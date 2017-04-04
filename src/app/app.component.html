@@ -25,4 +25,6 @@
         <input type="submit" class="form-control" value="Submit" [disabled]="newUserForm?.invalid">
     </div>
 </form>
+<p>Form value: {{ newUserForm.value | json }}</p>
+<p>Form status: {{ newUserForm.status | json }}</p>   
 

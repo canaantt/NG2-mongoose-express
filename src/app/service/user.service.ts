@@ -36,13 +36,14 @@ export class UserService {
   //     .catch(this.handleError);
   // }
 
-  // create(name: string): Promise<User> {
-  //   return this.http
-  //     .post(this.usersUrl, JSON.stringify({name: name}), {headers: this.headers})
-  //     .toPromise()
-  //     .then(res => res.json().data as User)
-  //     .catch(this.handleError);
-  // }
+  create(user: User): Promise<User> {
+    return this.http
+      .post(this.usersUrl, JSON.stringify({FirstName: user.FirstName, 
+        LastName: user.LastName, Photo:user.Photo, Email:user.Email}), {headers: this.headers})
+      .toPromise()
+      .then(res => res.json().data as User)
+      .catch(this.handleError);
+  }
 
   // update(user: User): Promise<User> {
   //   const url = `${this.usersUrl}/${user.FirstName}`;

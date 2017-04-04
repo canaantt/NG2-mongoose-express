@@ -4,14 +4,7 @@ import { UserService } from './service/user.service';
 
 @Component({
   selector: 'app-root',
-  template: `
-    <h1>{{title}}</h1>
-    <div class="grid grid-pad">
-      <div class="grid grid-pad">
-      <label *ngFor="let user of users"  class="col-1-4">
-        {{user.LastName}}, {{user.FirstName}} 
-      </label>
-    </div>`,
+  templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
@@ -19,9 +12,21 @@ export class AppComponent implements OnInit {
   users: User[] = [];
 
   constructor(private userService: UserService) { }
+  
+  getUsers(): void {
+    this.userService.getUsers()
+      .then(users => this.users = users);
+  }
+  
+  getUserById(id : number): void {
+    console.log(id);
+    this.userService.getUser(id)
+      .then(user => this.users[0] = user);
+  }
 
   ngOnInit(): void {
     this.userService.getUsers()
       .then(users => this.users = users);
+    
   }
 }

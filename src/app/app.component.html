@@ -1,3 +1,8 @@
-<h1>
-  {{title}}
-</h1>
+<h1>{{title}}</h1>
+<div class="grid grid-pad">
+  <div class="grid grid-pad">
+  <p><strong>All the users</strong></p>
+  <label *ngFor="let user of users"  class="col-1-6">
+    {{user.LastName}}, {{user.FirstName}}
+  </label>
+</div>

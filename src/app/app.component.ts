@@ -39,18 +39,16 @@ export class AppComponent implements OnInit {
       .then(users => this.users = users);
 
     this.newUserForm = this.fb.group({
-      firstName: new FormControl('Hello', Validators.required),
-      lastName: new FormControl('World', Validators.minLength(4)),
-      photo: new FormControl(''),
-      email: new FormControl('')
+      FirstName: new FormControl('Hello', Validators.required),
+      LastName: new FormControl('World', Validators.minLength(4)),
+      Photo: new FormControl(''),
+      Email: new FormControl('')
     });
   }
-  
   submit() {
     console.log("Reactive Form submitted: ", this.newUserForm);
     this.newUser = this.newUserForm.value;
     console.log(this.newUser);
     this.userService.create(this.newUser);
-  }  
-    
+  }
 }

@@ -7,19 +7,19 @@
 <form [formGroup] = "newUserForm" (ngSubmit) = "submit()">
     <div class="form-group">
         <label for="firstName">First Name</label>
-        <input type="text" class="form-control" id="firstName" formControlName="firstName">
+        <input type="text" class="form-control" id="firstName" formControlName="FirstName">
     </div>
     <div class="form-group">
         <label for="lastName">Last Name</label>
-        <input type="text" class="form-control" id="lastName" formControlName="lastName">
+        <input type="text" class="form-control" id="lastName" formControlName="LastName">
     </div>
     <div class="form-group">
         <label for="Photo">Photo</label>
-        <input type="text" class="form-control" id="Photo" formControlName="photo">
+        <input type="text" class="form-control" id="Photo" formControlName="Photo">
     </div>
     <div class="form-group">
         <label for="Email">Email</label>
-        <input type="text" class="form-control" id="Email" formControlName="email">
+        <input type="text" class="form-control" id="Email" formControlName="Email">
     </div>
     <div class="form-group">
         <input type="submit" class="form-control" value="Submit" [disabled]="newUserForm?.invalid">

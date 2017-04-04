@@ -1,8 +1,28 @@
 <h1>{{title}}</h1>
-<div class="grid grid-pad">
-  <div class="grid grid-pad">
-  <p><strong>All the users</strong></p>
-  <label *ngFor="let user of users"  class="col-1-6">
-    {{user.LastName}}, {{user.FirstName}}
-  </label>
+<div>
+    <ul>
+        <li *ngFor = "let user of users"><span class='badge'>{{user.FirstName}}</span></li>
+    </ul>
 </div>
+<form [formGroup] = "newUserForm" (ngSubmit) = "submit()">
+    <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" class="form-control" id="firstName" formControlName="firstName">
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" class="form-control" id="lastName" formControlName="lastName">
+    </div>
+    <div class="form-group">
+        <label for="Photo">Photo</label>
+        <input type="text" class="form-control" id="Photo" formControlName="photo">
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="text" class="form-control" id="Email" formControlName="email">
+    </div>
+    <div class="form-group">
+        <input type="submit" class="form-control" value="Submit" [disabled]="newUserForm?.invalid">
+    </div>
+</form>
+

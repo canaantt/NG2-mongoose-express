@@ -1,6 +1,6 @@
 import { Component, Input, OnInit}          from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { User }        from './user.interface';
+import { User }        from './user';
 import { UserService } from './service/user.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
     private fb: FormBuilder, 
     private userService: UserService
   ) {}
-  
+
   getUsers(): void {
     this.userService.getUsers()
       .then(users => this.users = users);
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
   submit() {
     this.userService.create(this.newUserForm.value).then((value: any) => this.getUsers());
   }
-  
+
   ngOnInit(): void {
     this.getUsers();
 

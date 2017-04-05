@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { User }        from '../user.interface';
+import { User } from '../user';
 import { UserService } from '../service/user.service';
 
 @Component({
@@ -9,10 +9,13 @@ import { UserService } from '../service/user.service';
 })
 export class UserDetailComponent{
   @Input() user: User;
-  constructor(private userService: UserService){}
+  constructor() { }
 
   update(user: User): void {
-    this.userService.update(user);
+
+
+    user.save();
+    
     console.log("in updating");
   }
 }

@@ -2,9 +2,9 @@
 <h3>User List</h3>
 <div>
     <ul>
-        <li *ngFor = "let user of users" [class.selected]="user === selectedUser"
-        (click)="onSelect(user)"><a>{{user.FirstName}}</a>
-        <span class="btn glyphicon glyphicon-minus-sign" (click)="delete(user)"></span>
+        <li *ngFor = "let user of users"><a [class.selected]="user === selectedUser"
+        (click)="onSelect(user)">{{user.FirstName}}</a>
+        <span class="btn glyphicon glyphicon-minus-sign" (click)="delete(user)"></span></li>
     </ul>
 </div>
 <user-detail [user]="selectedUser"></user-detail>

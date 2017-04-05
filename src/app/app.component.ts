@@ -12,7 +12,6 @@ import { UserService } from './service/user.service';
 export class AppComponent implements OnInit {
   title = 'Data Uploading';
   users: User[] = [];
-  newUser: User;
   selectedUser: User;
   newUserForm: FormGroup;
 
@@ -25,13 +24,18 @@ export class AppComponent implements OnInit {
     this.userService.getUsers()
       .then(users => this.users = users);
   }
-  delete(user: User): void{
-    this.userService.delete(user);
+  onSelect(user: User): void {
+    this.selectedUser = user;
   }
-
+  delete(user: User): void{
+    this.userService.delete(user).then((value: void) => this.getUsers());
+  }
+  submit() {
+    this.userService.create(this.newUserForm.value).then((value: any) => this.getUsers());
+  }
+  
   ngOnInit(): void {
-    this.userService.getUsers()
-      .then(users => this.users = users);
+    this.getUsers();
 
     this.newUserForm = this.fb.group({
       FirstName: new FormControl('Hello', Validators.required),
@@ -39,14 +43,5 @@ export class AppComponent implements OnInit {
       Photo: new FormControl(''),
       Email: new FormControl('')
     });
-  }
-  submit() {
-    console.log("Reactive Form submitted: ", this.newUserForm);
-    this.newUser = this.newUserForm.value;
-    console.log(this.newUser);
-    this.userService.create(this.newUser);
-  }
-  onSelect(user: User): void {
-    this.selectedUser = user;
   }
 }

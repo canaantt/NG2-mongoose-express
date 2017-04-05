@@ -5,6 +5,7 @@
     <label>First name: </label>
     <input [(ngModel)]="user.FirstName" placeholder="First Name"/>
   </div>
+  <div class="help-block" *ngIf="!form.controls['textC_' + i].valid"></div> 
   <div>
     <label>Last name: </label>
     <input [(ngModel)]="user.LastName" placeholder="Last Name"/>

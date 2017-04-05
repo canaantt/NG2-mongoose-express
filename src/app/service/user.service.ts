@@ -20,21 +20,13 @@ export class UserService {
                .catch(this.handleError);
   }
 
-  getUser(id: number): Promise<User> {
-    const url = `${this.usersUrl}/${id}`;
-    return this.http.get(url)
+  delete(user: User): Promise<void> {
+    const url = `${this.usersUrl}/`+ user._id;
+    return this.http.delete(url, {headers: this.headers})
       .toPromise()
-      .then(response => response.json().data as User)
+      .then(() => null)
       .catch(this.handleError);
   }
-
-  // delete(id: number): Promise<void> {
-  //   const url = `${this.usersUrl}/${id}`;
-  //   return this.http.delete(url, {headers: this.headers})
-  //     .toPromise()
-  //     .then(() => null)
-  //     .catch(this.handleError);
-  // }
 
   create(user: User): Promise<User> {
     return this.http
@@ -44,14 +36,14 @@ export class UserService {
       .catch(this.handleError);
   }
 
-  // update(user: User): Promise<User> {
-  //   const url = `${this.usersUrl}/${user.FirstName}`;
-  //   return this.http
-  //     .put(url, JSON.stringify(user), {headers: this.headers})
-  //     .toPromise()
-  //     .then(() => user)
-  //     .catch(this.handleError);
-  // }
+  update(user: User): Promise<User> {
+    const url = `${this.usersUrl}/` + user._id;
+    return this.http
+      .put(url, JSON.stringify(user), {headers: this.headers})
+      .toPromise()
+      .then(() => user)
+      .catch(this.handleError);
+  }
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only

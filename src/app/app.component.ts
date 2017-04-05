@@ -12,7 +12,8 @@ import { UserService } from './service/user.service';
 export class AppComponent implements OnInit {
   title = 'Data Uploading';
   users: User[] = [];
-  @Input() newUser: User;
+  newUser: User;
+  selectedUser: User;
   newUserForm: FormGroup;
 
   constructor(
@@ -24,16 +25,10 @@ export class AppComponent implements OnInit {
     this.userService.getUsers()
       .then(users => this.users = users);
   }
-  
-  getUserById(id : number): void {
-    console.log(id);
-    this.userService.getUser(id)
-      .then(user => this.users[0] = user);
+  delete(user: User): void{
+    this.userService.delete(user);
   }
-  addUser(user, User): void {
-    console.log(user);
-    this.userService.create(user);
-  }
+
   ngOnInit(): void {
     this.userService.getUsers()
       .then(users => this.users = users);
@@ -50,5 +45,8 @@ export class AppComponent implements OnInit {
     this.newUser = this.newUserForm.value;
     console.log(this.newUser);
     this.userService.create(this.newUser);
+  }
+  onSelect(user: User): void {
+    this.selectedUser = user;
   }
 }

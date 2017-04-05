@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { User }        from '../user.interface';
+import { UserService } from '../service/user.service';
 
 @Component({
-  selector: 'app-user-detail',
+  selector: 'user-detail',
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.css']
 })
-export class UserDetailComponent implements OnInit {
+export class UserDetailComponent{
+  @Input() user: User;
+  constructor(private userService: UserService){}
 
-  constructor() { }
-
-  ngOnInit() {
+  update(user: User): void {
+    this.userService.update(user);
+    console.log("in updating");
   }
-
 }

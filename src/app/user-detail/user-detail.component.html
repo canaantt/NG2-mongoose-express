@@ -1,3 +1,25 @@
-<p>
-  user-detail works!
-</p>
+<div *ngIf="user">
+  <hr>
+  <h3>User Detail Section</h3>
+  <div>
+    <label>First name: </label>
+    <input [(ngModel)]="user.FirstName" placeholder="First Name"/>
+  </div>
+  <div>
+    <label>Last name: </label>
+    <input [(ngModel)]="user.LastName" placeholder="Last Name"/>
+  </div>
+  <div>
+    <label>Photo: </label>
+    <input [(ngModel)]="user.Photo" placeholder="photo url"/>
+  </div>
+  <div>
+    <label>Email: </label>
+    <input [(ngModel)]="user.Email" placeholder=" "/>
+  </div>
+  <div>
+    <label>Database ID:  </label>
+    <span> {{user._id}}</span>
+  </div>
+  <button class='btn btn-primary'  (click)="update(user)">Update</button>
+</div>

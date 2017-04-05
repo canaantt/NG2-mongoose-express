@@ -1,9 +1,16 @@
 <h1>{{title}}</h1>
+<h3>User List</h3>
 <div>
     <ul>
-        <li *ngFor = "let user of users"><span class='badge'>{{user.FirstName}}</span></li>
+        <li *ngFor = "let user of users" [class.selected]="user === selectedUser"
+        (click)="onSelect(user)"><a>{{user.FirstName}}</a>
+        <span class="btn glyphicon glyphicon-minus-sign" (click)="delete(user)"></span>
     </ul>
 </div>
+<user-detail [user]="selectedUser"></user-detail>
+<hr>
+<h3>Add New User</h3>
+<div class='well well-sm'>
 <form [formGroup] = "newUserForm" (ngSubmit) = "submit()">
     <div class="form-group">
         <label for="firstName">First Name</label>
@@ -27,4 +34,5 @@
 </form>
 <p>Form value: {{ newUserForm.value | json }}</p>
 <p>Form status: {{ newUserForm.status | json }}</p>   
+</div>
 

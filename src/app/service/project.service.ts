@@ -3,45 +3,45 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { User } from '../user';
+import { Project } from '../project';
 
 @Injectable()
-export class UserService {
+export class ProjectService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private usersUrl = 'http://localhost:3000/users';  // URL to web api
+  private projectsUrl = 'http://localhost:3000/projects';  // URL to web api
 
   constructor(private http: Http) {}
 
-  getUsers(): Promise<User[]> {
-    return this.http.get(this.usersUrl)
+  getProjects(): Promise<Project[]> {
+    return this.http.get(this.projectsUrl)
                .toPromise()
-               .then(response => response.json() as User[])
+               .then(response => response.json() as Project[])
                .catch(this.handleError);
   }
 
-  delete(user: User): Promise<void> {
-    const url = `${this.usersUrl}/` + user._id;
+  delete(project: Project): Promise<void> {
+    const url = `${this.projectsUrl}/` + project._id;
     return this.http.delete(url, {headers: this.headers})
       .toPromise()
       .then(() => null)
       .catch(this.handleError);
   }
 
-  create(user: User): Promise<User> {
+  create(project: Project): Promise<Project> {
     return this.http
-      .post(this.usersUrl, JSON.stringify(user), {headers: this.headers})
+      .post(this.projectsUrl, JSON.stringify(project), {headers: this.headers})
       .toPromise()
-      .then(res => res.json().data as User)
+      .then(res => res.json().data as Project)
       .catch(this.handleError);
   }
 
-  update(user: User): Promise<User> {
-    const url = `${this.usersUrl}/` + user._id;
+  update(project: Project): Promise<Project> {
+    const url = `${this.projectsUrl}/` + project._id;
     return this.http
-      .put(url, JSON.stringify(user), {headers: this.headers})
+      .put(url, JSON.stringify(project), {headers: this.headers})
       .toPromise()
-      .then(() => user)
+      .then(() => project)
       .catch(this.handleError);
   }
 

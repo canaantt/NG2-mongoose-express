@@ -1,0 +1,36 @@
+<h3>User List</h3>
+<div>
+    <ul>
+        <li *ngFor = "let user of users"><a [class.selected]="user === selectedUser"
+        (click)="onSelect(user)">{{user.FirstName}}</a>
+        <span class="btn glyphicon glyphicon-minus-sign" (click)="delete(user)"></span></li>
+    </ul>
+</div>
+<user-detail [user]="selectedUser"></user-detail>
+<hr>
+<h3>Add New User</h3>
+<div class='well well-sm'>
+<form [formGroup] = "newUserForm" (ngSubmit) = "submit()">
+    <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" class="form-control" id="firstName" formControlName="FirstName">
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" class="form-control" id="lastName" formControlName="LastName">
+    </div>
+    <div class="form-group">
+        <label for="Photo">Photo</label>
+        <input type="text" class="form-control" id="Photo" formControlName="Photo">
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="text" class="form-control" id="Email" formControlName="Email">
+    </div>
+    <div class="form-group">
+        <input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">
+    </div>
+</form>
+<p>Form value: {{ newUserForm.value | json }}</p>
+<p>Form Status: {{ newUserForm.status | json }}</p>
+</div>

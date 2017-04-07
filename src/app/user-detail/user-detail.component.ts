@@ -9,13 +9,10 @@ import { UserService } from '../service/user.service';
 })
 export class UserDetailComponent{
   @Input() user: User;
-  constructor() { }
+  constructor(private userService: UserService) { }
 
   update(user: User): void {
-
-
-    user.save();
-    
+    this.userService.update(user);
     console.log("in updating");
   }
 }

@@ -1,0 +1,25 @@
+<div *ngIf="project">
+  <hr>
+  <h3>project Detail Section</h3>
+  <div>
+    <label>Project Name: </label>
+    <input [(ngModel)]="project.Name" placeholder="Project Name"/>
+  </div>
+  <div>
+    <label>Description: </label>
+    <input [(ngModel)]="project.Description" placeholder="Description"/>
+  </div>
+  <div>
+    <label>Annotations: </label>
+    <input [(ngModel)]="project.Annotations" placeholder="Annotations"/>
+  </div>
+  <div>
+    <label>Files: </label>
+    <input [(ngModel)]="project.Files" placeholder=" "/>
+  </div>
+  <div>
+    <label>Database ID:  </label>
+    <span> {{project._id}}</span>
+  </div>
+  <button class='btn btn-primary'  (click)="update(project)">Update</button>
+</div>

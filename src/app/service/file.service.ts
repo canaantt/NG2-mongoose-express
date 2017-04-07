@@ -3,45 +3,45 @@ import { Headers, Http } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 
-import { User } from '../user';
+import { File } from '../file';
 
 @Injectable()
-export class UserService {
+export class FileService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private usersUrl = 'http://localhost:3000/users';  // URL to web api
+  private filesUrl = 'http://localhost:3000/files';  // URL to web api
 
   constructor(private http: Http) {}
 
-  getUsers(): Promise<User[]> {
-    return this.http.get(this.usersUrl)
+  getFiles(): Promise<File[]> {
+    return this.http.get(this.filesUrl)
                .toPromise()
-               .then(response => response.json() as User[])
+               .then(response => response.json() as File[])
                .catch(this.handleError);
   }
 
-  delete(user: User): Promise<void> {
-    const url = `${this.usersUrl}/` + user._id;
+  delete(file: File): Promise<void> {
+    const url = `${this.filesUrl}/` + file._id;
     return this.http.delete(url, {headers: this.headers})
       .toPromise()
       .then(() => null)
       .catch(this.handleError);
   }
 
-  create(user: User): Promise<User> {
+  create(file: File): Promise<File> {
     return this.http
-      .post(this.usersUrl, JSON.stringify(user), {headers: this.headers})
+      .post(this.filesUrl, JSON.stringify(file), {headers: this.headers})
       .toPromise()
-      .then(res => res.json().data as User)
+      .then(res => res.json().data as File)
       .catch(this.handleError);
   }
 
-  update(user: User): Promise<User> {
-    const url = `${this.usersUrl}/` + user._id;
+  update(file: File): Promise<File> {
+    const url = `${this.filesUrl}/` + file._id;
     return this.http
-      .put(url, JSON.stringify(user), {headers: this.headers})
+      .put(url, JSON.stringify(file), {headers: this.headers})
       .toPromise()
-      .then(() => user)
+      .then(() => file)
       .catch(this.handleError);
   }
 

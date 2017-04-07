@@ -6,15 +6,27 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { UserService } from './service/user.service';
 import { UserDetailComponent } from './user-detail/user-detail.component';
+import { UsersComponent } from './users/users.component';
+import { LandingComponent } from './landing/landing.component';
+import { DocumentationComponent } from './documentation/documentation.component';
+import { AppRouterModule } from './router/app-router.module';
+import { ProjectsComponent } from './projects/projects.component';
+import { ProjectDetailComponent } from './project-detail/project-detail.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UserDetailComponent
+    UserDetailComponent,
+    UsersComponent,
+    LandingComponent,
+    DocumentationComponent,
+    ProjectsComponent,
+    ProjectDetailComponent
   ],
   imports: [
     BrowserModule,
-    FormsModule, 
+    FormsModule,
+    AppRouterModule,
     ReactiveFormsModule,
     HttpModule
   ],

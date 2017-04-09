@@ -9,14 +9,14 @@
     <label>Description: </label>
     <input [(ngModel)]="project.Description" placeholder="Description"/>
   </div>
-  <div>
-    <label>Annotations: </label>
-    <input [(ngModel)]="project.Annotations" placeholder="Annotations"/>
-  </div>
-  <div>
+  <!--<div>
     <label>Files: </label>
-    <input [(ngModel)]="project.Files" placeholder=" "/>
-  </div>
+    <ul>
+      <li *ngFor = "let file of files">
+        {{file}}
+      </li>
+    </ul>
+  </div>-->
   <div>
     <label>Database ID:  </label>
     <span> {{project._id}}</span>

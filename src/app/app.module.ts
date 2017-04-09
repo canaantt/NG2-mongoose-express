@@ -12,6 +12,8 @@ import { DocumentationComponent } from './documentation/documentation.component'
 import { AppRouterModule } from './router/app-router.module';
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailComponent } from './project-detail/project-detail.component';
+import { IrbComponent } from './irb/irb.component';
+import { FileDetailComponent } from './file-detail/file-detail.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { ProjectDetailComponent } from './project-detail/project-detail.componen
     LandingComponent,
     DocumentationComponent,
     ProjectsComponent,
-    ProjectDetailComponent
+    ProjectDetailComponent,
+    IrbComponent,
+    FileDetailComponent
   ],
   imports: [
     BrowserModule,

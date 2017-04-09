@@ -1,0 +1,16 @@
+<div *ngIf="file">
+  <hr>
+  <div>
+    <label>file Category: </label>
+    <input [(ngModel)]="file.Category" placeholder="file category"/>
+  </div>
+  <div>
+    <label>file Path: </label>
+    <input [(ngModel)]="file.Path" placeholder="Path"/>
+  </div>
+  <div>
+    <label>Database ID:  </label>
+    <span> {{file._id}}</span>
+  </div>
+  <!--<button class='btn btn-primary'  (click)="update(file)">Update</button>-->
+</div>

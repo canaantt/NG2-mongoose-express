@@ -2,6 +2,7 @@ import { Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
+// import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-root',
@@ -10,27 +11,29 @@ import { ProjectService } from '../service/project.service';
   providers: [ProjectService]
 })
 export class ProjectsComponent implements OnInit {
-  projects: Project[] = [];
+  projects: Project[];
   selectedProject: Project;
   newProjectForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    private ProjectService: ProjectService
+    private projectService: ProjectService
   ) {}
 
   getProjects(): void {
-    this.ProjectService.getProjects()
-      .then(Projects => this.projects = Projects);
+    this.projectService.getProjects()
+       .subscribe(res => {
+          this.projects = res.json();
+        });
   }
   onSelect(Project: Project): void {
     this.selectedProject = Project;
   }
   delete(project: Project): void {
-    this.ProjectService.delete(project).then((value: void) => this.getProjects());
+    this.projectService.delete(project).subscribe(() => this.getProjects());
   }
   submit() {
-    this.ProjectService.create(this.newProjectForm.value).then((value: any) => this.getProjects());
+    this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
   }
 
   ngOnInit(): void {

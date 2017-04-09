@@ -1,7 +1,6 @@
 import { Injectable }    from '@angular/core';
-import { Headers, Http } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
+import { Headers, Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
 import { User } from '../user';
 
@@ -13,36 +12,23 @@ export class UserService {
 
   constructor(private http: Http) {}
 
-  getUsers(): Promise<User[]> {
-    return this.http.get(this.usersUrl)
-               .toPromise()
-               .then(response => response.json() as User[])
-               .catch(this.handleError);
+  getUsers():  Observable<Response> {
+    return this.http.get(this.usersUrl);
   }
 
-  delete(user: User): Promise<void> {
+  delete(user: User): Observable<Response> {
     const url = `${this.usersUrl}/` + user._id;
-    return this.http.delete(url, {headers: this.headers})
-      .toPromise()
-      .then(() => null)
-      .catch(this.handleError);
+    return this.http.delete(url, {headers: this.headers});
   }
 
-  create(user: User): Promise<User> {
+  create(user: User): Observable<Response> {
     return this.http
-      .post(this.usersUrl, JSON.stringify(user), {headers: this.headers})
-      .toPromise()
-      .then(res => res.json().data as User)
-      .catch(this.handleError);
+      .post(this.usersUrl, JSON.stringify(user), {headers: this.headers});
   }
 
-  update(user: User): Promise<User> {
+  update(user: User): Observable<Response> {
     const url = `${this.usersUrl}/` + user._id;
-    return this.http
-      .put(url, JSON.stringify(user), {headers: this.headers})
-      .toPromise()
-      .then(() => user)
-      .catch(this.handleError);
+    return this.http.put(url, JSON.stringify(user), {headers: this.headers});
   }
 
   private handleError(error: any): Promise<any> {

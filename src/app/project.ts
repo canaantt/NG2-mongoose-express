@@ -5,5 +5,5 @@ export class Project {
     Name: string;
     Description: string;
     Annotations: [{key: string, value: string}];
-    Files: File[];
+    Files: string[];
 }

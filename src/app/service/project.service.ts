@@ -1,7 +1,6 @@
 import { Injectable }    from '@angular/core';
-import { Headers, Http } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
+import { Headers, Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
 import { Project } from '../project';
 
@@ -13,36 +12,24 @@ export class ProjectService {
 
   constructor(private http: Http) {}
 
-  getProjects(): Promise<Project[]> {
-    return this.http.get(this.projectsUrl)
-               .toPromise()
-               .then(response => response.json() as Project[])
-               .catch(this.handleError);
+  getProjects(): Observable<Response> {
+    return this.http.get(this.projectsUrl);
   }
 
-  delete(project: Project): Promise<void> {
+  delete(project: Project): Observable<Response> {
     const url = `${this.projectsUrl}/` + project._id;
-    return this.http.delete(url, {headers: this.headers})
-      .toPromise()
-      .then(() => null)
-      .catch(this.handleError);
+    return this.http.delete(url, {headers: this.headers});
   }
 
-  create(project: Project): Promise<Project> {
+  create(project: Project): Observable<Response> {
     return this.http
-      .post(this.projectsUrl, JSON.stringify(project), {headers: this.headers})
-      .toPromise()
-      .then(res => res.json().data as Project)
-      .catch(this.handleError);
+      .post(this.projectsUrl, JSON.stringify(project), {headers: this.headers});
   }
 
-  update(project: Project): Promise<Project> {
+  update(project: Project): Observable<Response> {
     const url = `${this.projectsUrl}/` + project._id;
     return this.http
-      .put(url, JSON.stringify(project), {headers: this.headers})
-      .toPromise()
-      .then(() => project)
-      .catch(this.handleError);
+      .put(url, JSON.stringify(project), {headers: this.headers});
   }
 
   private handleError(error: any): Promise<any> {

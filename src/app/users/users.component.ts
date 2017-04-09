@@ -2,6 +2,7 @@ import { Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from '../user';
 import { UserService } from '../service/user.service';
+// import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-root',
@@ -10,27 +11,32 @@ import { UserService } from '../service/user.service';
   providers: [UserService]
 })
 export class UsersComponent implements OnInit {
-  users: User[] = [];
+  users: User[];
   selectedUser: User;
   newUserForm: FormGroup;
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private userService: UserService
   ) {}
 
   getUsers(): void {
     this.userService.getUsers()
-      .then(users => this.users = users);
+        .subscribe(res => {
+          this.users = res.json();
+        });
   }
   onSelect(user: User): void {
     this.selectedUser = user;
   }
-  delete(user: User): void{
-    this.userService.delete(user).then((value: void) => this.getUsers());
+  delete(user: User): void {
+    this.userService.delete(user).subscribe(response => {
+      console.log(response);
+      this.getUsers();
+    });
   }
   submit() {
-    this.userService.create(this.newUserForm.value).then((value: any) => this.getUsers());
+    this.userService.create(this.newUserForm.value).subscribe(() => this.getUsers());
   }
 
   ngOnInit(): void {

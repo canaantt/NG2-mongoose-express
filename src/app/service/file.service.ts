@@ -19,6 +19,13 @@ export class FileService {
                .then(response => response.json() as File[])
                .catch(this.handleError);
   }
+  getFile(id: string): Promise<File> {
+    const url = `${this.filesUrl}/` + id;
+    return this.http.get(url)
+               .toPromise()
+               .then(response => response.json() as File)
+               .catch(this.handleError);
+  }
 
   delete(file: File): Promise<void> {
     const url = `${this.filesUrl}/` + file._id;

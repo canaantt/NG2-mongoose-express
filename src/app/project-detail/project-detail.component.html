@@ -9,14 +9,14 @@
     <label>Description: </label>
     <input [(ngModel)]="project.Description" placeholder="Description"/>
   </div>
-  <!--<div>
+  <div *ngIf="project.Files.length > 0">
     <label>Files: </label>
     <ul>
       <li *ngFor = "let file of files">
-        {{file}}
+        {{file.Path}}
       </li>
     </ul>
-  </div>-->
+  </div>
   <div>
     <label>Database ID:  </label>
     <span> {{project._id}}</span>

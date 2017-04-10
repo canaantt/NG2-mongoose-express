@@ -1,8 +1,6 @@
 import { Injectable }    from '@angular/core';
-import { Headers, Http } from '@angular/http';
-
-import 'rxjs/add/operator/toPromise';
-
+import { Headers, Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import { File } from '../file';
 
 @Injectable()
@@ -13,43 +11,28 @@ export class FileService {
 
   constructor(private http: Http) {}
 
-  getFiles(): Promise<File[]> {
-    return this.http.get(this.filesUrl)
-               .toPromise()
-               .then(response => response.json() as File[])
-               .catch(this.handleError);
+  getFiles(): Observable<Response> {
+    return this.http.get(this.filesUrl);
   }
-  getFile(id: string): Promise<File> {
+  getFile(id: string): Observable<Response> {
     const url = `${this.filesUrl}/` + id;
-    return this.http.get(url)
-               .toPromise()
-               .then(response => response.json() as File)
-               .catch(this.handleError);
+    return this.http.get(url);
   }
 
-  delete(file: File): Promise<void> {
+  delete(file: File): Observable<Response> {
     const url = `${this.filesUrl}/` + file._id;
-    return this.http.delete(url, {headers: this.headers})
-      .toPromise()
-      .then(() => null)
-      .catch(this.handleError);
+    return this.http.delete(url, {headers: this.headers});
   }
 
-  create(file: File): Promise<File> {
+  create(file: File): Observable<Response> {
     return this.http
-      .post(this.filesUrl, JSON.stringify(file), {headers: this.headers})
-      .toPromise()
-      .then(res => res.json().data as File)
-      .catch(this.handleError);
+      .post(this.filesUrl, JSON.stringify(file), {headers: this.headers});
   }
 
-  update(file: File): Promise<File> {
+  update(file: File): Observable<Response> {
     const url = `${this.filesUrl}/` + file._id;
     return this.http
-      .put(url, JSON.stringify(file), {headers: this.headers})
-      .toPromise()
-      .then(() => file)
-      .catch(this.handleError);
+      .put(url, JSON.stringify(file), {headers: this.headers});
   }
 
   private handleError(error: any): Promise<any> {

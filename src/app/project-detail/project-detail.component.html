@@ -9,16 +9,16 @@
     <label>Description: </label>
     <input [(ngModel)]="project.Description" placeholder="Description"/>
   </div>
-  <div *ngIf="project.Files.length > 0">
+  <!--<div *ngIf="project.Files.length > 0">
     <label>Files: </label>
     <ul>
       <li *ngFor = "let file of files"  >
         {{file.category}} {{file.dataType}} {{file.path}}
       </li>
     </ul>
-  </div>
+  </div>-->
    <div *ngIf="project.Files.length > 0">
-    <label>Restuls: </label>
+    <label>Results: </label>
     <ul>
       <li *ngFor = "let result of results$ | async"  >
         {{result.category}} {{result.dataType}} {{result.path}}

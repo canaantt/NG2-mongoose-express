@@ -41,8 +41,26 @@ export class ProjectsComponent implements OnInit {
 
     this.newProjectForm = this.fb.group({
       Name: new FormControl('', Validators.required),
-      Description: new FormControl('World', Validators.minLength(4))
+      Description: new FormControl('', Validators.minLength(4)),
+      Annotations: this.fb.array([this.annotationItem('annot1')]),
+      Files: this.fb.array([this.fileItem('file1'), this.fileItem('file2')])
     });
-    console.log(this.newProjectForm.get('Name'));
   }
+  annotationItem(val: string) {
+    return new FormGroup({
+      key: new FormControl(val, Validators.required),
+      value: new FormControl(val, Validators.required)
+    });
+  }
+
+  fileItem(val: string) {
+    return new FormGroup({
+      category: new FormControl(val, Validators.required),
+      dataType: new FormControl(val, Validators.required),
+      path: new FormControl(val, Validators.required)
+    });
+  }
+  
+  //console. log(this.newProjectForm.get('Name'));
+
 }

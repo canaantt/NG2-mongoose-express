@@ -13,7 +13,6 @@ import { AppRouterModule } from './router/app-router.module';
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailComponent } from './project-detail/project-detail.component';
 import { IrbComponent } from './irb/irb.component';
-import { FileDetailComponent } from './file-detail/file-detail.component';
 
 @NgModule({
   declarations: [
@@ -24,8 +23,7 @@ import { FileDetailComponent } from './file-detail/file-detail.component';
     DocumentationComponent,
     ProjectsComponent,
     ProjectDetailComponent,
-    IrbComponent,
-    FileDetailComponent
+    IrbComponent
   ],
   imports: [
     BrowserModule,

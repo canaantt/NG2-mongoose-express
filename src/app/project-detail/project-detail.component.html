@@ -12,8 +12,16 @@
   <div *ngIf="project.Files.length > 0">
     <label>Files: </label>
     <ul>
-      <li *ngFor = "let file of files">
-        {{file.Path}}
+      <li *ngFor = "let file of files"  >
+        {{file.category}} {{file.dataType}} {{file.path}}
+      </li>
+    </ul>
+  </div>
+   <div *ngIf="project.Files.length > 0">
+    <label>Restuls: </label>
+    <ul>
+      <li *ngFor = "let result of results$ | async"  >
+        {{result.category}} {{result.dataType}} {{result.path}}
       </li>
     </ul>
   </div>

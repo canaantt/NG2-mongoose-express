@@ -12,9 +12,14 @@ export class FileService {
   constructor(private http: Http) {}
 
   getFiles(): Observable<Response> {
-    return this.http.get(this.filesUrl);
+    return this.http.get(this.filesUrl)
+            .map(res => res.json());
   }
-  getFile(id: string): Observable<Response> {
+  getFilesByIDs(ids: string[]): Observable<Response> {
+    return this.http.get(this.filesUrl)
+            .map(res => res.json().filter(value => ids.indexOf(value._id) > -1));
+  }
+  getFileByID(id: string): Observable<Response> {
     const url = `${this.filesUrl}/` + id;
     return this.http.get(url);
   }

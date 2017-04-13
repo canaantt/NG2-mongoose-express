@@ -1,6 +1,6 @@
-import { Injectable }    from '@angular/core';
-import { Headers, Http } from '@angular/http';
-
+import { Injectable } from '@angular/core';
+import { Headers, Http, Response} from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
 
 import { IRB } from '../irb';
@@ -13,36 +13,29 @@ export class IrbService {
 
   constructor(private http: Http) {}
 
-  getIrbs(): Promise<IRB[]> {
+  getIrbs():  Observable<Response> {
     return this.http.get(this.irbsUrl)
-               .toPromise()
-               .then(response => response.json() as IRB[])
-               .catch(this.handleError);
+               .map(res => res.json());
   }
-
-  delete(irb: IRB): Promise<void> {
+  getIrbsByProjID(id: string): Observable<Response> {
+    console.log(id);
+    return this.http.get(this.irbsUrl)
+               .map(res => res.json().filter(value => value._id === id));
+  }
+  delete(irb: IRB): Observable<Response> {
     const url = `${this.irbsUrl}/` + irb._id;
-    return this.http.delete(url, {headers: this.headers})
-      .toPromise()
-      .then(() => null)
-      .catch(this.handleError);
+    return this.http.delete(url, {headers: this.headers});
   }
 
-  create(irb: IRB): Promise<IRB> {
+  create(irb: IRB): Observable<Response> {
     return this.http
-      .post(this.irbsUrl, JSON.stringify(irb), {headers: this.headers})
-      .toPromise()
-      .then(res => res.json().data as IRB)
-      .catch(this.handleError);
+      .post(this.irbsUrl, JSON.stringify(irb), {headers: this.headers});
   }
 
-  update(irb: IRB): Promise<IRB> {
+  update(irb: IRB): Observable<Response> {
     const url = `${this.irbsUrl}/` + irb._id;
     return this.http
-      .put(url, JSON.stringify(irb), {headers: this.headers})
-      .toPromise()
-      .then(() => irb)
-      .catch(this.handleError);
+      .put(url, JSON.stringify(irb), {headers: this.headers});
   }
 
   private handleError(error: any): Promise<any> {

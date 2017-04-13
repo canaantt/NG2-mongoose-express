@@ -2,7 +2,6 @@ import { Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
-// import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-root',
@@ -45,6 +44,7 @@ export class ProjectsComponent implements OnInit {
       Annotations: this.fb.array([this.annotationItem('annot1')]),
       Files: this.fb.array([this.fileItem('file1'), this.fileItem('file2')])
     });
+    console.log(this.newProjectForm.get('Files'));
   }
   annotationItem(val: string) {
     return new FormGroup({
@@ -60,7 +60,4 @@ export class ProjectsComponent implements OnInit {
       path: new FormControl(val, Validators.required)
     });
   }
-  
-  //console. log(this.newProjectForm.get('Name'));
-
 }

@@ -6,4 +6,5 @@ export class Project {
     Description: string;
     Annotations: [{key: string, value: string}];
     Files: string[];
+    IRB: string;
 }

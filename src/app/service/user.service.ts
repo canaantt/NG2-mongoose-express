@@ -15,7 +15,14 @@ export class UserService {
   getUsers():  Observable<Response> {
     return this.http.get(this.usersUrl);
   }
-
+  getUsersByID(id: string): Observable<Response> {
+    return this.http.get(this.usersUrl)
+            .map(res => res.json().filter(value => value._id === id));
+  }
+  getUsersByIDs(ids: string[]): Observable<Response> {
+    return this.http.get(this.usersUrl)
+            .map(res => res.json().filter(value => ids.indexOf(value._id) > -1));
+  }
   delete(user: User): Observable<Response> {
     const url = `${this.usersUrl}/` + user._id;
     return this.http.delete(url, {headers: this.headers});

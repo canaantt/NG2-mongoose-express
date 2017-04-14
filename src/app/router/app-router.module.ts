@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes} from '@angular/router';
-import { UsersComponent } from '../users/users.component';
-import { LandingComponent } from '../landing/landing.component';
-import { DocumentationComponent } from '../documentation/documentation.component';
-import { ProjectsComponent } from '../projects/projects.component';
+import { RouterModule, Routes } from '@angular/router';
+import { UsersComponent } from '../components/users/users.component';
+import { LandingComponent } from '../components/landing/landing.component';
+import { DocumentationComponent } from '../components/documentation/documentation.component';
+import { ProjectsComponent } from '../components/projects/projects.component';
 import { NavbarComponent } from '../components/navbar/navbar.component';
+import { IRBComponent } from '../components/irb/irb.component';
 
 const routes: Routes = [
   {
@@ -25,8 +26,11 @@ const routes: Routes = [
     path: 'projects',
     component: ProjectsComponent
   }, {
-     path: 'navbar',
+    path: 'navbar',
     component: NavbarComponent
+  }, {
+    path: 'irb',
+    component: IRBComponent
   }
 ];
 

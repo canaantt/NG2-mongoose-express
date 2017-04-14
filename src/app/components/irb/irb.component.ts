@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-irb',
   templateUrl: './irb.component.html',
-  styleUrls: ['./irb.component.css']
+  styleUrls: ['./irb.component.scss']
 })
 export class IrbComponent implements OnInit {
 

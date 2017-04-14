@@ -5,6 +5,7 @@ import { UsersComponent } from '../users/users.component';
 import { LandingComponent } from '../landing/landing.component';
 import { DocumentationComponent } from '../documentation/documentation.component';
 import { ProjectsComponent } from '../projects/projects.component';
+import { NavbarComponent } from '../components/navbar/navbar.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,9 @@ const routes: Routes = [
   }, {
     path: 'projects',
     component: ProjectsComponent
+  }, {
+     path: 'navbar',
+    component: NavbarComponent
   }
 ];
 

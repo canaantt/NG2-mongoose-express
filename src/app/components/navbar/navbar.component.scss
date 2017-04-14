@@ -1,0 +1,72 @@
+// Namespace
+.navbar-logo-img {
+    position: absolute;
+    left: 0px;
+    top: 10px;
+    max-height: 40px;
+    image-rendering: crisp-edges;
+}
+
+.navbar-logo-text {
+    position: absolute;
+    left: 45px;
+    top: 0px;
+    font-size: 18px;
+    line-height: 60px;
+    vertical-align: middle;
+    color: #FFF;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+}
+
+.navbar-inverse {
+    border: none !important;
+}
+
+.navbar-inverse .navbar-toggle {
+    border: none !important;
+}
+
+.header {
+    position: absolute;
+    width: 100%;
+    ul.dropdown-menu,
+    div.dropdown-menu {
+        padding: 25px;
+        position: fixed !important;
+        left: 1%;
+        top: 60px;
+        border: 0px;
+        border-radius: 0px;
+        width: 98%;
+        transition: all;
+        max-height: 85vh !important;
+    }
+}
+
+.nav {
+    li {
+        a {
+            font-size: 14px;
+            span {
+                padding-right: 5px;
+            }
+        }
+    }
+}
+
+.navbar {
+    border: none;
+    box-shadow: $box-shaddow;
+}
+
+
+
+
+/*
+
+
+
+
+
+*/

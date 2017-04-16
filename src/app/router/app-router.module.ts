@@ -1,12 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { UsersComponent } from '../components/users/users.component';
-import { LandingComponent } from '../components/landing/landing.component';
-import { DocumentationComponent } from '../components/documentation/documentation.component';
-import { ProjectsComponent } from '../components/projects/projects.component';
-import { NavbarComponent } from '../components/navbar/navbar.component';
-import { IRBComponent } from '../components/irb/irb.component';
+import { UsersComponent } from '../users/users.component';
+import { LandingComponent } from '../landing/landing.component';
+import { DocumentationComponent } from '../documentation/documentation.component';
+import { ProjectsComponent } from '../projects/projects.component';
+import { IrbComponent } from '../irb/irb.component';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { ProjectsDashboardComponent } from '../projects-dashboard/projects-dashboard.component';
+import { ProjectAdditionComponent } from '../project-addition/project-addition.component';
+import { ProjectDetailComponent } from '../project-detail/project-detail.component';
 
 const routes: Routes = [
   {
@@ -17,6 +20,9 @@ const routes: Routes = [
     path: 'landing',
     component: LandingComponent
   }, {
+    path: 'navbar',
+    component: NavbarComponent
+  }, {
     path: 'users',
     component: UsersComponent
   }, {
@@ -24,13 +30,15 @@ const routes: Routes = [
     component: DocumentationComponent
   }, {
     path: 'projects',
-    component: ProjectsComponent
-  }, {
-    path: 'navbar',
-    component: NavbarComponent
+    component: ProjectsComponent,
+    children: [
+      { path: 'dashboard', component: ProjectsDashboardComponent },
+      { path: 'item/:id', component: ProjectDetailComponent },
+      { path: 'add', component: ProjectAdditionComponent}
+    ]
   }, {
     path: 'irb',
-    component: IRBComponent
+    component: IrbComponent
   }
 ];
 

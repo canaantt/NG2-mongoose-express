@@ -1,23 +1,19 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, OnInit, Output} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './projects.component.html',
-  styleUrls: ['./projects.component.scss'],
-  providers: [ProjectService]
+  selector: 'app-project-addition',
+  templateUrl: './project-addition.component.html',
+  styleUrls: ['./project-addition.component.scss']
 })
-export class ProjectsComponent implements OnInit {
-  projects: Project[];
-  selectedProject: Project;
-  newProjectForm: FormGroup;
+export class ProjectAdditionComponent implements OnInit {
+ newProjectForm: FormGroup;
+ @Output() projects: Project[];
 
-  constructor(
-    private fb: FormBuilder,
-    private projectService: ProjectService
-  ) {}
+  constructor(private fb: FormBuilder,
+  private projectService: ProjectService) { }
 
   getProjects(): void {
     this.projectService.getProjects()
@@ -25,19 +21,7 @@ export class ProjectsComponent implements OnInit {
           this.projects = res.json();
         });
   }
-  onSelect(Project: Project): void {
-    this.selectedProject = Project;
-  }
-  delete(project: Project): void {
-    this.projectService.delete(project).subscribe(() => this.getProjects());
-  }
-  submit() {
-    this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
-  }
-
   ngOnInit(): void {
-    this.getProjects();
-
     this.newProjectForm = this.fb.group({
       Name: new FormControl('', Validators.required),
       Description: new FormControl('', Validators.minLength(4)),
@@ -45,6 +29,9 @@ export class ProjectsComponent implements OnInit {
       Files: this.fb.array([this.fileItem('file1'), this.fileItem('file2')])
     });
     console.log(this.newProjectForm.get('Files'));
+  }
+  submit() {
+    this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
   }
   annotationItem(val: string) {
     return new FormGroup({

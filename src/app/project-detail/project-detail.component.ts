@@ -1,4 +1,5 @@
 import { Component, Input, Output, SimpleChanges, OnInit, OnChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
 import { File } from '../file';
@@ -18,7 +19,8 @@ import 'rxjs/add/observable/of';
   providers: [FileService, IrbService, UserService]
 })
 export class ProjectDetailComponent implements OnInit, OnChanges {
-  @Input() project: Project;
+  project: any;
+  id: string;
   files: any;
   irb$: any;
   pi: any;
@@ -26,15 +28,39 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
   results$: Observable<any>;
 
   constructor(
+    private route: ActivatedRoute,
     private projectService: ProjectService,
     private fileService: FileService,
     private irbService: IrbService,
-    private userService: UserService) { }
+    private userService: UserService) {
+      this.id = this.route.snapshot.params['id'];
+     }
   ngOnInit(): void {
-    console.log('In the project detail OnInit function');
+    if (typeof(this.id) !== 'undefined') {
+      this.projectService.getProjectByID(this.route.snapshot.params['id'])
+                         .subscribe(res0 => {
+                           this.project = res0;
+                          //  console.log(this.project);
+                            this.results$ = this.fileService.getFilesByIDs(this.project.Files);
+                            this.irbService.getIrbsByProjID(this.project.IRB).subscribe(res => {
+                              this.irb$ = res[0];
+                              this.userService.getUsersByID(this.irb$.PI)
+                              .subscribe(res2 => this.pi = res2[0]);
+                              this.users$ = this.userService.getUsersByIDs(this.irb$.OtherUsers);
+                            });
+                          });
+    } else {
+      console.log(typeof(this.id));
+    }
   }
 
   ngOnChanges() {
+    console.log(typeof(this.project));
+    this.id = this.route.snapshot.params['id'];
+    this.projectService.getProjectByID(this.id)
+                       .subscribe(res => {
+                         console.log(res);
+                         return this.project = res; });
     if (typeof(this.project) !== 'undefined') {
       this.results$ = this.fileService.getFilesByIDs(this.project.Files);
       this.irbService.getIrbsByProjID(this.project.IRB).subscribe(res => {
@@ -45,7 +71,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
       });
     }
   }
-  
+
   update(project: Project): void {
     this.projectService.update(project).subscribe(() => console.log('updating...'));
   }

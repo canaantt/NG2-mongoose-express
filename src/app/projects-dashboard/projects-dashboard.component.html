@@ -1,6 +1,6 @@
 <div>
     <ul>
-        <li *ngFor = "let project of projects" ><a [class.selected]="project === selectedProject"
+        <li *ngFor = "let project of projects" ><a href='projects/{{project._id}}' [class.selected]="project === selectedProject"
         (click)="onSelect(project)">{{project.Name}}</a>
         <span class="btn glyphicon glyphicon-minus-sign" (click)="delete(project)"></span></li>
     </ul>

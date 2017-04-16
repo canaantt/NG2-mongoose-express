@@ -33,8 +33,8 @@ const routes: Routes = [
     component: ProjectsComponent,
     children: [
       { path: 'dashboard', component: ProjectsDashboardComponent },
-      { path: 'item/:id', component: ProjectDetailComponent },
-      { path: 'add', component: ProjectAdditionComponent}
+      { path: 'add', component: ProjectAdditionComponent},
+      { path: ':id', component: ProjectDetailComponent }
     ]
   }, {
     path: 'irb',

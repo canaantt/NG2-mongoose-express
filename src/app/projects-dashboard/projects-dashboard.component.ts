@@ -9,12 +9,13 @@ import { ProjectService } from '../service/project.service';
   styleUrls: ['./projects-dashboard.component.scss']
 })
 export class ProjectsDashboardComponent implements OnInit {
-  @Output() projects: Project[];
-  @Output() selectedProject: Project;
+  projects: Project[];
+  selectedProject: Project;
 
   constructor(private projectService: ProjectService) { }
   onSelect(Project: Project): void {
     this.selectedProject = Project;
+    console.log(this.selectedProject.Name);
   }
   getProjects(): void {
     this.projectService.getProjects()

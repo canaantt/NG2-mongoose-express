@@ -1,4 +1,4 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, Input, Output} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
@@ -11,7 +11,6 @@ import { ProjectService } from '../service/project.service';
 })
 export class ProjectsComponent {
   projects: Project[];
- selectedProject: Project;
   constructor() {}
 
 }

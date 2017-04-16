@@ -12,9 +12,9 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/of';
 @Component({
-  selector: 'project-detail',
+  selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',
-  styleUrls: ['./project-detail.component.css'],
+  styleUrls: ['./project-detail.component.scss'],
   providers: [FileService, IrbService, UserService]
 })
 export class ProjectDetailComponent implements OnInit, OnChanges {

@@ -4,60 +4,14 @@ import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-projects',
   templateUrl: './projects.component.html',
-  styleUrls: ['./projects.component.css'],
+  styleUrls: ['./projects.component.scss'],
   providers: [ProjectService]
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent {
   projects: Project[];
-  selectedProject: Project;
-  newProjectForm: FormGroup;
+ selectedProject: Project;
+  constructor() {}
 
-  constructor(
-    private fb: FormBuilder,
-    private projectService: ProjectService
-  ) {}
-
-  getProjects(): void {
-    this.projectService.getProjects()
-       .subscribe(res => {
-          this.projects = res.json();
-        });
-  }
-  onSelect(Project: Project): void {
-    this.selectedProject = Project;
-  }
-  delete(project: Project): void {
-    this.projectService.delete(project).subscribe(() => this.getProjects());
-  }
-  submit() {
-    this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
-  }
-
-  ngOnInit(): void {
-    this.getProjects();
-
-    this.newProjectForm = this.fb.group({
-      Name: new FormControl('', Validators.required),
-      Description: new FormControl('', Validators.minLength(4)),
-      Annotations: this.fb.array([this.annotationItem('annot1')]),
-      Files: this.fb.array([this.fileItem('file1'), this.fileItem('file2')])
-    });
-    console.log(this.newProjectForm.get('Files'));
-  }
-  annotationItem(val: string) {
-    return new FormGroup({
-      key: new FormControl(val, Validators.required),
-      value: new FormControl(val, Validators.required)
-    });
-  }
-
-  fileItem(val: string) {
-    return new FormGroup({
-      category: new FormControl(val, Validators.required),
-      dataType: new FormControl(val, Validators.required),
-      path: new FormControl(val, Validators.required)
-    });
-  }
 }

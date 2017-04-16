@@ -13,6 +13,9 @@ import { AppRouterModule } from './router/app-router.module';
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailComponent } from './project-detail/project-detail.component';
 import { IrbComponent } from './irb/irb.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
+import { ProjectAdditionComponent } from './project-addition/project-addition.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,10 @@ import { IrbComponent } from './irb/irb.component';
     DocumentationComponent,
     ProjectsComponent,
     ProjectDetailComponent,
-    IrbComponent
+    IrbComponent,
+    NavbarComponent,
+    ProjectsDashboardComponent,
+    ProjectAdditionComponent
   ],
   imports: [
     BrowserModule,

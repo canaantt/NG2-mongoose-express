@@ -1,59 +1,6 @@
-<h3>project List</h3>
-<div>
-    <ul>
-        <li *ngFor = "let project of projects" ><a [class.selected]="project === selectedProject"
-        (click)="onSelect(project)">{{project.Name}}</a>
-        <span class="btn glyphicon glyphicon-minus-sign" (click)="delete(project)"></span></li>
-    </ul>
-</div>
-<project-detail [project]="selectedProject"></project-detail>
-<hr>
-<h3>Add New Project</h3>
-<div class='well well-sm'>
-<form class = 'submitForm' [formGroup] = "newProjectForm" (ngSubmit) = "submit()">
-    <div class="form-group">
-        <label for="Name">Name</label>
-        <input type="text" class="form-control" id="Name" formControlName="Name">
-    </div>
-    <div class="form-group">
-        <label for="description">Description</label>
-        <input type="text" class="form-control" id="description" formControlName="Description">
-    </div>
-    <label for="files">Files</label>  
-    <fieldset formArrayName="Files">
-        <div class="form-group row" *ngFor="let fileItem of newProjectForm.get('Files').controls; let i=index"
-            [formGroup]="fileItem">
-            <div class="col-sm-3">
-                <label [attr.for]="'category'+i">Category</label>
-                <input type="text" class="form-control"
-                    [attr.id]="'category'+i" formControlName="category">
-            </div>
-            <div class="col-sm-3">
-                <label [attr.for]="'dataType'+i">Data Type</label>
-                <input type="text" class="form-control"
-                    [attr.id]="'dataType'+i" formControlName="dataType">
-            </div>
-            <div class="col-sm-3">
-                <label [attr.for]="'path'+i">Path</label>
-                <input type="text" class="form-control"
-                    [attr.id]="'text'+i" formControlName="path">
-            </div>
-            <div class="col-sm-1 py-1">
-                <button type="button" class="btn"
-                        (click)="newProjectForm.get('Files').removeAt(i)">-</button>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-sm-2 col-sm-offset-10">
-            <button type="button" class="btn btn-link"
-                    (click)="newProjectForm.get('Files').push(fileItem(''))">Add Another File</button>
-            </div>
-        </div>
-   </fieldset>
-    <div class="form-group">
-        <input type="submit" class="form-control" value="Add" [disabled]="newProjectForm?.invalid">
-    </div>
-</form>
-<p>Form value: {{ newProjectForm.value | json }}</p>
-<p>Form Status: {{ newProjectForm.status | json }}</p>
-</div>
+<nav>
+    <a class='btn btn-outline btn-xl' routerLinkActive="active" routerLink='dashboard'>Dashboard</a>
+    <a class='btn btn-outline btn-xl' routerLinkActive="active" routerLink='item/:id'>Detail</a>
+    <a class='btn btn-outline btn-xl' routerLinkActive="active" routerLink='add'>Add New Project</a>
+</nav>
+<router-outlet></router-outlet>

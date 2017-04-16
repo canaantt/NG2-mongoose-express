@@ -5,9 +5,9 @@ import { UserService } from '../service/user.service';
 // import { Observable } from 'rxjs/Observable';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css'],
+  styleUrls: ['./users.component.scss'],
   providers: [UserService]
 })
 export class UsersComponent implements OnInit {

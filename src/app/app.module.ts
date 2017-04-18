@@ -18,6 +18,7 @@ import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashbo
 import { ProjectAdditionComponent } from './project-addition/project-addition.component';
 import { UserLogInComponent } from './user-log-in/user-log-in.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

@@ -37,7 +37,7 @@ export class ProjectAdditionComponent implements OnInit {
       Name: new FormControl('', Validators.required),
       Description: new FormControl('', Validators.minLength(4)),
       Annotations: this.fb.array([this.annotationItem('annot1')]),
-      Files: this.fb.array([this.fileItem('file1'), this.fileItem('file2')])
+      Files: this.fb.array([this.fileItem('path1')])
     });
     console.log(this.newProjectForm.get('Files'));
   }
@@ -55,8 +55,8 @@ export class ProjectAdditionComponent implements OnInit {
 
   fileItem(val: string) {
     return new FormGroup({
-      category: new FormControl(val),
-      dataType: new FormControl(val),
+      category: new FormControl('clinical'),
+      dataType: new FormControl('diagnosis'),
       path: new FormControl(val)
     });
   }

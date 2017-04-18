@@ -1,6 +1,26 @@
 // import global variable
 @import '/../index';
 
-.hi {
-    color: $color-gray-light;
+.landing {
+    padding-top: 150px;
+}
+.landing-title {
+    font-weight: 400;
+    letter-spacing: 20px;
+    font-size: 25px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    text-transform: uppercase;
+    color: $color-onco-blue;
+
+}
+.landing-button {
+    background: $color-onco-blue;
+    color: #FFF;
+    border-radius: 0;
+    padding: 10px;
+    width: 80px;
+    height: 40px;
+    line-height: 20px;
+    margin: 3px;
 }

@@ -17,6 +17,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
 import { ProjectAdditionComponent } from './project-addition/project-addition.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +30,8 @@ import { ProjectAdditionComponent } from './project-addition/project-addition.co
     IrbComponent,
     NavbarComponent,
     ProjectsDashboardComponent,
-    ProjectAdditionComponent
+    ProjectAdditionComponent,
+
   ],
   imports: [
     BrowserModule,

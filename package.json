@@ -25,9 +25,11 @@
     "core-js": "^2.4.1",
     "cors": "^2.8.3",
     "express-fileupload": "^0.1.2",
-    "font-awesome": "^4.7.0",
+
+    "mongoose": "^4.9.5",
     "ng2-bootstrap": "^1.6.1",
-    "ngx": "0.0.1",
+    "ng2-material-dropdown": "^0.7.7",
+    "ngx-bootstrap": "^1.6.6",
     "rxjs": "^5.0.1",
     "ts-helpers": "^1.1.1",
     "underscore": "^1.8.3",

@@ -16,6 +16,7 @@ import { IrbComponent } from './irb/irb.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
 import { ProjectAdditionComponent } from './project-addition/project-addition.component';
+import { UserLogInComponent } from './user-log-in/user-log-in.component';
 
 
 @NgModule({
@@ -31,7 +32,7 @@ import { ProjectAdditionComponent } from './project-addition/project-addition.co
     NavbarComponent,
     ProjectsDashboardComponent,
     ProjectAdditionComponent,
-
+    UserLogInComponent
   ],
   imports: [
     BrowserModule,

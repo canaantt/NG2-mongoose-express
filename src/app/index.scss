@@ -2,7 +2,7 @@
  *  If you want to override some bootstrap variables, you have to change values here.
  *  The list of variables are listed here bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss
  */
-
+@import url(https://fonts.googleapis.com/css?family=Lato);
 $color-gray-light: #EAEAEA;
 $color-gray: #bbb;
 $color-white: #FFFFFF;
@@ -19,20 +19,20 @@ $input-border-radius: 0;
 $border-radius-base: 0;
 $navbar-inverse-bg:$color-blue;
 $navbar-inverse-link-color: $color-white;
-$navbar-inverse-brand-hover-bg: $color-blue !important;
-$navbar-inverse-link-active-bg: $color-blue !important;
-$navbar-inverse-link-hover-bg: $color-blue !important;
+$navbar-inverse-brand-hover-bg: $color-blue; 
+$navbar-inverse-link-active-bg: $color-blue; 
+$navbar-inverse-link-hover-bg: $color-blue; 
 $navbar-inverse-brand-color: $color-white;
 $navbar-inverse-brand-hover-color: $color-white;
 $navbar-height: 60px;
-
-$icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 $font-family-sans-serif: 'Lato',
 sans-serif;
 $font-family-serif: 'Lato',
 sans-serif;
 $font-size-base: 13px;
 $headings-font-weight: 300 !default;
+
+
 
 /**
  *  Do not remove the comments below. It's the markers used by wiredep to inject
@@ -55,6 +55,8 @@ body {
     font-smoothing: subpixel-antialiased;
     -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-family: $font-family-sans-serif;
+ 
 }
 
 label {
@@ -97,6 +99,9 @@ button {
 
 .tooltip {
     z-index: 99999 !important;
+}
+.navbar-inverse .navbar-nav>li>a {
+    color: $color-white;
 }
 
 

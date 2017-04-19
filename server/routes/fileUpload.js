@@ -17,7 +17,7 @@ router.post('/', function(req, res) {
   if (validFileTypes.indexOf(_.last(file.name.split("."), 1)[0]) == -1){
     return res.status(400).send('File type is not valid.');
   } else{
-    var fileUploadingDir = '/Users/jennyzhang/Desktop/canaantt/mongooseDataUploading/tmp/';
+    var fileUploadingDir = '/Users/jennyzhang/Desktop/canaantt/NG2-mongoose-express/tmp/';
     var filePath = fileUploadingDir.concat(file.name);
     
     file.mv(filePath, function(err) {

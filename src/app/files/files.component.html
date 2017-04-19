@@ -9,7 +9,7 @@
               <td>Category</td>
               <td>Data Type</td>
               <td>Path</td>
-              <td>Delete</td>
+              <td>Actions</td>
             </tr>
           </thead>
           <tbody class="form-group row" *ngFor="let fileItem of fileForm.get('Files').controls" [formGroup]="fileItem">
@@ -20,8 +20,16 @@
             <td><select formControlName="dataType">
                   <option *ngFor="let datatype of fileMeta.clinical" [ngValue]="datatype">{{datatype}}</option>
                 </select></td>
-            <td><input type="text" [attr.id]="'text'+i" formControlName="path"></td>
-            <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="fileForm.get('Files').removeAt(i)"></span></td>
+            <!--<td><input type="text" [attr.id]="'text'+i" formControlName="path"></td>-->
+            <td><form ref='uploadForm'
+              id='uploadForm'
+              action='http://localhost:3000/upload'
+              method='post'
+              encType="multipart/form-data">
+                  <input type="file" name="sampleFile"/>
+              </form></td>
+              <td><input type='submit' class="btn glyphicon glyphicon-plus-sign">
+              <span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="fileForm.get('Files').removeAt(i)"></span></td>
           </tr>
         </tbody>
         </table>

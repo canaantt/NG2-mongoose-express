@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { File } from '../file';
 import { FileService } from '../service/file.service';
-import * as _ from 'underscore';
 
 @Component({
   selector: 'app-files',
@@ -14,7 +13,8 @@ export class FilesComponent implements OnInit {
   fileMeta = {'clinical': ['diagnosis', 'drug', 'treatment'], 
               'molecular': ['mut', 'RNASeq', 'cnv'], 
               'metadata': ['metadata'] };
-  fileCategory: _.keys(fileMeta)wq1
+  fileCategories: string[];
+  fileDataTypes: string[];
   files: File[];
   file: File;
   fileForm: FormGroup;
@@ -23,8 +23,10 @@ export class FilesComponent implements OnInit {
                private fileService: FileService ) { }
 
   ngOnInit() {
+    this.fileCategories = Object.keys(this.fileMeta);
     this.fileForm = this.fb.group({Files: this.fb.array([this.fileItem('path1')])});
-  }  
+    //this.fileDataTypes = this.fileMeta[this.fileForm.get('Files').value()]
+  }
    fileItem(val: string) {
     return new FormGroup({
       category: new FormControl('clinical'),

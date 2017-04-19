@@ -9,7 +9,7 @@ import { IRB } from '../irb';
 export class IrbService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private irbsUrl = 'http://localhost:3000/irbs';  // URL to web api
+  private irbsUrl = 'http://localhost:3000/irbs';
 
   constructor(private http: Http) {}
 

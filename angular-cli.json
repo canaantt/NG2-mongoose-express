@@ -8,9 +8,9 @@
       "root": "src",
       "outDir": "dist",
       "assets": [
-  "assets",
-  "favicon.ico"
-],
+        "assets",
+        "favicon.ico"
+      ],
       "index": "index.html",
       "main": "main.ts",
       "polyfills": "polyfills.ts",
@@ -20,10 +20,9 @@
       "styles": [
         "app/index.scss"
       ],
-      "scripts": [
-      ],
+      "scripts": [],
+      "environmentSource": "environments/environment.ts",
       "environments": {
-        "source": "environments/environment.ts",
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts"
       }

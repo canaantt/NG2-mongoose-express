@@ -2,9 +2,10 @@
  *  If you want to override some bootstrap variables, you have to change values here.
  *  The list of variables are listed here bower_components/bootstrap-sass/assets/stylesheets/bootstrap/_variables.scss
  */
-
+@import url(https://fonts.googleapis.com/css?family=Lato);
 $color-gray-light: #EAEAEA;
 $color-gray: #bbb;
+$color-black: #000;
 $color-white: #FFFFFF;
 $color-blue-light: #c1e9fe;
 $color-onco-blue: #039BE5;
@@ -19,20 +20,20 @@ $input-border-radius: 0;
 $border-radius-base: 0;
 $navbar-inverse-bg:$color-blue;
 $navbar-inverse-link-color: $color-white;
-$navbar-inverse-brand-hover-bg: $color-blue !important;
-$navbar-inverse-link-active-bg: $color-blue !important;
-$navbar-inverse-link-hover-bg: $color-blue !important;
+$navbar-inverse-brand-hover-bg: $color-blue; 
+$navbar-inverse-link-active-bg: $color-blue; 
+$navbar-inverse-link-hover-bg: $color-blue; 
 $navbar-inverse-brand-color: $color-white;
 $navbar-inverse-brand-hover-color: $color-white;
 $navbar-height: 60px;
-
-$icon-font-path: "../../bower_components/bootstrap-sass/assets/fonts/bootstrap/";
 $font-family-sans-serif: 'Lato',
 sans-serif;
 $font-family-serif: 'Lato',
 sans-serif;
 $font-size-base: 13px;
 $headings-font-weight: 300 !default;
+
+
 
 /**
  *  Do not remove the comments below. It's the markers used by wiredep to inject
@@ -55,14 +56,21 @@ body {
     font-smoothing: subpixel-antialiased;
     -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-label {
-    font-weight: 300;
+    font-family: $font-family-sans-serif;
+    background: $color-white;
 }
 
 button {
     font-weight: 300;
+}
+
+label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    letter-spacing: 3px;
+    font-weight: 300;
+    
 }
 
 .container-fluid {
@@ -70,35 +78,37 @@ button {
     padding-right: 20px;
 }
 
-.btn-no-focus:focus {
-    outline: none !important;
-    background-color: #FFF !important;
-    border-color: #cccccc !important;
-}
-
-.btn-help-icon {
-    background-color: #FAFAFA;
-    color: #000;
-    cursor: pointer;
-}
-
-.btn-help-icon:hover {}
-
-.btn-no-focus:hover {}
-
-*:focus {
-    outline: none;
-}
-
-.radio label,
-.checkbox label {
-    font-weight: 300;
-}
-
 .tooltip {
     z-index: 99999 !important;
 }
 
+.btn {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 13px;
+    line-height: 1.42857;
+    border-radius: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.btn-primary {
+    color: #fff;
+    background-color: #039BE5;
+    border-color: #fff;
+}
+.btn-link {
+    color: $color-onco-blue;
+    font-size: 12px;
+}
 
 /* Small devices (tablets, 768px and up) */
 
@@ -131,88 +141,10 @@ h3 {
     font-size: 16px;
 }
 
-.h2-tool {
-    font-size: 20px;
-    margin-bottom: 0px;
-}
-
-.h3-tool {
-    margin-bottom: 20px;
-}
-
-.h3-datasource {
-    font-size: 20px;
-    padding: 0px;
-    margin: 0px;
-    margin-top: -5px;
-    display: inline-block;
-}
-
-.h3-datasource:before {
-    content: "(";
-}
-
-.h3-datasource:after {
-    content: ")";
-}
 
 .sro {
     // Screen Readers Only
     display: none !important;
-}
-
-.form-control {
-    height: inherit;
-}
-
-.form-item {
-    color: #000;
-    margin-bottom: 20px;
-}
-
-.legend {
-    text-transform: capitalize;
-    display: block !important;
-}
-
-.legend-bar-container {
-    border: 1px solid $color-gray-light;
-    border-left-width: 0px;
-    background: $color-white;
-    padding-bottom: 1px;
-}
-
-.legend-bar {
-    text-transform: capitalize;
-    border: solid 0px;
-    border-left-width: 10px;
-    padding-left: 10px;
-    display: block;
-    margin-top: 1px;
-    margin-bottom: 0px;
-    overflow: hidden;
-    line-height: 25px;
-}
-
-.legend-bar-button {
-    position: relative;
-    background-color: #FFF;
-    padding: 2px 10px;
-    line-height: 25px;
-}
-
-.legend-bar-button:focus {
-    outline: none;
-}
-
-.legend-dot {
-    border: solid 0px;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    margin-right: 10px;
-    display: inline-block;
-    margin-bottom: 1px;
 }
 
 .dropdown-menu {
@@ -224,20 +156,10 @@ h3 {
     }
 }
 
-.tool-container {
-    position: absolute;
-    top: 10px;
-    text-align: center;
-    width: 100%;
-}
+
 
 
 /* Overrides */
-
-.ngrs-range-slider {
-    margin-bottom: 0px !important;
-    margin-top: 0px !important;
-}
 
 .bs-dropdown {
     width: 100%;
@@ -263,235 +185,8 @@ h3 {
     }
 }
 
-.container-main {
-    position: absolute;
-    width: 100%;
-    height: 100vh;
-    padding: 0px;
-    padding-top: 59px;
-}
 
-.container-main-full {
-    padding-top: 0px;
-}
 
-.legend {
-    display: inline-block;
-    color: #000;
-    ul {
-        list-style-type: none;
-        margin: 20px 20px 20px 0px;
-        padding: 0px;
-        font-weight: 300;
-    }
-}
-
-.legend-section {
-    font-size: 1.5em;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
-.hvr-sweep-to-right {
-    display: inline-block;
-    vertical-align: middle;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -moz-osx-font-smoothing: grayscale;
-    position: relative;
-    -webkit-transition-property: color;
-    transition-property: color;
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s
-}
-
-.hvr-sweep-to-right:before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: $color-blue;
-    -webkit-transform: scaleX(0);
-    transform: scaleX(0);
-    -webkit-transform-origin: 0 50%;
-    transform-origin: 0 50%;
-    -webkit-transition-property: transform;
-    transition-property: transform;
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s;
-    -webkit-transition-timing-function: ease-out;
-    transition-timing-function: ease-out
-}
-
-.hvr-sweep-to-right:active,
-.hvr-sweep-to-right:focus,
-.hvr-sweep-to-right:hover {
-    color: #fff
-}
-
-.hvr-sweep-to-right:active:before,
-.hvr-sweep-to-right:focus:before,
-.hvr-sweep-to-right:hover:before {
-    -webkit-transform: scaleX(1);
-    transform: scaleX(1)
-}
-
-.hvr-sweep-to-left {
-    display: inline-block;
-    vertical-align: middle;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -moz-osx-font-smoothing: grayscale;
-    position: relative;
-    -webkit-transition-property: color;
-    transition-property: color;
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s
-}
-
-.hvr-sweep-to-left:before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: $color-blue;
-    ;
-    -webkit-transform: scaleX(0);
-    transform: scaleX(0);
-    -webkit-transform-origin: 100% 50%;
-    transform-origin: 100% 50%;
-    -webkit-transition-property: transform;
-    transition-property: transform;
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s;
-    -webkit-transition-timing-function: ease-out;
-    transition-timing-function: ease-out
-}
-
-.hvr-sweep-to-left:active,
-.hvr-sweep-to-left:focus,
-.hvr-sweep-to-left:hover {
-    color: #fff
-}
-
-.hvr-sweep-to-left:active:before,
-.hvr-sweep-to-left:focus:before,
-.hvr-sweep-to-left:hover:before {
-    -webkit-transform: scaleX(1);
-    transform: scaleX(1)
-}
-
-.hvr-sweep-to-bottom {
-    display: inline-block;
-    vertical-align: middle;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -moz-osx-font-smoothing: grayscale;
-    position: relative;
-    -webkit-transition-property: color;
-    transition-property: color;
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s
-}
-
-.hvr-sweep-to-bottom:before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: $color-blue;
-    -webkit-transform: scaleY(0);
-    transform: scaleY(0);
-    -webkit-transform-origin: 50% 0;
-    transform-origin: 50% 0;
-    -webkit-transition-property: transform;
-    transition-property: transform;
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s;
-    -webkit-transition-timing-function: ease-out;
-    transition-timing-function: ease-out
-}
-
-.hvr-sweep-to-bottom:active,
-.hvr-sweep-to-bottom:focus,
-.hvr-sweep-to-bottom:hover {
-    color: #fff
-}
-
-.hvr-sweep-to-bottom:active:before,
-.hvr-sweep-to-bottom:focus:before,
-.hvr-sweep-to-bottom:hover:before {
-    -webkit-transform: scaleY(1);
-    transform: scaleY(1)
-}
-
-.hvr-sweep-to-top {
-    display: inline-block;
-    vertical-align: middle;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -moz-osx-font-smoothing: grayscale;
-    position: relative;
-    -webkit-transition-property: color;
-    transition-property: color;
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s
-}
-
-.hvr-sweep-to-top:before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: $color-blue;
-    -webkit-transform: scaleY(0);
-    transform: scaleY(0);
-    -webkit-transform-origin: 50% 100%;
-    transform-origin: 50% 100%;
-    -webkit-transition-property: transform;
-    transition-property: transform;
-    -webkit-transition-duration: .3s;
-    transition-duration: .3s;
-    -webkit-transition-timing-function: ease-out;
-    transition-timing-function: ease-out
-}
-
-.hvr-sweep-to-top:active,
-.hvr-sweep-to-top:focus,
-.hvr-sweep-to-top:hover {
-    color: #fff
-}
-
-.hvr-sweep-to-top:active:before,
-.hvr-sweep-to-top:focus:before,
-.hvr-sweep-to-top:hover:before {
-    -webkit-transform: scaleY(1);
-    transform: scaleY(1)
-}
 
 
 /**

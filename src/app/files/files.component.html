@@ -1,55 +1,33 @@
-<p>
-  files works!
-</p>
+<h3>Files Management</h3>
 <div class='well well-lg'>
-  <table class='table table-hover'>
-    <thead>
-      <tr>
-        <td>Category</td>
-        <td>Data Type</td>
-        <td>Path</td>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-<form class='submitForm' [formGroup]="fileForm">
-  <div class="form-group">
-    <label for="file">Files</label>
-    <fieldset formArrayName="Files">
-      <div class="form-group row" *ngFor="let fileItem of fileForm.get('Files').controls; let i=index" [formGroup]="fileItem">
-        <div class="col-sm-1">
-          <label [attr.for]="'category'+i">Category</label>
-          <select formControlName="category">
-            <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
-          </select>
-        </div>
-        <div class="col-sm-1">
-          <label [attr.for]="'dataType'+i">Data Type</label>
-          <select formControlName="dataType">
-            <option *ngFor="let datatype of fileMeta.clinical" [ngValue]="datatype">{{datatype}}</option>
-          </select>
-        </div>
-        <div class="col-sm-3">
-          <label [attr.for]="'path'+i">Path</label>
-          <input type="text" [attr.id]="'text'+i" formControlName="path">
-        </div>
-        <div class="col-sm-1">
-          <span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="fileForm.get('Files').removeAt(i)"></span>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-2 col-sm-offset-10">
-          <button type="button" class="btn btn-link" (click)="fileForm.get('Files').push(fileItem(''))">Add Another File</button>
-        </div>
-      </div>
-    </fieldset>
-  </div>
-</form>
-<p>Form value: {{ fileForm.get('Files').value | json }}</p>
+  <form class='submitForm' [formGroup]="fileForm">
+    <div class="form-group">
+      <fieldset formArrayName="Files">
+        <table>
+          <thead>
+            <tr>
+              <td>Category</td>
+              <td>Data Type</td>
+              <td>Path</td>
+              <td>Delete</td>
+            </tr>
+          </thead>
+          <tbody class="form-group row" *ngFor="let fileItem of fileForm.get('Files').controls" [formGroup]="fileItem">
+          <tr>
+            <td><select formControlName="category">
+                  <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
+                </select></td>
+            <td><select formControlName="dataType">
+                  <option *ngFor="let datatype of fileMeta.clinical" [ngValue]="datatype">{{datatype}}</option>
+                </select></td>
+            <td><input type="text" [attr.id]="'text'+i" formControlName="path"></td>
+            <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="fileForm.get('Files').removeAt(i)"></span></td>
+          </tr>
+        </tbody>
+        </table>
+      </fieldset>
+      <button type="button" class="btn btn-link" (click)="fileForm.get('Files').push(fileItem(''))">Add Another File</button>
+    </div>
+  </form>
+  <p>Form value: {{ fileForm.get('Files').value | json }}</p>
 </div>

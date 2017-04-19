@@ -1,4 +1,4 @@
-import { Component, OnInit , OnChanges} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { File } from '../file';
 import { FileService } from '../service/file.service';
@@ -10,12 +10,11 @@ import * as _ from 'underscore';
   styleUrls: ['./files.component.scss'],
   providers: [FileService]
 })
-export class FilesComponent implements OnInit, OnChanges {
+export class FilesComponent implements OnInit {
   fileMeta = {'clinical': ['diagnosis', 'drug', 'treatment'], 
               'molecular': ['mut', 'RNASeq', 'cnv'], 
               'metadata': ['metadata'] };
-  fileCategories = Object.keys(this.fileMeta);
-  fileDataTypes: string[];
+  fileCategory: _.keys(fileMeta)wq1
   files: File[];
   file: File;
   fileForm: FormGroup;
@@ -33,10 +32,5 @@ export class FilesComponent implements OnInit, OnChanges {
       path: new FormControl(val)
     });
   }
-
-  ngOnChanges() {
-    this.fileDataTypes = fileMeta[this.]
-  }  
-
 }
 

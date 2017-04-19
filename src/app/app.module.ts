@@ -17,8 +17,9 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
 import { ProjectAdditionComponent } from './project-addition/project-addition.component';
 import { UserLogInComponent } from './user-log-in/user-log-in.component';
-import { FileDetailComponent } from './file-detail/file-detail.component';
 import { FilesComponent } from './files/files.component';
+import { FileDetailComponent } from './file-detail/file-detail.component';
+
 
 @NgModule({
   declarations: [

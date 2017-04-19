@@ -16,10 +16,7 @@ import { IrbService } from '../service/irb.service';
 export class ProjectAdditionComponent implements OnInit {
  newProjectForm: FormGroup;
  @Output() projects: Project[];
- fileCategories = ['clinical', 'molecular', 'metadata'];
- fileDataTypes = ['diagnosis', 'drug', 'treatment', 'mut', 'RNASeq', 'cnv'];
- file: File;
-
+ 
   constructor(private fb: FormBuilder,
               private projectService: ProjectService,
               private fileService: FileService,
@@ -35,15 +32,16 @@ export class ProjectAdditionComponent implements OnInit {
   ngOnInit(): void {
     this.newProjectForm = this.fb.group({
       Name: new FormControl('', Validators.required),
-      Description: new FormControl('', Validators.minLength(4)),
-      Annotations: this.fb.array([this.annotationItem('annot1')]),
-      Files: this.fb.array([this.fileItem('path1')])
+      Description: new FormControl('', Validators.minLength(4))
+      ,
+      // Annotations: this.fb.array([this.annotationItem('annot1')]),
+      // Files: this.fb.array([this.fileItem('path1')])
     });
     console.log(this.newProjectForm.get('Files'));
   }
   submit() {
-    this.fileService.create(this.newProjectForm.get('Files').value[0]).subscribe(() => this.file);
-    console.log(this.file);
+    // this.fileService.create(this.newProjectForm.get('Files').value[0]).subscribe(() => this.file);
+    // console.log(this.file);
     this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
   }
   annotationItem(val: string) {

@@ -20,15 +20,12 @@
             <td><select formControlName="dataType">
                   <option *ngFor="let datatype of fileMeta.clinical" [ngValue]="datatype">{{datatype}}</option>
                 </select></td>
-            <!--<td><input type="text" [attr.id]="'text'+i" formControlName="path"></td>-->
-            <td><form ref='uploadForm'
-              id='uploadForm'
-              action='http://localhost:3000/upload'
-              method='post'
-              encType="multipart/form-data">
-                  <input type="file" name="sampleFile"/>
-              </form></td>
-              <td><input type='submit' class="btn glyphicon glyphicon-plus-sign">
+            <td><input type="file"
+                  ngFileSelect
+                  [options]="options"
+                  (onUpload)="handleUpload($event)"
+                  (beforeUpload)="beforeUpload($event)"></td>
+              <td><span type='submit' class="btn glyphicon glyphicon-plus-sign"></span>
               <span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="fileForm.get('Files').removeAt(i)"></span></td>
           </tr>
         </tbody>
@@ -39,3 +36,4 @@
   </form>
   <p>Form value: {{ fileForm.get('Files').value | json }}</p>
 </div>
+

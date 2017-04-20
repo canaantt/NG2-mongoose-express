@@ -19,6 +19,7 @@ import { ProjectAdditionComponent } from './project-addition/project-addition.co
 import { UserLogInComponent } from './user-log-in/user-log-in.component';
 import { FilesComponent } from './files/files.component';
 import { FileDetailComponent } from './file-detail/file-detail.component';
+import { NgUploaderModule } from 'ngx-uploader';
 
 
 
@@ -44,7 +45,8 @@ import { FileDetailComponent } from './file-detail/file-detail.component';
     FormsModule,
     AppRouterModule,
     ReactiveFormsModule,
-    HttpModule
+    HttpModule,
+    NgUploaderModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

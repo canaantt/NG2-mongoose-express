@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { File } from '../file';
 import { FileService } from '../service/file.service';
+import { NgUploaderOptions } from 'ngx-uploader';
 
 @Component({
   selector: 'app-files',
@@ -10,22 +11,46 @@ import { FileService } from '../service/file.service';
   providers: [FileService]
 })
 export class FilesComponent implements OnInit {
-  fileMeta = {'clinical': ['diagnosis', 'drug', 'treatment'], 
-              'molecular': ['mut', 'RNASeq', 'cnv'], 
+  fileMeta = {'clinical': ['diagnosis', 'drug', 'treatment'],
+              'molecular': ['mut', 'RNASeq', 'cnv'],
               'metadata': ['metadata'] };
   fileCategories: string[];
   fileDataTypes: string[];
   files: File[];
   file: File;
   fileForm: FormGroup;
+  options: NgUploaderOptions;
+  response: any;
+  hasBaseDropZoneOver: boolean;
 
-  constructor( private fb: FormBuilder,
-               private fileService: FileService ) { }
+  constructor(@Inject(NgZone) private zone: NgZone,
+               private fb: FormBuilder,
+               private fileService: FileService) {
+      this.options = new NgUploaderOptions({
+        url: 'http://localhost:3000/upload',
+        autoUpload: true,
+        calculateSpeed: true
+      });
+    }
+
+  handleUpload(data: any) {
+    setTimeout(() => {
+      this.zone.run(() => {
+        this.response = data;
+        if (data && data.response) {
+          this.response = JSON.parse(data.response);
+        }
+      });
+    });
+  }
+
+  fileOverBase(e: boolean) {
+    this.hasBaseDropZoneOver = e;
+  }
 
   ngOnInit() {
     this.fileCategories = Object.keys(this.fileMeta);
     this.fileForm = this.fb.group({Files: this.fb.array([this.fileItem('path1')])});
-    //this.fileDataTypes = this.fileMeta[this.fileForm.get('Files').value()]
   }
    fileItem(val: string) {
     return new FormGroup({

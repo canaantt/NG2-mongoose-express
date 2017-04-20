@@ -10,7 +10,7 @@ var Permission = require("./models/permission");
 var routerFactory = require("./routes/routerFactory");
 var fileupload = require('./routes/fileUpload');
 const corsOptions = {
-  origin: 'http://localhost:4200'
+  origin: 'http://0.0.0.0:4201'
 }
 mongoose.connect("mongodb://localhost:27017/mydb");
 var db = mongoose.connection;

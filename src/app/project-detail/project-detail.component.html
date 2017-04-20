@@ -1,35 +1,46 @@
-<div *ngIf="project">
-  <hr>
-  <h3>project Detail Section</h3>
-  <div>
-    <label>Project Name: </label>
-    <input [(ngModel)]="project.Name" placeholder="Project Name"/>
+<div class="detail">
+  <div class="detail container-fluid">
+    <div class="row">
+      <div *ngIf="project">
+        <h3 class="detail-header">View + Edit {{project.Name}} </h3>
+        <div>
+          <label>Project Name: </label>
+          <input [(ngModel)]="project.Name" placeholder="Project Name" />
+        </div>
+        <div>
+          <label>Description: </label>
+          <input [(ngModel)]="project.Description" placeholder="Description" />
+        </div>
+        <div>
+          <label>Date Created: </label>
+          <input [(ngModel)]="project.DateCreated" placeholder="DateCreated" />
+        </div>
+        <div *ngIf="project.Files.length > 0">
+          <label>Results: </label>
+          <ul>
+            <li *ngFor="let result of results$ | async">
+              {{result.category}} {{result.dataType}} {{result.path}}
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="pi">
+          <label>IRB</label>
+          <p>PI: {{pi.FirstName}} {{pi.LastName}}</p>
+          <p>All Users: </p>
+     
+            <div *ngFor="let user of users$ | async">
+              <input [(ngModel)]="user.FirstName" placeholder="User First Name" />
+              <input [(ngModel)]="user.LastName" placeholder="User Last Name" />
+            
+            </div>
+       
+        </div>
+        <!--<div>
+          <label>Database ID:  </label>
+          <span> {{project._id}}</span>
+        </div>-->
+        <button class='btn btn-primary' (click)="update(project)">Update</button>
+      </div>
+    </div>
   </div>
-  <div>
-    <label>Description: </label>
-    <input [(ngModel)]="project.Description" placeholder="Description"/>
-  </div>
-   <div *ngIf="project.Files.length > 0">
-    <label>Results: </label>
-    <ul>
-      <li *ngFor = "let result of results$ | async"  >
-        {{result.category}} {{result.dataType}} {{result.path}}
-      </li>
-    </ul>
-  </div>
-  <div *ngIf="pi">
-    <label>IRB</label>
-    <p>PI: {{pi.FirstName}} {{pi.LastName}}</p>
-    <p>All Users: </p>
-    <ul>
-      <li *ngFor = "let user of users$ | async"  >
-        {{user.FirstName}} {{user.LastName}}
-      </li>
-    </ul>
-  </div>
-  <div>
-    <label>Database ID:  </label>
-    <span> {{project._id}}</span>
-  </div>
-  <button class='btn btn-primary'  (click)="update(project)">Update</button>
 </div>

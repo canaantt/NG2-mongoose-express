@@ -19,8 +19,7 @@ import { ProjectAdditionComponent } from './project-addition/project-addition.co
 import { UserLogInComponent } from './user-log-in/user-log-in.component';
 import { FilesComponent } from './files/files.component';
 import { FileDetailComponent } from './file-detail/file-detail.component';
-import { NgUploaderModule } from 'ngx-uploader';
-
+import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 
 
 @NgModule({
@@ -38,15 +37,15 @@ import { NgUploaderModule } from 'ngx-uploader';
     ProjectAdditionComponent,
     UserLogInComponent,
     FileDetailComponent,
-    FilesComponent
+    FilesComponent,
+    FileSelectDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRouterModule,
     ReactiveFormsModule,
-    HttpModule,
-    NgUploaderModule
+    HttpModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

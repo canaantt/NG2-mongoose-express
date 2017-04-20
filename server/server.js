@@ -25,12 +25,6 @@ db.once("open", function(callback){
 	app.use('/irbs', routerFactory(IRB));
 	app.use('/permissions', routerFactory(Permission));
     app.use('/upload', fileupload);
-	
-	// app.use(express.static(path.join(__dirname, 'dist')));
-	// app.get('*', (req, res) => {
-	// 	res.sendFile(path.join(__dirname, 'dist/index.html'));
-	// });
-
 
 	app.listen(3000, function(){
 		console.log('listening on 3000...');

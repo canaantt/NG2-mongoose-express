@@ -1,5 +1,5 @@
 <h3>Files Management</h3>
-<div class='well well-lg'>
+
   <form class='submitForm' [formGroup]="fileForm">
     <div class="form-group">
       <fieldset formArrayName="Files">
@@ -31,21 +31,11 @@
     </div>
   </form>
   <p>Form value: {{ fileForm.get('Files').value | json }}</p>
-</div>
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li><a>File Upload</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</nav>
-<div class="container">
+
+
+<div class='well well-lg'>
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
       <form>
         <div class="form-group">
           <label for="multiple">Multiple</label>
@@ -58,13 +48,12 @@
       </form>
     </div>
     <div class="col-md-8">
-      <h3>File Upload with Angular 2 and Node</h3>
       Queue length: {{ uploader?.queue?.length }}
 
       <table class="table">
         <thead>
           <tr>
-            <th width="50%">Name</th>
+            <th width="70%">Name</th>
             <th>Size</th>
             <th>Progress</th>
             <th>Status</th>
@@ -103,7 +92,7 @@
       <div>
         <div>
           Queue progress:
-          <div class="progress" style="">
+          <div class="progress">
             <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
           </div>
         </div>

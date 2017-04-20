@@ -4,12 +4,18 @@
             
       
         <ul>
-            <div *ngFor="let project of projects">
+            <div *ngFor="let project of projects ">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h3>{{project.Name}}</h3> 
-                         <!--<h2>{{project.IRB}}</h2> -->
-                        {{project.Description}}
+                         <p>IRB Number: {{project.irbNumber}}</p> 
+                         <p>PI: {{project.pi}}</p>
+                         <p>Users: </p>
+                         <div *ngFor='let u of project.users'>
+                             <p>{{u.FirstName}} {{u.LastName}}</p>
+                         </div>    
+                         <p>Descrition: </p>
+                         {{project.Description}}
                     </div>
                 </div>
                 </div>

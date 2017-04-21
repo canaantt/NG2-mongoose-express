@@ -1,6 +1,7 @@
 <div class="dashboard">
     <header class="dashboard container-fluid">
         <div class="row">
+
             <div class="col-xs-6 float-right">
                 <h4 class="dashboard-header">Project Dashboard</h4>
             </div>
@@ -22,9 +23,24 @@
                             <a class=" fa fa-2x fa-cog" style="margin-top:20px; margin-left: 200px; color: #039be5; text-decoration:none;" href='projects/{{project._id}}'
                                 [class.selected]="project === selectedProject" (click)="onSelect(project)"></a>
                         </div>
+                       </div>
+             </div>
+         </div>
+            <!--<div *ngFor="let project of projects ">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>{{project.Name}}</h3> 
+                         <p>IRB Number: {{project.irbNumber}}</p> 
+                         <p>PI: {{project.pi}}</p>
+                         <p>Users: </p>
+                         <div *ngFor='let u of project.users'>
+                             <p>{{u.FirstName}} {{u.LastName}}</p>
+                         </div>    
+                         <p>Descrition: </p>
+                         {{project.Description}}
                     </div>
                 </div>
-            </div>
+            </div>-->
             <!--<td><button class=" btn btn-primary" (click)="delete(project)">Delete</button></td>-->
         </div>
     </header>

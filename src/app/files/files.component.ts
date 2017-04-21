@@ -33,8 +33,7 @@ export class FilesComponent implements OnInit {
    fileItem(val: string) {
     return new FormGroup({
       category: new FormControl('clinical'),
-      dataType: new FormControl('diagnosis'),
-      path: new FormControl(val)
+      dataType: new FormControl('diagnosis')
     });
   }
 }

@@ -1,38 +1,4 @@
 <h3>Files Management</h3>
-
-  <form class='submitForm' [formGroup]="fileForm">
-    <div class="form-group">
-      <fieldset formArrayName="Files">
-        <table>
-          <thead>
-            <tr>
-              <td>Category</td>
-              <td>Data Type</td>
-              <td>Path</td>
-              <td>Actions</td>
-            </tr>
-          </thead>
-          <tbody class="form-group row" *ngFor="let fileItem of fileForm.get('Files').controls" [formGroup]="fileItem">
-            <tr>
-              <td><select formControlName="category">
-                  <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
-                </select></td>
-              <td><select formControlName="dataType">
-                  <option *ngFor="let datatype of fileMeta.clinical" [ngValue]="datatype">{{datatype}}</option>
-                </select></td>
-              <td><input type="file"></td>
-              <td><span type='submit' class="btn glyphicon glyphicon-plus-sign"></span>
-                <span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="fileForm.get('Files').removeAt(i)"></span></td>
-            </tr>
-          </tbody>
-        </table>
-      </fieldset>
-      <button type="button" class="btn btn-link" (click)="fileForm.get('Files').push(fileItem(''))">Add Another File</button>
-    </div>
-  </form>
-  <p>Form value: {{ fileForm.get('Files').value | json }}</p>
-
-
 <div class='well well-lg'>
   <div class="row">
     <div class="col-md-5">
@@ -55,14 +21,26 @@
           <tr>
             <th width="70%">Name</th>
             <th>Size</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Data Type</th>
             <th>Progress</th>
             <th>Status</th>
+            <th>What's in item</th>
             <th>Actions</th>
+
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let item of uploader.queue">
             <td><strong>{{ item.file.name }}</strong></td>
+            <td><strong>{{ item.file.type }}</strong></td>
+            <td><select [(ngModel)]="item.file.category">
+                  <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
+                </select></td>
+            <td><select [(ngModel)]="item.file.dataType">
+                  <option *ngFor="let datatype of fileMeta.clinical" [ngValue]="datatype">{{datatype}}</option>
+                </select></td>
             <td nowrap>{{ item.file.size/1024/1024 | number:'.2' }} MB</td>
             <td>
               <div class="progress" style="margin-bottom: 0;">
@@ -73,6 +51,9 @@
               <span *ngIf="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
               <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
               <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+            </td>
+            <td>
+              {{item.file | json}}
             </td>
             <td nowrap>
               <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">

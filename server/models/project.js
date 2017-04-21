@@ -6,7 +6,8 @@ var projectSchema = new Schema({
     Name: String,
     Description: String,
     Annotations: [{key: String, value: String}], 
-    Files: [{type: Schema.ObjectId, ref:File}]
+    Files: [{type: Schema.ObjectId, ref:File}],
+    Date: {type: Date, default: Date.now}
 });
 module.exports = mongoose.model("Project", projectSchema);
 

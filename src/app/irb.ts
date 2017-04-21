@@ -5,4 +5,5 @@ export class IRB {
     IRBNumber: string;
     PI: string;
     OtherUsers: string[];
+    Date: Date;
 }

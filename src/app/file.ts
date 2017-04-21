@@ -7,4 +7,5 @@ export class File {
     DataType: datatypes ;
     Path: string;
     Status: boolean;
+    Date: Date;
 }

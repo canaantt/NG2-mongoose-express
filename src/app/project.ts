@@ -7,4 +7,5 @@ export class Project {
     Annotations: [{key: string, value: string}];
     Files: string[];
     IRB: string;
+    Date: Date;
 }

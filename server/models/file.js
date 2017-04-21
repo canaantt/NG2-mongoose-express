@@ -8,6 +8,7 @@ var fileSchema = new Schema({
     Category: { type: String, enum: categories }, 
     DataType: { type: String, enum: datatypes },
     Path: String, 
-    Status: Boolean
+    Status: Boolean,
+    Date: {type: Date, default: Date.now}
 });
 module.exports = mongoose.model("File", fileSchema);

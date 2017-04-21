@@ -9,9 +9,14 @@
                 <div class="panel panel-default panel-horizontal">
                     <div class="panel-heading">
                         <h3 style="padding-bottom:10px;font-size: 20px; font-weight: 300;">{{project.Name}}</h3>
-                        <div style="padding-bottom:5px">IRB #: UW 17889</div>
-                        <div style="padding-bottom:5px">Users: Lisa McFerrin, Jenny Zhang</div>
-                        <div style="padding-bottom:5px">Date Created: April 21st, 2017</div>
+                        <div style="padding-bottom:5px">IRB #: {{project.irbNumber}}</div>
+                        <div style="padding-bottom:5px">PI: {{project.pi}}</div>
+                        <div style="padding-bottom:5px">Users: 
+                            <ul *ngFor='let u of project.users'>
+                                <li>{{u.FirstName}} {{u.LastName}}</li>
+                           </ul> 
+                        </div>
+                        <div style="padding-bottom:5px">Date Created: {{project.Date}}</div>
                     </div>
                     <div class="panel-body">{{project.Description}}</div>
                     <div class="panel-body">

@@ -1,37 +1,36 @@
 <div class="dashboard">
     <header class="dashboard container-fluid">
         <div class="row">
-
             <div class="col-xs-6 float-right">
                 <h4 class="dashboard-header">Project Dashboard</h4>
             </div>
             <div *ngFor="let project of projects">
                 <div class="panel panel-default panel-horizontal">
                     <div class="panel-heading">
-                        <h3 style="padding-bottom:10px;font-size: 20px; font-weight: 300;">{{project.Name}}</h3>
+                        <h3 style="padding-bottom:10px;font-size: 20px; font-weight: 300; margin-top:0px;">{{project.Name}}</h3>
                         <div style="padding-bottom:5px">IRB #: {{project.irbNumber}}</div>
                         <div style="padding-bottom:5px">PI: {{project.pi}}</div>
-                        <div style="padding-bottom:5px">Users: 
-                            <ul *ngFor='let u of project.users'>
-                                <li>{{u.FirstName}} {{u.LastName}}</li>
-                           </ul> 
-                        </div>
-                        <div style="padding-bottom:5px">Date Created: {{project.Date}}</div>
-                    </div>
-                    <div class="panel-body">{{project.Description}}</div>
-                    <div class="panel-body">
-                        <div style="padding-bottom:5px;">Source: UW</div>
-                        <div style="padding-bottom:5px;">Sample Size: 60</div>
-                        <div style="padding-bottom:5px;">Sample Format: Frozen</div>
-                        <div style="padding-bottom:5px;">Annotations: Frozen, OCT</div>
-                        <div>
-                            <a class=" fa fa-2x fa-cog" style="margin-top:20px; margin-left: 200px; color: #039be5; text-decoration:none;" href='projects/{{project._id}}'
-                                [class.selected]="project === selectedProject" (click)="onSelect(project)"></a>
-                        </div>
+                        <div style="padding-bottom:5px">Users:
+                        <span *ngFor="let u of project.users; let isLast=last">{{u.FirstName}} {{u.LastName}}{{isLast ? '' : ', '}}
+                        </span>
                        </div>
-             </div>
-         </div>
-            <!--<div *ngFor="let project of projects ">
+                        <div style="padding-bottom:5px">Created: {{project.Date}}</div>
+                        <div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div style="margin-top:0px;">{{project.Description}}</div>
+                        <div>
+                            <button (click)="delete(project)" class=" btn btn-primary" style=" margin-top:10px; float:right">Delete</button>
+                             </div>
+                            <div>
+                            <a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class= "btn btn-primary" style="margin-top:10px; float:right;">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<div *ngFor="let project of projects ">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <h3>{{project.Name}}</h3> 
@@ -46,7 +45,7 @@
                     </div>
                 </div>
             </div>-->
-            <!--<td><button class=" btn btn-primary" (click)="delete(project)">Delete</button></td>-->
-        </div>
+        <!--<td><button class=" btn btn-primary" (click)="delete(project)">Delete</button></td>-->
+
     </header>
 </div>

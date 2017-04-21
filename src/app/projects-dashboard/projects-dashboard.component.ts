@@ -1,6 +1,6 @@
-import { Component, OnInit, Output} from '@angular/core';
+import { Component, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
 import { IRB } from '../irb';
@@ -22,34 +22,36 @@ export class ProjectsDashboardComponent implements OnInit {
   selectedProject: Project;
 
   constructor(private projectService: ProjectService,
-              private irbService: IrbService,
-              private userService: UserService ) { }
+    private irbService: IrbService,
+    private userService: UserService) { }
   onSelect(Project: Project): void {
     this.selectedProject = Project;
     console.log(this.selectedProject.Name);
   }
   getProjects(): void {
     this.projectService.getProjects()
-       .subscribe(res => {
-          let projectArr = res.json();
-          projectArr.forEach(p => {
-            this.irbService.getIrbsByProjID(p.IRB)
-                .subscribe(res => {
-                  p.irbNumber = res[0].IRBNumber;
-                  this.userService.getUsersByID(res[0].PI)
-                      .subscribe(res2 => {
-                        console.log(res2[0]);
-                        p.pi = res2[0].FirstName + ' ' + res2[0].LastName;
-                      });
-                  this.userService.getUsersByIDs(res[0].OtherUsers)
-                      .subscribe(res => p.users = res);
-                });
-          });
-          this.projects = projectArr;
-          console.log(this.projects);
+      .subscribe(res => {
+        let projectArr = res.json();
+        projectArr.forEach(p => {
+          this.irbService.getIrbsByProjID(p.IRB)
+            .subscribe(res => {
+              if (typeof (res[0]) !== 'undefined') {
+                p.irbNumber = res[0].IRBNumber;
+                this.userService.getUsersByID(res[0].PI)
+                  .subscribe(res2 => {
+                    p.pi = res2[0].FirstName + ' ' + res2[0].LastName;
+                  });
+                this.userService.getUsersByIDs(res[0].OtherUsers)
+                  .subscribe(res => p.users = res);
+              }
+
+            });
         });
+        this.projects = projectArr;
+        console.log(this.projects);
+      });
   }
-  
+
   delete(project: Project): void {
     this.projectService.delete(project).subscribe(() => this.getProjects());
   }

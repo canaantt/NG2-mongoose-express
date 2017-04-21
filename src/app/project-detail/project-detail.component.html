@@ -3,57 +3,64 @@
     <div class="row">
       <div *ngIf="project">
         <h3 class="detail-header">Edit {{project.Name}} </h3>
-        <div class="col-xs-12">
-        <div>
-          <label style="padding-bottom:10px;">Project Name: </label>
-          <input [(ngModel)]="project.Name" placeholder="Project Name" />
+        <div class="form-group">
+          <label>Project Name</label>
+          <textarea [(ngModel)]="project.Name" placeholder="Project Name" class="form-control" rows="1"></textarea>
         </div>
-        <div>
-          <label style="padding-bottom:10px;">Description: </label>
-          <input [(ngModel)]="project.Description" placeholder="Description" />
+        <div class="form-group">
+          <label>Description</label>
+          <textarea [(ngModel)]="project.Description" placeholder="Description" class="form-control" rows="4"></textarea>
         </div>
-        <div>
-          <label style="padding-bottom:10px;">Date Created: </label>
-          <input [(ngModel)]="project.DateCreated" placeholder="DateCreated" />
+        <div class="form-group">
+          <label>Created</label>
+          <textarea [(ngModel)]="project.Date" placeholder="DateCreated" class="form-control" rows="1"></textarea>
         </div>
-        <div>
-        
+        <div class="form-group">
+          <label>IRB</label>
+          <textarea placeholder="Enter IRB Number" class="form-control" rows="1"></textarea>
+        </div>
         <div *ngIf="pi">
-          <label style="padding-bottom:10px;" >IRB: UW 17899</label>
-         
           <div>
-          <label style="padding-bottom:10px;">PI: </label>
-          <input [(ngModel)]="pi.FirstName" placeholder="PI First Name" />
-          <input [(ngModel)]="pi.LastName" placeholder="PI Last Name" />
-        </div>
-        
+            <label>PI</label>
+            <input [(ngModel)]="pi.FirstName" placeholder="PI First Name" />
+            <input [(ngModel)]="pi.LastName" placeholder="PI Last Name" />
+          </div>
           <div *ngFor="let user of users$ | async">
-              <label style="padding-bottom:10px;"> Users: </label>
+            <label style="padding-bottom:10px;"> Users: </label>
             <input [(ngModel)]="user.FirstName" placeholder="User First Name" />
             <input [(ngModel)]="user.LastName" placeholder="User Last Name" />
           </div>
-          <!--<div class="fa fa-plus"></div>-->
+        </div>
+        <div class="form-group">
+          <label>*Source</label>
+          <textarea placeholder="Enter Data Source" class="form-control" rows="1"></textarea>
+        </div>
+        <div class="form-group">
+          <label>*Sample Size</label>
+          <textarea placeholder="Sample Size" class="form-control" rows="1"></textarea>
+        </div>
+        <div class="form-group">
+          <label>*Sample Format</label>
+          <textarea placeholder="Frozen, Fresh etc.." class="form-control" rows="1"></textarea>
+        </div>
+        <div class="form-group">
+          <label>*Annotations</label>
+          <textarea placeholder="OCT, FFPE" class="form-control" rows="1"></textarea>
         </div>
         <div *ngIf="project.Files.length > 0">
           <label>Uploaded Files: </label>
           <ul>
-            <li   *ngFor="let result of results$ | async">
+            <li *ngFor="let result of results$ | async">
               {{result.category}} {{result.dataType}} {{result.path}}
             </li>
           </ul>
         </div>
-        <div class="panel-body">
-                        <div style="padding-bottom:5px;">Source: UW</div>
-                        <div style="padding-bottom:5px;">Sample Size: 60</div>
-                        <div style="padding-bottom:5px;">Sample Format: Frozen</div>
-                        <div style="padding-bottom:5px;">Annotations: Frozen, OCT</div>
-                     
-                       </div>
         <!--<div>
           <label>Database ID:  </label>
           <span> {{project._id}}</span>
         </div>-->
         <button style="margin-top:10px;" class='btn btn-primary' (click)="update(project)">Update</button>
+
       </div>
     </div>
   </div>

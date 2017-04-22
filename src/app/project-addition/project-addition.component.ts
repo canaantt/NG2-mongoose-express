@@ -16,7 +16,7 @@ import { IrbService } from '../service/irb.service';
 export class ProjectAdditionComponent implements OnInit {
  newProjectForm: FormGroup;
  @Output() projects: Project[];
- 
+
   constructor(private fb: FormBuilder,
               private projectService: ProjectService,
               private fileService: FileService,
@@ -32,30 +32,19 @@ export class ProjectAdditionComponent implements OnInit {
   ngOnInit(): void {
     this.newProjectForm = this.fb.group({
       Name: new FormControl('', Validators.required),
-      Description: new FormControl('', Validators.minLength(4))
-      ,
-      // Annotations: this.fb.array([this.annotationItem('annot1')]),
-      // Files: this.fb.array([this.fileItem('path1')])
+      Description: new FormControl('', Validators.minLength(4)),
+      IRBNumber: new FormControl('')
     });
-    console.log(this.newProjectForm.get('Files'));
   }
   submit() {
-    // this.fileService.create(this.newProjectForm.get('Files').value[0]).subscribe(() => this.file);
-    // console.log(this.file);
-    this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
-  }
-  annotationItem(val: string) {
-    return new FormGroup({
-      key: new FormControl(val, Validators.required),
-      value: new FormControl(val, Validators.required)
-    });
+    this.irbService.getIrbObjIDByIRBNumber(this.newProjectForm.get('IRBNumber').value)
+                   .subscribe(res => {
+                     let project = new Project();
+                     project.Name = this.newProjectForm.get('Name').value;
+                     project.Description = this.newProjectForm.get('Description').value;
+                     project.IRB = res[0]._id;
+                     this.projectService.create(project).subscribe(() => this.getProjects());
+                    });
   }
 
-  fileItem(val: string) {
-    return new FormGroup({
-      category: new FormControl('clinical'),
-      dataType: new FormControl('diagnosis'),
-      path: new FormControl(val)
-    });
-  }
 }

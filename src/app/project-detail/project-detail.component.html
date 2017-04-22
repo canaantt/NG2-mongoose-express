@@ -13,24 +13,23 @@
           <input [(ngModel)]="project.Description" placeholder="Description" />
         </div>
         <div>
-          <label style="padding-bottom:10px;">Date Created: </label>
-          <input [(ngModel)]="project.DateCreated" placeholder="DateCreated" />
+          <label style="padding-bottom:10px;">Date Created:</label>{{project.Date}}
         </div>
         <div>
         
         <div *ngIf="pi">
-          <label style="padding-bottom:10px;" >IRB: UW 17899</label>
+          <label style="padding-bottom:10px;" ><strong>IRB: {{irb$.IRBNumber}}</strong></label>
          
           <div>
-          <label style="padding-bottom:10px;">PI: </label>
-          <input [(ngModel)]="pi.FirstName" placeholder="PI First Name" />
-          <input [(ngModel)]="pi.LastName" placeholder="PI Last Name" />
+          <label style="padding-bottom:10px;"><strong>PI: </strong></label> {{pi.FirstName}} {{pi.LastName}}
         </div>
         
-          <div *ngFor="let user of users$ | async">
-              <label style="padding-bottom:10px;"> Users: </label>
-            <input [(ngModel)]="user.FirstName" placeholder="User First Name" />
-            <input [(ngModel)]="user.LastName" placeholder="User Last Name" />
+          <div>
+              <label style="padding-bottom:10px;"><strong> Users: </strong></label>
+              <div *ngFor="let user of users$ | async">
+              <p>{{user.FirstName}} {{user.LastName}}</p></div>
+            <!--<input [(ngModel)]="user.FirstName" placeholder="User First Name" />
+            <input [(ngModel)]="user.LastName" placeholder="User Last Name" />-->
           </div>
           <!--<div class="fa fa-plus"></div>-->
         </div>

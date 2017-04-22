@@ -1,5 +1,3 @@
-import { File } from './file';
-
 export class Project {
     _id: string;
     Name: string;

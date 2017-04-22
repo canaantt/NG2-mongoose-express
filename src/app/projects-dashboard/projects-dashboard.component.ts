@@ -24,6 +24,7 @@ export class ProjectsDashboardComponent implements OnInit {
   constructor(private projectService: ProjectService,
     private irbService: IrbService,
     private userService: UserService) { }
+
   onSelect(Project: Project): void {
     this.selectedProject = Project;
     console.log(this.selectedProject.Name);

@@ -18,9 +18,12 @@ export class IrbService {
                .map(res => res.json());
   }
   getIrbsByProjID(id: string): Observable<Response> {
-    console.log(id);
     return this.http.get(this.irbsUrl)
                .map(res => res.json().filter(value => value._id === id));
+  }
+  getIrbObjIDByIRBNumber(id: string): Observable<Response> {
+    return this.http.get(this.irbsUrl)
+               .map(res => res.json().filter(value => value.IRBNumber === id));
   }
   delete(irb: IRB): Observable<Response> {
     const url = `${this.irbsUrl}/` + irb._id;

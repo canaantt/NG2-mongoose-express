@@ -42,6 +42,7 @@ export class FileService {
 
   upload(file: File): Observable<Response> {
     const url = `${this.fileUploadingUrl}/` + file._id;
+    console.log(file._id);
     return this.http
       .post(url, JSON.stringify(file), {headers: this.headers});
   }

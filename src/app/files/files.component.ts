@@ -11,7 +11,7 @@ import { FileUploader } from 'ng2-file-upload';
   providers: [FileService]
 })
 export class FilesComponent implements OnInit {
-  public uploader:FileUploader = new FileUploader({url:'http://localhost:3000/upload'});
+  public uploader: FileUploader = new FileUploader({url: 'http://localhost:3000/upload'});
   fileMeta = {'clinical': ['diagnosis', 'drug', 'treatment'],
               'molecular': ['mut', 'RNASeq', 'cnv'],
               'metadata': ['metadata'] };
@@ -20,21 +20,14 @@ export class FilesComponent implements OnInit {
   files: File[];
   file: File;
   fileForm: FormGroup;
-  
-  constructor( private fb: FormBuilder,
-               private fileService: FileService) { }
+  fileCategory: string;
+  fileDataType: string;
 
-  
+  constructor(private fileService: FileService) { }
 
   ngOnInit() {
     this.fileCategories = Object.keys(this.fileMeta);
-    this.fileForm = this.fb.group({Files: this.fb.array([this.fileItem('path1')])});
   }
-   fileItem(val: string) {
-    return new FormGroup({
-      category: new FormControl('clinical'),
-      dataType: new FormControl('diagnosis')
-    });
-  }
+
 }
 

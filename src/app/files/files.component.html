@@ -37,9 +37,9 @@
             <td><strong>{{ item.file.type }}</strong></td>
             <td><select [(ngModel)]="item.file.category">
                   <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
-                </select></td>
+                </select></td>    
             <td><select [(ngModel)]="item.file.dataType">
-                  <option *ngFor="let datatype of fileMeta.clinical" [ngValue]="datatype">{{datatype}}</option>
+                  <option *ngFor="let datatype of fileMeta[item.file.category]" [ngValue]="datatype">{{datatype}}</option>
                 </select></td>
             <td nowrap>{{ item.file.size/1024/1024 | number:'.2' }} MB</td>
             <td>

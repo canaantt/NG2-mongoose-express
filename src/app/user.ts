@@ -4,5 +4,6 @@ export class User {
   LastName: string;
   Photo: string;
   Email: string;
+  Date: Date;
 }
 

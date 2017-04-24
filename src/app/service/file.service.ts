@@ -7,8 +7,8 @@ import { File } from '../file';
 export class FileService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private filesUrl = 'http://localhost:3000/files';  // URL to web api
-
+  private filesUrl = 'http://localhost:3000/files'; 
+  private fileUploadingUrl = 'http://localhost:3000/upload';
   constructor(private http: Http) {}
 
   getFiles(): Observable<Response> {
@@ -39,6 +39,13 @@ export class FileService {
     return this.http
       .put(url, JSON.stringify(file), {headers: this.headers});
   }
+
+  // upload(file: File): Observable<Response> {
+  //   const url = `${this.fileUploadingUrl}/` + file._id;
+  //   console.log(file._id);
+  //   return this.http
+  //     .post(url, JSON.stringify(file), {headers: this.headers});
+  // }
 
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only

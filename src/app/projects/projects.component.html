@@ -1,13 +1,11 @@
 <div class="projects">
     <header class="projects container-fluid">
         <div class="row">
-            <nav>
-                <a class='btn btn-outline btn-xl' routerLinkActive="active" routerLink='dashboard'>Dashboard</a>
-                <!--<a class='btn btn-outline btn-xl' routerLinkActive="active" routerLink='item/:id'>Detail</a>-->
-                <a class='btn btn-outline btn-xl' routerLinkActive="active" routerLink='add'>Add New Project</a>
-            </nav>
+            <div routerLinkActive="active" routerLink='dashboard'></div>
+            <div class="col-xs-12 float-left">
+            <div class='btn btn-primary' style="float:right;" routerLinkActive="active" routerLink='add'>Add New Project</div>
+          </div>
         </div>
     </header>
 </div>
 <router-outlet></router-outlet>
-

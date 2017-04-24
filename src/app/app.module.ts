@@ -19,7 +19,7 @@ import { ProjectAdditionComponent } from './project-addition/project-addition.co
 import { UserLogInComponent } from './user-log-in/user-log-in.component';
 import { FilesComponent } from './files/files.component';
 import { FileDetailComponent } from './file-detail/file-detail.component';
-
+import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 
 
 @NgModule({
@@ -37,7 +37,8 @@ import { FileDetailComponent } from './file-detail/file-detail.component';
     ProjectAdditionComponent,
     UserLogInComponent,
     FileDetailComponent,
-    FilesComponent
+    FilesComponent,
+    FileSelectDirective
   ],
   imports: [
     BrowserModule,

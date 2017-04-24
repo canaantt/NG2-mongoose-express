@@ -40,8 +40,7 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
       this.projectService.getProjectByID(this.route.snapshot.params['id'])
                          .subscribe(res0 => {
                            this.project = res0;
-                          //  console.log(this.project);
-                            this.results$ = this.fileService.getFilesByIDs(this.project.Files);
+                           this.results$ = this.fileService.getFilesByIDs(this.project.Files);
                             this.irbService.getIrbsByProjID(this.project.IRB).subscribe(res => {
                               this.irb$ = res[0];
                               this.userService.getUsersByID(this.irb$.PI)

@@ -1,4 +1,4 @@
-import { Component,  OnInit } from '@angular/core';
+import { Component,  OnInit, OnChanges} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { File } from '../file';
 import { FileService } from '../service/file.service';
@@ -17,17 +17,13 @@ export class FilesComponent implements OnInit {
               'metadata': ['metadata'] };
   fileCategories: string[];
   fileDataTypes: string[];
-  files: File[];
-  file: File;
-  fileForm: FormGroup;
-  fileCategory: string;
-  fileDataType: string;
+  files: any[];
 
   constructor(private fileService: FileService) { }
 
   ngOnInit() {
     this.fileCategories = Object.keys(this.fileMeta);
+    console.log(this.uploader.queue);
   }
-
 }
 

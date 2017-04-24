@@ -59,15 +59,14 @@ var storage = GridFsStorage({
         },
         /** With gridfs we can store aditional meta-data along with the file */
         metadata: function(req, file, cb) {
-            console.log("what is the req");
-            console.dir(req);
             cb(null, { originalname: file.originalname});
         },
         root: 'uploadedFiles' //root name for collection to store files into
     });
 
 var upload = multer({
-	storage: storage
+	storage: storage, 
+    preservePath: true
 }).single('file');
 
 

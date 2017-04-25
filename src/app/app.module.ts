@@ -20,6 +20,7 @@ import { UserLogInComponent } from './user-log-in/user-log-in.component';
 import { FilesComponent } from './files/files.component';
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { PermissionsComponent } from './permissions/permissions.component';
+import { AnnotationsComponent } from './annotations/annotations.component';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { PermissionsComponent } from './permissions/permissions.component';
     UserLogInComponent,
     FilesComponent,
     FileSelectDirective,
-    PermissionsComponent
+    PermissionsComponent,
+    AnnotationsComponent
   ],
   imports: [
     BrowserModule,

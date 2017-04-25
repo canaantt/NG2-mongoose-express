@@ -1,0 +1,25 @@
+<h3>Permission List</h3>
+<div class='well well-lg'>
+  <div class='row'>
+    <div class="col-md-8">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let permission of permissions" >
+            <td><strong>{{ permission.Email }}</strong></td>
+            <td><select [(ngModel)]="permission.Role">
+                  <option *ngFor="let role of roles" [ngValue]="role">{{role}}</option>
+                </select></td>    
+            <td nowrap><button (click)="delete(permission)" class=" btn btn-primary" style=" margin-top:10px; float:right">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

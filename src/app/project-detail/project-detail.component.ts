@@ -43,9 +43,11 @@ export class ProjectDetailComponent implements OnInit, OnChanges {
                            this.results$ = this.fileService.getFilesByIDs(this.project.Files);
                             this.irbService.getIrbsByProjID(this.project.IRB).subscribe(res => {
                               this.irb$ = res[0];
-                              this.userService.getUsersByID(this.irb$.PI)
-                              .subscribe(res2 => this.pi = res2[0]);
-                              this.users$ = this.userService.getUsersByIDs(this.irb$.OtherUsers);
+                              if(typeof(this.irb$) !== 'undefined'){
+                                 this.userService.getUsersByID(this.irb$.PI)
+                                                 .subscribe(res2 => this.pi = res2[0]);
+                                 this.users$ = this.userService.getUsersByIDs(this.irb$.OtherUsers);
+                              }
                             });
                           });
     } else {

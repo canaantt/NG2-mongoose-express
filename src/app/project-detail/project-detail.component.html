@@ -14,29 +14,15 @@
         <div class="form-group">
           <label>Created: {{project.Date}}</label>
         </div>
-        
-        <div *ngIf="pi">
+        <div class="form-group">
+          <label>ID: {{project._id}}</label>
+        </div>
+        <div *ngIf="irb$ && pi">
           <label style="padding-bottom:10px;"><strong>IRB: {{irb$.IRBNumber}}</strong></label>
           <p><label style="padding-bottom:10px;"><strong>PI: </strong></label> {{pi.FirstName}} {{pi.LastName}}</p>
           <label style="padding-bottom:10px;"><strong>Users:</strong></label>
           <div *ngFor="let user of users$ | async">
                <p>{{user.FirstName}} {{user.LastName}}</p>
-          </div>
-          <div class="form-group">
-            <label>*Source</label>
-            <textarea placeholder="Enter Data Source" class="form-control" rows="1"></textarea>
-          </div>
-          <div class="form-group">
-            <label>*Sample Size</label>
-            <textarea placeholder="Sample Size" class="form-control" rows="1"></textarea>
-          </div>
-          <div class="form-group">
-            <label>*Sample Format</label>
-            <textarea placeholder="Frozen, Fresh etc.." class="form-control" rows="1"></textarea>
-          </div>
-          <div class="form-group">
-            <label>*Annotations</label>
-            <textarea placeholder="OCT, FFPE" class="form-control" rows="1"></textarea>
           </div>
           <div *ngIf="project.Files.length > 0">
             <label>Uploaded Files: </label>

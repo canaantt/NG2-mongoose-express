@@ -18,8 +18,8 @@ import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashbo
 import { ProjectAdditionComponent } from './project-addition/project-addition.component';
 import { UserLogInComponent } from './user-log-in/user-log-in.component';
 import { FilesComponent } from './files/files.component';
-import { FileDetailComponent } from './file-detail/file-detail.component';
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
+import { PermissionsComponent } from './permissions/permissions.component';
 
 
 @NgModule({
@@ -36,9 +36,9 @@ import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
     ProjectsDashboardComponent,
     ProjectAdditionComponent,
     UserLogInComponent,
-    FileDetailComponent,
     FilesComponent,
-    FileSelectDirective
+    FileSelectDirective,
+    PermissionsComponent
   ],
   imports: [
     BrowserModule,

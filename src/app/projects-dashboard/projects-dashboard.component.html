@@ -8,8 +8,6 @@
                 <div class="panel panel-default panel-horizontal">
                     <div class="panel-heading">
                         <h3 style="padding-bottom:10px;font-size: 20px; font-weight: 300; margin-top:0px;">{{project.Name}}</h3>
-                        <div style="padding-bottom:5px">IRB #: {{project.irbNumber}}</div>
-                        <div style="padding-bottom:5px">PI: {{project.pi}}</div>
                         <div *ngIf='project?.irbNumber' style="padding-bottom:5px">IRB #: {{project.irbNumber}}</div>
                         <div *ngIf='project?.pi' style="padding-bottom:5px">PI: {{project.pi}}</div>
                         <div *ngIf='project?.users' style="padding-bottom:5px">Users:

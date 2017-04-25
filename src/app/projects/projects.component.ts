@@ -11,6 +11,7 @@ import { ProjectService } from '../service/project.service';
 })
 export class ProjectsComponent {
   projects: Project[];
+
   constructor() {}
 
 }

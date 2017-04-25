@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Project } from '../project';
@@ -20,6 +20,7 @@ import 'rxjs/add/observable/of';
 export class ProjectsDashboardComponent implements OnInit {
   projects: Project[];
   selectedProject: Project;
+  @Input() message; 
 
   constructor(private projectService: ProjectService,
     private irbService: IrbService,

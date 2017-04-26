@@ -44,7 +44,8 @@ export class ProjectDetailComponent implements OnInit {
       this.id = this.route.snapshot.params['id'];
      }
   ngOnInit(): void {
-    this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('New Email'), this.permissionItem('New Email')])});
+    this.getPermissions();
+    this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('New Email')])});
     if (typeof(this.id) !== 'undefined') {
       this.projectService.getProjectByID(this.route.snapshot.params['id'])
                          .subscribe(res0 => {
@@ -78,14 +79,26 @@ export class ProjectDetailComponent implements OnInit {
     console.log(this.id);
     this.permissionService.getPermissionsByProjectID(this.id)
                           .subscribe(res => {
-                            this.permissions = res.json();
-                            console.log(res.json());});
+                              this.permissions = res[0];
+                              console.log(this.permissions);
+                            });
   }
   addPermission(formValue: any) {
     let p =  new Permission();
-    this.userService.userValidationByEmail(formValue.get('Email'))
+    this.userService.userValidationByEmail(formValue.Email)
         .subscribe(res => {
-          
+          console.log(formValue.Email);
+          console.log(res[0]);
+          p.User = res[0]._id;
+          p.Project = this.id;
+          p.Role = formValue.Role;
+          this.permissionService.create(p).subscribe(() => this.getPermissions());
         });
   }
+  submitPermissions(): void {
+    this.newPermissionForm.get('Permissions').value.forEach(element => {
+      this.addPermission(element);
+    });
+  }
+  
 }

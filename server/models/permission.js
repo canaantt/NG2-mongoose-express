@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var roles = ['full-permission', 'read-only'];
+var roles = ['full-access', 'read-only'];
 
 var permissionSchema = new Schema({
     User: {type: Schema.ObjectId, ref: 'User', required: true},

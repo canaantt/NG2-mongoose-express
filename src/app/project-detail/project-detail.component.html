@@ -40,7 +40,23 @@
         <div #permissions class='well well-lg'>
           <div class='row'>
             <div class="col-md-8">
-              <form class='submitForm' [formGroup]="newPermissionForm">
+              <!--<table>
+                <thead>
+                  <tr>
+                    <td>Email</td>
+                    <td>Role</td>
+                    <td>Action</td>
+                  </tr>
+                </thead>
+                <tbody class="form-group row" *ngFor="let permission of permissions">
+                  <tr>
+                    <td><input type="text">{{permission.User}}</td>
+                    <td><input type="text">{{permission.Role}}</td>
+                    <td nowrap><span type="button" class="btn glyphicon glyphicon-minus-sign"></span></td>
+                  </tr>
+                </tbody>
+              </table>-->
+              <form class='submitForm' [formGroup]="newPermissionForm" (ngSubmit)="submit()">
                 <div class="form-group">
                   <fieldset formArrayName="Permissions">
                     <table>
@@ -51,18 +67,21 @@
                           <td>Action</td>
                         </tr>
                       </thead>
-                      <tbody class="form-group row" *ngFor="let permissionItem of newPermissionForm.get('Permissions').controls" >
+                      <tbody class="form-group row" *ngFor="let permissionItem of newPermissionForm.get('Permissions').controls" [formGroup]='permissionItem'>
                         <tr>
-                          <td><option type="text" formControlName="Email" [ngValue]="Email"></option></td>
-                          <!--<td><select formControlName="Role">
-                                <option *ngFor="let role of roles" [ngValue]="Role">{{Role}}</option>
+                          <td><input type="text" formControlName="Email"></td>
+                          <td><select formControlName="Role">
+                                <option *ngFor="let role of roles" [ngValue]="role">{{role}}</option>
                               </select></td>
-                          <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="newPermissionForm.get('Permissions').removeAt(i)"></span></td>-->
+                          <td nowrap><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="newPermissionForm.get('Permissions').removeAt(i)"></span>
+                            <span type="button" class="btn glyphicon glyphicon-plus-sign" (click)="newPermissionForm.get('Permissions').push(permissionItem(''))"></span></td>
                         </tr>
                       </tbody>
                     </table>
                   </fieldset>
                   <button type="button" class="btn btn-link" (click)="newPermissionForm.get('Permissions').push(permissionItem(''))">Add Another Permit</button>
+                  <input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">
+
                 </div>
               </form>
               <p>Form value: {{ newPermissionForm.get('Permissions').value | json }}</p>
@@ -71,9 +90,6 @@
         </div>
       </div>
       <app-files></app-files>
-
-
-      <app-annotations></app-annotations>
     </div>
   </div>
 </div>

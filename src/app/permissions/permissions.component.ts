@@ -22,7 +22,7 @@ export class PermissionsComponent implements OnInit {
                private fb: FormBuilder ) { }
 
   ngOnInit() {
-    //this.getPermissions();
+    this.getPermissions();
     this.newPermissionForm = this.fb.group({
       Email: new FormControl('New Email', Validators.required),
       Role: new FormControl('', Validators.minLength(4))

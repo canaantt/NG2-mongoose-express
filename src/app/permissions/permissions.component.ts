@@ -15,14 +15,14 @@ import { Project } from '../project';
 export class PermissionsComponent implements OnInit {
   permissions: Permission[];
   newPermissionForm: FormGroup; 
-  @Input() project: Project; 
+  @Input() project: any;
 
   constructor( private userService: UserService,
                private permissionService: PermissionService,
                private fb: FormBuilder ) { }
 
   ngOnInit() {
-    this.getPermissions();
+    //this.getPermissions();
     this.newPermissionForm = this.fb.group({
       Email: new FormControl('New Email', Validators.required),
       Role: new FormControl('', Validators.minLength(4))
@@ -34,8 +34,12 @@ export class PermissionsComponent implements OnInit {
     this.permissionService.getPermissionsByProjectID(this.project._id)
                           .subscribe(res => this.permissions = res.json());
   }
-  addPermission() {
-
+  addPermission(formValue: any) {
+    let p =  new Permission();
+    this.userService.userValidationByEmail(formValue.get('Email'))
+        .subscribe(res => {
+          
+        });
   }
 
 }

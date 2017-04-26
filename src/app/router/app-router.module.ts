@@ -20,9 +20,6 @@ const routes: Routes = [
     path: 'landing',
     component: LandingComponent
   }, {
-    path: 'navbar',
-    component: NavbarComponent
-  }, {
     path: 'users',
     component: UsersComponent
   }, {

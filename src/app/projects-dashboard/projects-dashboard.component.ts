@@ -20,7 +20,6 @@ import 'rxjs/add/observable/of';
 export class ProjectsDashboardComponent implements OnInit {
   projects: Project[];
   selectedProject: Project;
-  @Input() message; 
 
   constructor(private projectService: ProjectService,
     private irbService: IrbService,

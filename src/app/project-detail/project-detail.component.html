@@ -2,42 +2,78 @@
   <div class="detail container-fluid">
     <div class="row">
       <div *ngIf="project">
-        <h3 class="detail-header">Edit {{project.Name}} </h3>
-        <div class="form-group">
-          <label>Project Name</label>
-          <input [(ngModel)]="project.Name" placeholder="Project Name" class="form-control" rows="1">
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea [(ngModel)]="project.Description" placeholder="Description" class="form-control" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Created: {{project.Date}}</label>
-        </div>
-        <div class="form-group">
-          <label>ID: {{project._id}}</label>
-        </div>
-        <div *ngIf="irb$ && pi">
-          <label style="padding-bottom:10px;"><strong>IRB: {{irb$.IRBNumber}}</strong></label>
-          <p><label style="padding-bottom:10px;"><strong>PI: </strong></label> {{pi.FirstName}} {{pi.LastName}}</p>
-          <label style="padding-bottom:10px;"><strong>Users:</strong></label>
-          <div *ngFor="let user of users$ | async">
-               <p>{{user.FirstName}} {{user.LastName}}</p>
+        <div #projectDetail>
+          <h3 class="detail-header">Edit {{project.Name}} </h3>
+          <div class="form-group">
+            <label>Project Name</label>
+            <input [(ngModel)]="project.Name" placeholder="Project Name" class="form-control" rows="1">
           </div>
-          <div *ngIf="project.Files.length > 0">
-            <label>Uploaded Files: </label>
-            <ul>
-              <li *ngFor="let result of results$ | async">
-                {{result.category}} {{result.dataType}} {{result.path}}
-              </li>
-            </ul>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea [(ngModel)]="project.Description" placeholder="Description" class="form-control" rows="4"></textarea>
           </div>
-          <button style="margin-top:10px;" class='btn btn-primary' (click)="update(project)">Update</button>
+          <div class="form-group">
+            <label>Created: {{project.Date}}</label>
+          </div>
+          <div class="form-group">
+            <label>ID: {{project._id}}</label>
+          </div>
+          <div *ngIf="irb$ && pi">
+            <label style="padding-bottom:10px;"><strong>IRB: {{irb$.IRBNumber}}</strong></label>
+            <p><label style="padding-bottom:10px;"><strong>PI: </strong></label> {{pi.FirstName}} {{pi.LastName}}</p>
+            <label style="padding-bottom:10px;"><strong>Users:</strong></label>
+            <div *ngFor="let user of users$ | async">
+              <p>{{user.FirstName}} {{user.LastName}}</p>
+            </div>
+            <div *ngIf="project.Files.length > 0">
+              <label>Uploaded Files: </label>
+              <ul>
+                <li *ngFor="let result of results$ | async">
+                  {{result.category}} {{result.dataType}} {{result.path}}
+                </li>
+              </ul>
+            </div>
+            <button style="margin-top:10px;" class='btn btn-primary' (click)="update(project)">Update</button>
+          </div>
         </div>
-        <app-files></app-files>
-        <app-permissions></app-permissions>
-        <app-annotations></app-annotations>
+        <h3>Permission List</h3>
+        <div #permissions class='well well-lg'>
+          <div class='row'>
+            <div class="col-md-8">
+              <form class='submitForm' [formGroup]="newPermissionForm">
+                <div class="form-group">
+                  <fieldset formArrayName="Permissions">
+                    <table>
+                      <thead>
+                        <tr>
+                          <td>Email</td>
+                          <td>Role</td>
+                          <td>Action</td>
+                        </tr>
+                      </thead>
+                      <tbody class="form-group row" *ngFor="let permissionItem of newPermissionForm.get('Permissions').controls" >
+                        <tr>
+                          <td><option type="text" formControlName="Email" [ngValue]="Email"></option></td>
+                          <!--<td><select formControlName="Role">
+                                <option *ngFor="let role of roles" [ngValue]="Role">{{Role}}</option>
+                              </select></td>
+                          <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="newPermissionForm.get('Permissions').removeAt(i)"></span></td>-->
+                        </tr>
+                      </tbody>
+                    </table>
+                  </fieldset>
+                  <button type="button" class="btn btn-link" (click)="newPermissionForm.get('Permissions').push(permissionItem(''))">Add Another Permit</button>
+                </div>
+              </form>
+              <p>Form value: {{ newPermissionForm.get('Permissions').value | json }}</p>
+            </div>
+          </div>
+        </div>
       </div>
+      <app-files></app-files>
+
+
+      <app-annotations></app-annotations>
     </div>
   </div>
 </div>

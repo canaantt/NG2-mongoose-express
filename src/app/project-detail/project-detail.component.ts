@@ -24,7 +24,6 @@ enum roles {'full-access', 'read-only'};
 })
 export class UserFullNamePipe implements PipeTransform {
   constructor(private userService: UserService){}
-  
 
   transform(id: string): Observable<string> {
       return this.userService.getUsersByID(id)

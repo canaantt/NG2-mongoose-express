@@ -60,9 +60,9 @@ export class ProjectDetailComponent implements OnInit {
       this.id = this.route.snapshot.params['id'];
      }
   ngOnInit(): void {
-    this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem('Key', 'Value')])});
+    this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem('', '')])});
     this.getPermissions();
-    this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('New Email')])});
+    this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('')])});
     if (typeof(this.id) !== 'undefined') {
       this.projectService.getProjectByID(this.route.snapshot.params['id'])
                          .subscribe(res0 => {
@@ -90,7 +90,7 @@ export class ProjectDetailComponent implements OnInit {
   permissionItem(val: string) {
     return new FormGroup({
       Email: new FormControl(val, Validators.required),
-      Role: new FormControl('', Validators.required)
+      Role: new FormControl('read-only', Validators.required)
     });
   }
   update(project: Project): void {
@@ -126,6 +126,11 @@ export class ProjectDetailComponent implements OnInit {
     this.permissionService.delete(permission).subscribe(() => this.getPermissions());
   }
   submitAnnotations(): void {
-    console.log('within submitAnnotation function');
+    console.log(this.newAnnotationForm.get('Annotations').value[0]);
+    this.newAnnotationForm.get('Annotations').value.forEach(element => {
+      console.log(element);
+      this.project.Annotations.push(element);
+      this.projectService.update(this.project);
+    });
   }
 }

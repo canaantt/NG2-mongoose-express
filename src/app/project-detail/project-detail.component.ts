@@ -23,9 +23,7 @@ enum roles {'full-access', 'read-only'};
   name: 'userFullName'
 })
 export class UserFullNamePipe implements PipeTransform {
-  constructor(private userService: UserService){}
-  
-
+  constructor(private userService: UserService) {}
   transform(id: string): Observable<string> {
       return this.userService.getUsersByID(id)
       .map(res => res[0].FirstName + ' ' + res[0].LastName)
@@ -47,7 +45,8 @@ export class ProjectDetailComponent implements OnInit {
   users$: Observable<any>;
   results$: Observable<any>;
   permissions$: Observable<any>;
-  newPermissionForm: FormGroup; 
+  newAnnotationForm: FormGroup;
+  newPermissionForm: FormGroup;
   roles = ['full-access', 'read-only'];
 
   constructor(
@@ -61,6 +60,7 @@ export class ProjectDetailComponent implements OnInit {
       this.id = this.route.snapshot.params['id'];
      }
   ngOnInit(): void {
+    this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem('Key', 'Value')])});
     this.getPermissions();
     this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('New Email')])});
     if (typeof(this.id) !== 'undefined') {
@@ -81,6 +81,12 @@ export class ProjectDetailComponent implements OnInit {
       console.log(typeof(this.id));
     }
   }
+  annotationItem(key: string, value: string) {
+    return new FormGroup({
+      Key: new FormControl(key, Validators.required),
+      Value: new FormControl(value, Validators.required)
+    });
+  }
   permissionItem(val: string) {
     return new FormGroup({
       Email: new FormControl(val, Validators.required),
@@ -97,13 +103,13 @@ export class ProjectDetailComponent implements OnInit {
     let p =  new Permission();
     this.userService.userValidationByEmail(formValue.Email)
         .subscribe(res => {
-          if(typeof(res) !== 'undefined'){
+          if (typeof(res) !== 'undefined') {
             p.User = res[0]._id;
             p.Project = this.id;
             p.Role = formValue.Role;
             this.permissionService.create(p).subscribe(() => this.getPermissions());
-          }else{
-            console.log("Email is not in the user list. Please register first.");
+          } else {
+            console.log('Email is not in the user list. Please register first.');
           }
         });
   }
@@ -114,9 +120,12 @@ export class ProjectDetailComponent implements OnInit {
     });
   }
   updatePermission(permission: Permission, permissionRole: roles){
-    this.permissionService.update(permission, permissionRole).subscribe(()=>this.getPermissions());
+    this.permissionService.update(permission, permissionRole).subscribe(() => this.getPermissions());
   }
   deletePermission(permission: Permission){
-    this.permissionService.delete(permission).subscribe(()=>this.getPermissions());
+    this.permissionService.delete(permission).subscribe(() => this.getPermissions());
+  }
+  submitAnnotations(): void {
+    console.log('within submitAnnotation function');
   }
 }

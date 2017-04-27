@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Project } from '../project';
@@ -49,7 +49,6 @@ export class ProjectsDashboardComponent implements OnInit {
             });
         });
         this.projects = projectArr;
-        console.log(this.projects);
       });
   }
 

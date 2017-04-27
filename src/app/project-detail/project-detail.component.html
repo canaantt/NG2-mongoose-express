@@ -2,53 +2,98 @@
   <div class="detail container-fluid">
     <div class="row">
       <div *ngIf="project">
-        <h3 class="detail-header">Edit {{project.Name}} </h3>
-        <div class="form-group">
-          <label>Project Name</label>
-          <textarea [(ngModel)]="project.Name" placeholder="Project Name" class="form-control" rows="1"></textarea>
+        <div #projectDetail>
+          <h3 class="detail-header">Edit {{project.Name}} </h3>
+          <div class="form-group">
+            <label>Project Name</label>
+            <input [(ngModel)]="project.Name" placeholder="Project Name" class="form-control" rows="1">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea [(ngModel)]="project.Description" placeholder="Description" class="form-control" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Created: {{project.Date}}</label>
+          </div>
+          <div class="form-group">
+            <label>ID: {{project._id}}</label>
+          </div>
+          <div *ngIf="irb$ && pi">
+            <label style="padding-bottom:10px;"><strong>IRB: {{irb$.IRBNumber}}</strong></label>
+            <p><label style="padding-bottom:10px;"><strong>PI: </strong></label> {{pi.FirstName}} {{pi.LastName}}</p>
+            <label style="padding-bottom:10px;"><strong>Users:</strong></label>
+            <div *ngFor="let user of users$ | async">
+              <p>{{user.FirstName}} {{user.LastName}}</p>
+            </div>
+            <div *ngIf="project.Files.length > 0">
+              <label>Uploaded Files: </label>
+              <ul>
+                <li *ngFor="let result of results$ | async">
+                  {{result.category}} {{result.dataType}} {{result.path}}
+                </li>
+              </ul>
+            </div>
+            <button style="margin-top:10px;" class='btn btn-primary' (click)="update(project)">Update</button>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea [(ngModel)]="project.Description" placeholder="Description" class="form-control" rows="4"></textarea>
-        </div>
-        <div class="form-group">
-          <label>Created: {{project.Date}}</label>
-        </div>
-        
-        <div *ngIf="pi">
-          <label style="padding-bottom:10px;"><strong>IRB: {{irb$.IRBNumber}}</strong></label>
-          <p><label style="padding-bottom:10px;"><strong>PI: </strong></label> {{pi.FirstName}} {{pi.LastName}}</p>
-          <label style="padding-bottom:10px;"><strong>Users:</strong></label>
-          <div *ngFor="let user of users$ | async">
-               <p>{{user.FirstName}} {{user.LastName}}</p>
+        <h3>Permission List</h3>
+        <div #permissions class='well well-lg'>
+          <div class='row'>
+            <div class="col-md-8">
+              <table>
+                <thead>
+                  <tr>
+                    <td>Name</td>
+                    <!--<td>Email</td>-->
+                    <td>Role</td>
+                    <td>Update</td>
+                    <td>Delete</td>
+                  </tr>
+                </thead>
+                <tbody class="form-group row" *ngFor="let permission of permissions$ | async">
+                  <tr>
+                    <td><span>{{permission.User | userFullName | async }}</span></td>
+                    <td><select [(ngModel)]="permission.Role">
+                        <option *ngFor="let role of roles" [value]="role">{{role}}</option>
+                        </select></td>
+                    <td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updatePermission(permission, permission.Role)"></span></td>
+                    <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="deletePermission(permission)"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <form class='submitForm' [formGroup]="newPermissionForm" (ngSubmit)="submitPermissions()">
+                <div class="form-group">
+                  <fieldset formArrayName="Permissions">
+                    <table>
+                      <thead>
+                        <tr>
+                          <td>Email</td>
+                          <td>Role</td>
+                          <td>Action</td>
+                        </tr>
+                      </thead>
+                      <tbody class="form-group row" *ngFor="let permissionItem of newPermissionForm.get('Permissions').controls" [formGroup]='permissionItem'>
+                        <tr>
+                          <td><input type="text" formControlName="Email"></td>
+                          <td><select formControlName="Role">
+                                <option *ngFor="let role of roles" [ngValue]="role">{{role}}</option>
+                              </select></td>
+                          <td nowrap><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="newPermissionForm.get('Permissions').removeAt(i)"></span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </fieldset>
+                  <button type="button" class="btn btn-link" (click)="newPermissionForm.get('Permissions').push(permissionItem(''))">Add Another Permit</button>
+                  <input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">
+
+                </div>
+              </form>
+              <p>Form value: {{ newPermissionForm.get('Permissions').value | json }}</p>
+            </div>
           </div>
-          <div class="form-group">
-            <label>*Source</label>
-            <textarea placeholder="Enter Data Source" class="form-control" rows="1"></textarea>
-          </div>
-          <div class="form-group">
-            <label>*Sample Size</label>
-            <textarea placeholder="Sample Size" class="form-control" rows="1"></textarea>
-          </div>
-          <div class="form-group">
-            <label>*Sample Format</label>
-            <textarea placeholder="Frozen, Fresh etc.." class="form-control" rows="1"></textarea>
-          </div>
-          <div class="form-group">
-            <label>*Annotations</label>
-            <textarea placeholder="OCT, FFPE" class="form-control" rows="1"></textarea>
-          </div>
-          <div *ngIf="project.Files.length > 0">
-            <label>Uploaded Files: </label>
-            <ul>
-              <li *ngFor="let result of results$ | async">
-                {{result.category}} {{result.dataType}} {{result.path}}
-              </li>
-            </ul>
-          </div>
-          <button style="margin-top:10px;" class='btn btn-primary' (click)="update(project)">Update</button>
         </div>
       </div>
+      <app-files></app-files>
     </div>
   </div>
 </div>

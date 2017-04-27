@@ -40,13 +40,11 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsers();
-
     this.newUserForm = this.fb.group({
       FirstName: new FormControl('', Validators.required),
       LastName: new FormControl('World', Validators.minLength(4)),
       Photo: new FormControl(''),
       Email: new FormControl('')
     });
-    console.log(this.newUserForm.get('FirstName'));
   }
 }

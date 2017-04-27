@@ -3,10 +3,10 @@ import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Permission } from '../permission';
 import { User } from '../user';
-
+enum roles {'full-access', 'read-only'};
 @Injectable()
 export class PermissionService {
-
+  
   private headers = new Headers({'Content-Type': 'application/json'});
   private permissionsUrl = 'http://localhost:3000/permissions';  // URL to web api
 
@@ -37,8 +37,9 @@ export class PermissionService {
       .post(this.permissionsUrl, JSON.stringify(permission), {headers: this.headers});
   }
 
-  update(permission: Permission): Observable<Response> {
+  update(permission: Permission, permissionRole: roles): Observable<Response> {
     const url = `${this.permissionsUrl}/` + permission._id;
+    permission.Role = permissionRole;
     return this.http.put(url, JSON.stringify(permission), {headers: this.headers});
   }
 

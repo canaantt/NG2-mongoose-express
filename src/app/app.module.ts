@@ -11,7 +11,7 @@ import { LandingComponent } from './landing/landing.component';
 import { DocumentationComponent } from './documentation/documentation.component';
 import { AppRouterModule } from './router/app-router.module';
 import { ProjectsComponent } from './projects/projects.component';
-import { ProjectDetailComponent } from './project-detail/project-detail.component';
+import { ProjectDetailComponent, UserFullNamePipe} from './project-detail/project-detail.component';
 import { IrbComponent } from './irb/irb.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
@@ -40,7 +40,8 @@ import { AnnotationsComponent } from './annotations/annotations.component';
     FilesComponent,
     FileSelectDirective,
     PermissionsComponent,
-    AnnotationsComponent
+    AnnotationsComponent,
+    UserFullNamePipe
   ],
   imports: [
     BrowserModule,

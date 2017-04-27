@@ -49,7 +49,6 @@ export class ProjectsDashboardComponent implements OnInit {
             });
         });
         this.projects = projectArr;
-        console.log(this.projects);
       });
   }
 

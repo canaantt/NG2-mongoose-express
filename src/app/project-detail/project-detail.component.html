@@ -2,7 +2,7 @@
   <div class="detail container-fluid">
     <div class="row">
       <div *ngIf="project">
-        <div #projectDetail>
+        <div #projectDetail  class='well well-lg'>
           <h3 class="detail-header">Edit {{project.Name}} </h3>
           <div class="form-group">
             <label>Project Name</label>
@@ -15,38 +15,44 @@
           <div class="form-group">
             <label>Created: {{project.Date}}</label>
           </div>
-          <div *ngIf='project.Annotaions'>
-            <div *ngFor='let annot of project.Annotations'>
-              <p>annot.key: annot.value</p>
-            </div>
-          </div>
-          <div #annotations class='well well-lg'>
+
+          <div #annotations>
             <h3>Customize Project Annotations</h3>
+            <div *ngIf='project.Annotations.length > 0'>
+              <table>
+                <thead>
+                  <tr>
+                    <td>Key</td>
+                    <td>Value</td>
+                    <!--<td>Update</td>-->
+                    <td>Remove/Add</td>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let annot of project.Annotations; let i = index">
+                  <tr>
+                    <td><input [(ngModel)]="annot.key"></td>
+                    <td><input [(ngModel)]="annot.value"></td>
+                    <!--<td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updateAnnotation(annot)"></span></td>-->
+                    <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="project.Annotations.splice(i,1)"></span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <form class='submitForm' [formGroup]="newAnnotationForm" (ngSubmit)="submitAnnotations()">
               <div class="form-group">
                 <fieldset formArrayName="Annotations">
                   <table>
-                    <thead>
-                      <tr>
-                        <!--<td>Email</td>
-                          <td>Role</td>
-                          <td>Action</td>-->
-                      </tr>
-                    </thead>
                     <tbody class="form-group row" *ngFor="let annotationItem of newAnnotationForm.get('Annotations').controls" [formGroup]='annotationItem'>
                       <tr>
-                        <td><input type="text" formControlName="Key" placeholder="Enter Key"></td>
-                        <td><input type="text" formControlName="Value" placeholder="Enter Value"></td>
-                        <!--<td nowrap><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="newPermissionForm.get('Permissions').removeAt(i)"></span></td>-->
+                        <td><input type="text" formControlName="key" placeholder="Enter Key"></td>
+                        <td><input type="text" formControlName="value" placeholder="Enter Value"></td>
                         <td><button type="submit" class="btn glyphicon glyphicon-plus-sign submission-btn"></button></td>
-                        <!--<td nowrap><span type="button" class="btn glyphicon glyphicon-plus-sign" (click)="newPermissionForm.get('Permissions').push(permissionItem(''))"></span></td>-->
                       </tr>
                     </tbody>
                   </table>
                 </fieldset>
               </div>
             </form>
-            <p>Form value: {{ newAnnotationForm.get('Annotations').value | json }}</p>
             <button style="margin-top:10px;" class='btn btn-primary' (click)="update(project)">Update</button>
           </div>
         </div>
@@ -92,19 +98,16 @@
                           <td><select formControlName="Role">
                                 <option *ngFor="let role of roles" [ngValue]="role">{{role}}</option>
                               </select></td>
-                          <!--<td nowrap><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="newPermissionForm.get('Permissions').removeAt(i)"></span></td>-->
                           <td><button type="submit" class="btn glyphicon glyphicon-plus-sign submission-btn"></button></td>
-                          <!--<td nowrap><span type="button" class="btn glyphicon glyphicon-plus-sign" (click)="newPermissionForm.get('Permissions').push(permissionItem(''))"></span></td>-->
                         </tr>
                       </tbody>
                     </table>
                   </fieldset>
                   <!--<button type="button" class="btn btn-link" (click)="newPermissionForm.get('Permissions').push(permissionItem(''))">Add Another Permit</button>-->
                   <!--<input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">-->
-
                 </div>
               </form>
-              <p>Form value: {{ newPermissionForm.get('Permissions').value | json }}</p>
+              <!--<p>Form value: {{ newPermissionForm.get('Permissions').value | json }}</p>-->
             </div>
           </div>
         </div>

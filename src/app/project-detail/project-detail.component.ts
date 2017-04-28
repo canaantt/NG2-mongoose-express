@@ -14,6 +14,7 @@ import { IrbService } from '../service/irb.service';
 import { User } from '../user';
 import { UserService } from '../service/user.service';
 import { Observable} from 'rxjs/Observable';
+import { Annotation } from '../annotation';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/of';
@@ -60,31 +61,33 @@ export class ProjectDetailComponent implements OnInit {
       this.id = this.route.snapshot.params['id'];
      }
   ngOnInit(): void {
-    this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem('', '')])});
+    this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem()])});
     this.getPermissions();
     this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('')])});
     if (typeof(this.id) !== 'undefined') {
       this.projectService.getProjectByID(this.route.snapshot.params['id'])
                          .subscribe(res0 => {
                            this.project = res0;
-                           this.results$ = this.fileService.getFilesByIDs(this.project.Files);
-                            this.irbService.getIrbsByProjID(this.project.IRB).subscribe(res => {
-                              this.irb$ = res[0];
-                              if(typeof(this.irb$) !== 'undefined'){
-                                 this.userService.getUsersByID(this.irb$.PI)
-                                                 .subscribe(res2 => this.pi = res2[0]);
-                                 this.users$ = this.userService.getUsersByIDs(this.irb$.OtherUsers);
-                              }
-                            });
+                          //  if(typeof(this.project.Files) !== 'undefined'){
+                          //   this.results$ = this.fileService.getFilesByIDs(this.project.Files);
+                          //   this.irbService.getIrbsByProjID(this.project.IRB).subscribe(res => {
+                          //     this.irb$ = res[0];
+                          //     if(typeof(this.irb$) !== 'undefined'){
+                          //         this.userService.getUsersByID(this.irb$.PI)
+                          //                         .subscribe(res2 => this.pi = res2[0]);
+                          //         this.users$ = this.userService.getUsersByIDs(this.irb$.OtherUsers);
+                          //     }
+                          //   });
+                          //  }
                           });
     } else {
       console.log(typeof(this.id));
     }
   }
-  annotationItem(key: string, value: string) {
+  annotationItem() {
     return new FormGroup({
-      Key: new FormControl(key, Validators.required),
-      Value: new FormControl(value, Validators.required)
+      key: new FormControl('', Validators.required),
+      value: new FormControl('', Validators.required)
     });
   }
   permissionItem(val: string) {
@@ -126,11 +129,11 @@ export class ProjectDetailComponent implements OnInit {
     this.permissionService.delete(permission).subscribe(() => this.getPermissions());
   }
   submitAnnotations(): void {
-    console.log(this.newAnnotationForm.get('Annotations').value[0]);
     this.newAnnotationForm.get('Annotations').value.forEach(element => {
-      console.log(element);
       this.project.Annotations.push(element);
-      this.projectService.update(this.project);
     });
   }
+  // updateAnnotation(annotation: Annotation): void {
+  //   this.projectService.update(this.project).subscribe(() =>  console.log(this.project));
+  // }
 }

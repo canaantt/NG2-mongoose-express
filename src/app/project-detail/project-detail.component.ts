@@ -14,6 +14,7 @@ import { IrbService } from '../service/irb.service';
 import { User } from '../user';
 import { UserService } from '../service/user.service';
 import { Observable} from 'rxjs/Observable';
+import { Annotation } from '../annotation';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/of';
@@ -23,8 +24,7 @@ enum roles {'full-access', 'read-only'};
   name: 'userFullName'
 })
 export class UserFullNamePipe implements PipeTransform {
-  constructor(private userService: UserService){}
-
+  constructor(private userService: UserService) {}
   transform(id: string): Observable<string> {
       return this.userService.getUsersByID(id)
       .map(res => res[0].FirstName + ' ' + res[0].LastName)
@@ -46,7 +46,8 @@ export class ProjectDetailComponent implements OnInit {
   users$: Observable<any>;
   results$: Observable<any>;
   permissions$: Observable<any>;
-  newPermissionForm: FormGroup; 
+  newAnnotationForm: FormGroup;
+  newPermissionForm: FormGroup;
   roles = ['full-access', 'read-only'];
 
   constructor(
@@ -60,30 +61,39 @@ export class ProjectDetailComponent implements OnInit {
       this.id = this.route.snapshot.params['id'];
      }
   ngOnInit(): void {
+    this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem()])});
     this.getPermissions();
-    this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('New Email')])});
+    this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('')])});
     if (typeof(this.id) !== 'undefined') {
       this.projectService.getProjectByID(this.route.snapshot.params['id'])
                          .subscribe(res0 => {
                            this.project = res0;
-                           this.results$ = this.fileService.getFilesByIDs(this.project.Files);
-                            this.irbService.getIrbsByProjID(this.project.IRB).subscribe(res => {
-                              this.irb$ = res[0];
-                              if(typeof(this.irb$) !== 'undefined'){
-                                 this.userService.getUsersByID(this.irb$.PI)
-                                                 .subscribe(res2 => this.pi = res2[0]);
-                                 this.users$ = this.userService.getUsersByIDs(this.irb$.OtherUsers);
-                              }
-                            });
+                          //  if(typeof(this.project.Files) !== 'undefined'){
+                          //   this.results$ = this.fileService.getFilesByIDs(this.project.Files);
+                          //   this.irbService.getIrbsByProjID(this.project.IRB).subscribe(res => {
+                          //     this.irb$ = res[0];
+                          //     if(typeof(this.irb$) !== 'undefined'){
+                          //         this.userService.getUsersByID(this.irb$.PI)
+                          //                         .subscribe(res2 => this.pi = res2[0]);
+                          //         this.users$ = this.userService.getUsersByIDs(this.irb$.OtherUsers);
+                          //     }
+                          //   });
+                          //  }
                           });
     } else {
       console.log(typeof(this.id));
     }
   }
+  annotationItem() {
+    return new FormGroup({
+      key: new FormControl('', Validators.required),
+      value: new FormControl('', Validators.required)
+    });
+  }
   permissionItem(val: string) {
     return new FormGroup({
       Email: new FormControl(val, Validators.required),
-      Role: new FormControl('', Validators.required)
+      Role: new FormControl('read-only', Validators.required)
     });
   }
   update(project: Project): void {
@@ -96,13 +106,13 @@ export class ProjectDetailComponent implements OnInit {
     let p =  new Permission();
     this.userService.userValidationByEmail(formValue.Email)
         .subscribe(res => {
-          if(typeof(res) !== 'undefined'){
+          if (typeof(res) !== 'undefined') {
             p.User = res[0]._id;
             p.Project = this.id;
             p.Role = formValue.Role;
             this.permissionService.create(p).subscribe(() => this.getPermissions());
-          }else{
-            console.log("Email is not in the user list. Please register first.");
+          } else {
+            console.log('Email is not in the user list. Please register first.');
           }
         });
   }
@@ -113,9 +123,17 @@ export class ProjectDetailComponent implements OnInit {
     });
   }
   updatePermission(permission: Permission, permissionRole: roles){
-    this.permissionService.update(permission, permissionRole).subscribe(()=>this.getPermissions());
+    this.permissionService.update(permission, permissionRole).subscribe(() => this.getPermissions());
   }
   deletePermission(permission: Permission){
-    this.permissionService.delete(permission).subscribe(()=>this.getPermissions());
+    this.permissionService.delete(permission).subscribe(() => this.getPermissions());
   }
+  submitAnnotations(): void {
+    this.newAnnotationForm.get('Annotations').value.forEach(element => {
+      this.project.Annotations.push(element);
+    });
+  }
+  // updateAnnotation(annotation: Annotation): void {
+  //   this.projectService.update(this.project).subscribe(() =>  console.log(this.project));
+  // }
 }

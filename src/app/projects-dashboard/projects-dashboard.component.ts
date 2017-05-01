@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { Project } from '../project';
@@ -20,10 +20,12 @@ import 'rxjs/add/observable/of';
 export class ProjectsDashboardComponent implements OnInit {
   projects: Project[];
   selectedProject: Project;
+  newProjectForm: FormGroup;
 
-  constructor(private projectService: ProjectService,
-    private irbService: IrbService,
-    private userService: UserService) { }
+  constructor( private fb: FormBuilder, 
+               private projectService: ProjectService,
+               private irbService: IrbService,
+               private userService: UserService) { }
 
   onSelect(Project: Project): void {
     this.selectedProject = Project;
@@ -48,17 +50,23 @@ export class ProjectsDashboardComponent implements OnInit {
 
             });
         });
-        this.projects = projectArr;
-        console.log(this.projects);
+        this.projects = projectArr.reverse();
       });
   }
 
   delete(project: Project): void {
     this.projectService.delete(project).subscribe(() => this.getProjects());
   }
-
+  add(): void {
+    this.newProjectForm = this.fb.group({
+      Name: new FormControl('Name Your Fancy Project', Validators.required),
+      Description: new FormControl('You don\'t need to use ours description:) But we offer anyway --- The largest recorded snowflake was in Keogh, MT during year 1887, and was 15 inches wide. Do you know? Do you? Do you? ' , Validators.minLength(4))
+    });
+    this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
+  }
   ngOnInit() {
     this.getProjects();
+    
   }
 
 }

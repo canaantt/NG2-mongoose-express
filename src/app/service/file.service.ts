@@ -40,13 +40,6 @@ export class FileService {
       .put(url, JSON.stringify(file), {headers: this.headers});
   }
 
-  // upload(file: File): Observable<Response> {
-  //   const url = `${this.fileUploadingUrl}/` + file._id;
-  //   console.log(file._id);
-  //   return this.http
-  //     .post(url, JSON.stringify(file), {headers: this.headers});
-  // }
-
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);

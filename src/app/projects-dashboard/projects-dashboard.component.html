@@ -4,12 +4,13 @@
             <div class="col-xs-6 float-right">
                 <h4 class="dashboard-header">Project Dashboard</h4>
             </div>
+            <div class='btn btn-primary col-xs-6 float-left' style="float:right;" (click)='add()'>Add New Project</div> 
+                
+           
             <div *ngFor="let project of projects">
                 <div class="panel panel-default panel-horizontal">
                     <div class="panel-heading">
                         <h3 style="padding-bottom:10px;font-size: 20px; font-weight: 300; margin-top:0px;">{{project.Name}}</h3>
-                        <div style="padding-bottom:5px">IRB #: {{project.irbNumber}}</div>
-                        <div style="padding-bottom:5px">PI: {{project.pi}}</div>
                         <div *ngIf='project?.irbNumber' style="padding-bottom:5px">IRB #: {{project.irbNumber}}</div>
                         <div *ngIf='project?.pi' style="padding-bottom:5px">PI: {{project.pi}}</div>
                         <div *ngIf='project?.users' style="padding-bottom:5px">Users:
@@ -17,15 +18,27 @@
                         </span>
                         </div>
                         <div style="padding-bottom:5px">Created: {{project.Date}}</div>
-                    </div>
-                    <div class="panel-body">
-                        <div style="margin-top:0px;">{{project.Description}}</div>
                         <div>
+                            <!--<a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary"
+                                style="margin-top:10px; float:right; font-weight:300;">Edit</a>-->
+                            <span type='button' (click)="delete(project)" class=" btn glyphicon glyphicon-minus-sign" style="color:#843534; margin-top:10px; float:right"></span>
+                        </div>
+                    </div>
+                    
+
+                    <!--<div class="panel-body">-->
+                        <a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="panel-body">
+                    
+                        <div style="margin-top:0px;">{{project.Description}}</div>
+                        <span class='btn glyphicon glyphicon-pencil' style="color:#039BE5;">Edit</span>
+                        <!--<div>
                             <a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary"
                                 style="margin-top:10px; float:right; font-weight:300;">Edit</a>
                             <button (click)="delete(project)" class=" btn btn-primary" style=" margin-top:10px; float:right">Delete</button>
-                        </div>
-                    </div>
+                        </div>-->
+                         </a>
+                    <!--</div>-->
+                   
                 </div>
             </div>
         </div>

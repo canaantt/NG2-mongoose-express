@@ -13,7 +13,7 @@ var Permission = require("./models/permission");
 var routerFactory = require("./routes/routerFactory");
 var multer = require('multer');
 const corsOptions = {
-	origin: 'http://0.0.0.0:4201'
+	origin: 'http://localhost:4200'
 }
 mongoose.connect("mongodb://localhost:27017/mydb");
 var db = mongoose.connection;

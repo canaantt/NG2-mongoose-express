@@ -18,6 +18,8 @@ import { Annotation } from '../annotation';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/of';
+import { UserEmailValidators } from '../validators/userEmail.validator';
+
 enum roles {'full-access', 'read-only'};
 
 @Pipe({
@@ -92,11 +94,12 @@ export class ProjectDetailComponent implements OnInit {
   }
   permissionItem(val: string) {
     return new FormGroup({
-      Email: new FormControl(val, Validators.required),
+      Email: new FormControl(val, [Validators.required, Validators.minLength(10), UserEmailValidators.UserEmailFormat]),
       Role: new FormControl('read-only', Validators.required)
     });
   }
   update(project: Project): void {
+
     this.projectService.update(project).subscribe(() => console.log('updating...'));
   }
   getPermissions(): void {
@@ -117,6 +120,7 @@ export class ProjectDetailComponent implements OnInit {
         });
   }
   submitPermissions(): void {
+    console.dir(this.newPermissionForm.get('Permissions').value);
     this.newPermissionForm.get('Permissions').value.forEach(element => {
       this.addPermission(element);
       this.newPermissionForm.get('Permissions').value = null;
@@ -133,7 +137,4 @@ export class ProjectDetailComponent implements OnInit {
       this.project.Annotations.push(element);
     });
   }
-  // updateAnnotation(annotation: Annotation): void {
-  //   this.projectService.update(this.project).subscribe(() =>  console.log(this.project));
-  // }
 }

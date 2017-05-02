@@ -1,53 +1,38 @@
 // import global variable
 @import '/../index';
 
-
-// Bootstrap needs to be placed in index.scss for overides
-.panel.panel-horizontal {
-    display:table;
-    width:100%;
-}
-.panel.panel-horizontal > .panel-heading, .panel.panel-horizontal > .panel-body, .panel.panel-horizontal > .panel-footer >  .panel-body-desc,{
-    display:table-cell;
-}
-.panel.panel-horizontal > .panel-heading, .panel.panel-horizontal > .panel-footer {
-    width: 25%;
-    border:0;
-    vertical-align: middle;
-}
-.panel.panel-horizontal > .panel-heading {
-    // border-right: px solid $color-onco-blue;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 4px;
-}
-.panel-default>.panel-heading {
-    color: #333;
-    background-color: #fff;
-    border-color: #ddd;
-}
-.panel-body{
-    width:50%;
-    padding: 10px 10px;
-    border-left: 1px solid $color-onco-blue;
-}
-// Bootstrap needs to be placed in index.scss for overides
-
 .dashboard-header{
-    padding-bottom: 25px;
-    font-weight: 400;
-    color: $color-onco-blue;
-    letter-spacing: 7px;
+    font-weight: 300;
+    color: #039BE5;
+    letter-spacing: 4px;
+    margin-bottom: 50px;
+    margin-top: 0;
+ }
+
+ .dashboard-title {
+     padding-bottom:10px;
+     font-size: 19px; 
+     font-weight: 300; 
+     margin-top:0px;
+ }
+
+ .dashboard-lists {
+     padding-bottom: 5px;
+ }
+
+ .dashboard-description {
+     margin-top:10px;
+     margin-bottom: 25px;
  }
 
 .dashboard{
     .btn {
-        width: 75px;
+        width: 110px;
         margin-right: 5px;
+        margin-bottom: 10px;
+        float: right;
     }
 }
 
-a:hover {
-    text-decoration: none;
-    box-shadow: 0 10px 6px -6px #777;
-}
+
 

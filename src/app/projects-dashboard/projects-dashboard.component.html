@@ -1,46 +1,39 @@
 <div class="dashboard">
-    <header class="dashboard container-fluid">
+    <div class="container">
         <div class="row">
-            <div class="col-xs-6 float-right">
+            <div class="col-xs-6">
                 <h4 class="dashboard-header">Project Dashboard</h4>
             </div>
-            <div class='btn btn-primary col-xs-6 float-left' style="float:right;" (click)='add()'>Add New Project</div> 
-                
-           
-            <div *ngFor="let project of projects">
-                <div class="panel panel-default panel-horizontal">
-                    <div class="panel-heading">
-                        <h3 style="padding-bottom:10px;font-size: 20px; font-weight: 300; margin-top:0px;">{{project.Name}}</h3>
-                        <div *ngIf='project?.irbNumber' style="padding-bottom:5px">IRB #: {{project.irbNumber}}</div>
-                        <div *ngIf='project?.pi' style="padding-bottom:5px">PI: {{project.pi}}</div>
-                        <div *ngIf='project?.users' style="padding-bottom:5px">Users:
-                            <span *ngFor="let u of project.users; let isLast=last">{{u.FirstName}} {{u.LastName}}{{isLast ? '' : ', '}}
+            <div class="col-xs-6">
+                <button class='btn btn-primary' (click)='add()'>New Project</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div *ngFor="let project of projects">
+                    <div class="panel panel-default panel-horizontal">
+                        <div class="panel-heading">
+                            <h3 class="dashboard-title">{{project.Name}}</h3>
+                            <!--<div class="dashboard-lists" *ngIf='project?.irbNumber'>IRB #: {{project.irbNumber}}</div>
+                            <div class="dashboard-lists" *ngIf='project?.pi'>PI: {{project.pi}}</div>-->
+                            <div class="dashboard-lists" *ngIf='project?.users'>Users:
+                                <span *ngFor="let u of project.users; let isLast=last">{{u.FirstName}} {{u.LastName}}{{isLast ? '' : ', '}}
                         </span>
+                            </div>
+                            <div class="dashboard-lists">Created: {{project.Date}}</div>
                         </div>
-                        <div style="padding-bottom:5px">Created: {{project.Date}}</div>
-                        <div>
-                            <!--<a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary"
-                                style="margin-top:10px; float:right; font-weight:300;">Edit</a>-->
-                            <span type='button' (click)="delete(project)" class=" btn glyphicon glyphicon-minus-sign" style="color:#843534; margin-top:10px; float:right"></span>
+                        <div class="row panel-body">
+                            <div class="col-xs-12">
+                                <div class="dashboard-description">{{project.Description}}</div>
+                            </div>
+                            <div class="col-xs-12">
+                                <a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary">Edit</a>
+                                <button (click)="delete(project)" class=" btn btn-primary ">Delete</button>
+                            </div>
                         </div>
                     </div>
-                    
-
-                    <!--<div class="panel-body">-->
-                        <a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="panel-body">
-                    
-                        <div style="margin-top:0px;">{{project.Description}}</div>
-                        <span class='btn glyphicon glyphicon-pencil' style="color:#039BE5;">Edit</span>
-                        <!--<div>
-                            <a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary"
-                                style="margin-top:10px; float:right; font-weight:300;">Edit</a>
-                            <button (click)="delete(project)" class=" btn btn-primary" style=" margin-top:10px; float:right">Delete</button>
-                        </div>-->
-                         </a>
-                    <!--</div>-->
-                   
                 </div>
             </div>
         </div>
-    </header>
+    </div>
 </div>

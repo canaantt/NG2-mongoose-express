@@ -1,3 +1,4 @@
+import { Directive } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { User } from '../user';
 import { UserService } from '../service/user.service';
@@ -7,7 +8,7 @@ import { PermissionService } from '../service/permission.service';
 export class UserEmailValidators {
   constructor( private userService: UserService, 
                private permissionService: PermissionService ) {}
-
+  
   static UserEmailFormat(control: AbstractControl) {
     if (control.value.includes('@')) {
       console.log("Within UserEmail static Function UserEmail function...");
@@ -16,4 +17,13 @@ export class UserEmailValidators {
     return {validEmailFormat: true}
   }
   
+  emailUserCollection(control: AbstractControl) {
+    this.userService.userValidationByEmail(control.value).subscribe(val => {
+      if(val.json.length == 0){
+        return {validEmailinUserCollection: true}
+      } else {
+        return null;
+      }
+    })
+  }
 }

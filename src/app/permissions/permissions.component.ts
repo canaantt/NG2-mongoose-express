@@ -40,7 +40,6 @@ export class PermissionsComponent implements OnInit {
     this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('')])});
     this.id = this.project._id;
     this.getPermissions();
-    this.newPermissionForm.controls.Permissions.controls[0].controls.Email.valueChange.subscribe(val => alert(val));
   }
 
   getPermissions(): void {

@@ -2,7 +2,6 @@
   <div class="container">
     <div class="row">
       <div *ngIf="project">
-        <div #projectDetail>
           <h3 class="detail-header">{{project.Name}}</h3>
           <div class="form-group">
             <label>Project Name</label>
@@ -20,7 +19,6 @@
                   <tr>
                     <td>Key</td>
                     <td>Value</td>
-                    <!--<td>Update</td>-->
                     <td>Remove/Add</td>
                   </tr>
                 </thead>
@@ -28,7 +26,6 @@
                   <tr>
                     <td><input [(ngModel)]="annot.key" placeholder="Sample Size" class="form-control"></td>
                     <td><input [(ngModel)]="annot.value" placeholder="110" class="form-control"></td>
-                    <!--<td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updateAnnotation(annot)"></span></td>-->
                     <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="project.Annotations.splice(i,1)"></span></td>
                   </tr>
                 </tbody>
@@ -50,16 +47,13 @@
               </div>
             </form>
           </div>
-        </div>
         <app-permissions [project]="project"></app-permissions>
+        <app-files></app-files>
         <div class="form-group">
           <label>Date Created {{project.Date}}</label>
         </div>
         <button class='btn btn-primary' (click)="update(project)">Update</button>
-       
       </div>
-      <app-files></app-files>
-      
     </div>
   </div>
 </div>

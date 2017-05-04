@@ -14,7 +14,6 @@ enum roles {'full-access', 'read-only'};
 export class UserFullNamePipe implements PipeTransform {
   constructor(private userService: UserService) {}
   transform(id: string): Observable<string> {
-      console.log(id);
       return this.userService.getUsersByID(id)
       .map(res => res[0].FirstName + ' ' + res[0].LastName);
   }
@@ -41,6 +40,7 @@ export class PermissionsComponent implements OnInit {
     this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('')])});
     this.id = this.project._id;
     this.getPermissions();
+    this.newPermissionForm.controls.Permissions.controls[0].controls.Email.valueChange.subscribe(val => alert(val));
   }
 
   getPermissions(): void {
@@ -69,8 +69,7 @@ export class PermissionsComponent implements OnInit {
         });
   }
 
-  submitPermissions(id: string): void {
-    console.dir(this.newPermissionForm.get('Permissions').value);
+  submitPermissions(): void {
     this.newPermissionForm.get('Permissions').value.forEach(element => {
       this.addPermission(element);
       this.newPermissionForm.get('Permissions').value = null;

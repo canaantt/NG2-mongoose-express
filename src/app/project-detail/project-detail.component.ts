@@ -1,5 +1,4 @@
-import { Component, Input, Output, SimpleChanges, OnInit, OnChanges ,
-         ViewChild, AfterViewInit} from '@angular/core';
+import { Component, Input, Output, SimpleChanges, OnInit, OnChanges, ViewChild} from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Headers, Http, Response } from '@angular/http';
@@ -26,7 +25,7 @@ enum roles {'full-access', 'read-only'};
   styleUrls: ['./project-detail.component.scss'],
   providers: [FileService, IrbService, UserService, FormBuilder]
 })
-export class ProjectDetailComponent implements OnInit, AfterViewInit{
+export class ProjectDetailComponent implements OnInit{
   project: any;
   id: string;
   files: any;
@@ -50,11 +49,8 @@ export class ProjectDetailComponent implements OnInit, AfterViewInit{
       this.id = this.route.snapshot.params['id'];
      }
 
-  ngAfterViewInit() {
-    // this.permissionComponent.getPermissions();
-  }
   ngOnInit(): void {
-    this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem()])});
+    this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem('')])});
 
     if (typeof(this.id) !== 'undefined') {
       this.projectService.getProjectByID(this.route.snapshot.params['id'])
@@ -63,18 +59,17 @@ export class ProjectDetailComponent implements OnInit, AfterViewInit{
       console.log(typeof(this.id));
     }
   }
-  annotationItem() {
+  annotationItem(val: string) {
     return new FormGroup({
-      key: new FormControl('', Validators.required),
-      value: new FormControl('', Validators.required)
+      key: new FormControl(val, Validators.required),
+      value: new FormControl(val, Validators.required)
     });
   }
- 
-  update(project: Project): void {
 
+  update(project: Project): void {
     this.projectService.update(project).subscribe(() => console.log('updating...'));
   }
-  
+
   submitAnnotations(): void {
     this.newAnnotationForm.get('Annotations').value.forEach(element => {
       this.project.Annotations.push(element);

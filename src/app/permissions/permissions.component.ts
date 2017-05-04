@@ -40,7 +40,6 @@ export class PermissionsComponent implements OnInit {
     this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('')])});
     this.id = this.project._id;
     this.getPermissions();
-    this.newPermissionForm.controls.Permissions.controls[0].controls.Email.valueChange.subscribe(val => alert(val));
   }
 
   getPermissions(): void {
@@ -72,14 +71,20 @@ export class PermissionsComponent implements OnInit {
   submitPermissions(): void {
     this.newPermissionForm.get('Permissions').value.forEach(element => {
       this.addPermission(element);
-      this.newPermissionForm.get('Permissions').value = null;
     });
+    this.newPermissionForm.get('Permissions').value = null;
   }
 
   updatePermission(permission: Permission, permissionRole: roles) {
-    this.permissionService.update(permission, permissionRole).subscribe(() => this.getPermissions());
+    this.permissionService.update(permission, permissionRole).subscribe(() => this.getPermissions);
   }
-
+  updatePermissions(){
+    console.log("within updatePermissions");
+    this.newPermissionForm.get('Permissions').value.forEach(element => {
+      console.log(element);
+      this.updatePermission(element, element.Role);
+    })
+  }
   deletePermission(permission: Permission){
     this.permissionService.delete(permission).subscribe(() => this.getPermissions());
   }

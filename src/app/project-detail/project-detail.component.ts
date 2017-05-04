@@ -33,10 +33,7 @@ export class ProjectDetailComponent implements OnInit{
   pi: any;
   users$: Observable<any>;
   results$: Observable<any>;
-  // permissions$: Observable<any>;
   newAnnotationForm: FormGroup;
-  // newPermissionForm: FormGroup;
-  // roles = ['full-access', 'read-only'];
   @ViewChild(PermissionsComponent) permissionComponent: PermissionsComponent;
 
   constructor(
@@ -67,6 +64,7 @@ export class ProjectDetailComponent implements OnInit{
   }
 
   update(project: Project): void {
+    this.permissionComponent.updatePermissions();
     this.projectService.update(project).subscribe(() => console.log('updating...'));
   }
 
@@ -74,5 +72,6 @@ export class ProjectDetailComponent implements OnInit{
     this.newAnnotationForm.get('Annotations').value.forEach(element => {
       this.project.Annotations.push(element);
     });
+    this.newAnnotationForm.get('Annotations').value = null;
   }
 }

@@ -1,14 +1,6 @@
 <div #permissions>
   <label>User Permissions</label>
   <table>
-    <!--<thead>
-          <tr>
-            <td>Name</td>
-            <td>Permission</td>
-            <td>Update</td>
-            <td>Remove/Add</td>
-          </tr>
-        </thead>-->
     <tbody class="form-group row" *ngFor="let permission of permissions$ | async">
       <tr>
         <td><span class="detail-users">{{permission.User | userFullName | async }}</span></td>
@@ -16,7 +8,7 @@
                 <option *ngFor="let role of roles" [value]="role">{{role}}</option>
                 </select></td>
         <td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updatePermission(permission, permission.Role)"></span></td>
-        <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="deletePermission(permission)"></span></td> 
+        <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="deletePermission(permission)"></span></td>
       </tr>
     </tbody>
   </table>
@@ -24,13 +16,6 @@
     <div class="form-group">
       <fieldset formArrayName="Permissions">
         <table>
-          <thead>
-            <tr>
-              <!--<td>Email</td>
-                  <td>Role</td>
-                  <td>Action</td>-->
-            </tr>
-          </thead>
           <tbody class="form-group row" *ngFor="let permissionItem of newPermissionForm.get('Permissions').controls" [formGroup]='permissionItem'>
             <tr>
               <td><input class="form-control" type="text" formControlName="Email" placeholder="Enter User New Email"></td>
@@ -43,9 +28,6 @@
           </tbody>
         </table>
       </fieldset>
-      <!--<button type="button" class="btn btn-link" (click)="newPermissionForm.get('Permissions').push(permissionItem(''))">Add Another Permit</button>-->
-      <!--<input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">-->
     </div>
   </form>
-  <!--<p>Form value: {{ newPermissionForm.get('Permissions').value | json }}</p>-->
 </div>

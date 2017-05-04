@@ -17,7 +17,7 @@ export class UserService {
   }
   getUsersByID(id: string): Observable<Response> {
     return this.http.get(this.usersUrl)
-               .map(res => res.json());
+               .map(res => res.json().filter(value => id.indexOf(value._id) > -1));
   }
   getUsersByIDs(ids: string[]): Observable<Response> {
     return this.http.get(this.usersUrl)

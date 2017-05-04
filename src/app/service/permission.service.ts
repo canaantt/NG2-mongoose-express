@@ -1,4 +1,4 @@
-import { Injectable }    from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Permission } from '../permission';
@@ -6,7 +6,6 @@ import { User } from '../user';
 enum roles {'full-access', 'read-only'};
 @Injectable()
 export class PermissionService {
-  
   private headers = new Headers({'Content-Type': 'application/json'});
   private permissionsUrl = 'http://localhost:3000/permissions';  // URL to web api
 
@@ -20,7 +19,6 @@ export class PermissionService {
             .map(res => res.json().filter(value => value._id === id));
   }
   getPermissionsByProjectID(id: string): Observable<Response> {
-    console.log(id);
     return this.http.get(this.permissionsUrl)
             .map(res => res.json().filter(value => value.Project === id));
   }

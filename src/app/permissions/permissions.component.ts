@@ -6,7 +6,6 @@ import { Permission } from '../permission';
 import { PermissionService } from '../service/permission.service';
 import { User } from '../user';
 import { UserService } from '../service/user.service';
-import { Project } from '../project';
 import { UserEmailValidators } from '../validators/userEmail.validator';
 enum roles {'full-access', 'read-only'};
 @Pipe({
@@ -15,10 +14,10 @@ enum roles {'full-access', 'read-only'};
 export class UserFullNamePipe implements PipeTransform {
   constructor(private userService: UserService) {}
   transform(id: string): Observable<string> {
+      console.log(id);
       return this.userService.getUsersByID(id)
-      .map(res => res[0].FirstName + ' ' + res[0].LastName)
+      .map(res => res[0].FirstName + ' ' + res[0].LastName);
   }
-
 }
 @Component({
   selector: 'app-permissions',
@@ -32,7 +31,7 @@ export class PermissionsComponent implements OnInit {
   permissions$: Observable<any>;
   roles= ['full-access', 'read-only'];
   @Input() project: any;
-  id: string; 
+  id: string;
 
   constructor( private userService: UserService,
                private permissionService: PermissionService,
@@ -45,9 +44,9 @@ export class PermissionsComponent implements OnInit {
   }
 
   getPermissions(): void {
-    console.log(this.id);
     this.permissions$ = this.permissionService.getPermissionsByProjectID(this.id);
   }
+
   permissionItem(val: string) {
     return new FormGroup({
       Email: new FormControl(val, [Validators.required, Validators.minLength(10), UserEmailValidators.UserEmailFormat]),
@@ -56,7 +55,7 @@ export class PermissionsComponent implements OnInit {
   }
 
   addPermission(formValue: any) {
-    let p =  new Permission();
+    const p =  new Permission();
     this.userService.userValidationByEmail(formValue.Email)
         .subscribe(res => {
           if (typeof(res) !== 'undefined') {
@@ -69,6 +68,7 @@ export class PermissionsComponent implements OnInit {
           }
         });
   }
+
   submitPermissions(id: string): void {
     console.dir(this.newPermissionForm.get('Permissions').value);
     this.newPermissionForm.get('Permissions').value.forEach(element => {
@@ -76,9 +76,11 @@ export class PermissionsComponent implements OnInit {
       this.newPermissionForm.get('Permissions').value = null;
     });
   }
-  updatePermission(permission: Permission, permissionRole: roles){
+
+  updatePermission(permission: Permission, permissionRole: roles) {
     this.permissionService.update(permission, permissionRole).subscribe(() => this.getPermissions());
   }
+
   deletePermission(permission: Permission){
     this.permissionService.delete(permission).subscribe(() => this.getPermissions());
   }

@@ -1,4 +1,5 @@
-import { Component, Input, Output, SimpleChanges, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, Output, SimpleChanges, OnInit, OnChanges ,
+         ViewChild, AfterViewInit} from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Headers, Http, Response } from '@angular/http';
@@ -7,8 +8,6 @@ import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
 import { File } from '../file';
 import { FileService } from '../service/file.service';
-import { Permission } from '../permission';
-import { PermissionService } from '../service/permission.service';
 import { IRB } from '../irb';
 import { IrbService } from '../service/irb.service';
 import { User } from '../user';
@@ -18,28 +17,16 @@ import { Annotation } from '../annotation';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/of';
-import { UserEmailValidators } from '../validators/userEmail.validator';
-
+import { PermissionsComponent } from '../permissions/permissions.component';
 enum roles {'full-access', 'read-only'};
 
-@Pipe({
-  name: 'userFullName'
-})
-export class UserFullNamePipe implements PipeTransform {
-  constructor(private userService: UserService) {}
-  transform(id: string): Observable<string> {
-      return this.userService.getUsersByID(id)
-      .map(res => res[0].FirstName + ' ' + res[0].LastName)
-  }
-
-}
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',
   styleUrls: ['./project-detail.component.scss'],
-  providers: [FileService, IrbService, UserService, PermissionService, FormBuilder]
+  providers: [FileService, IrbService, UserService, FormBuilder]
 })
-export class ProjectDetailComponent implements OnInit {
+export class ProjectDetailComponent implements OnInit, AfterViewInit{
   project: any;
   id: string;
   files: any;
@@ -47,10 +34,11 @@ export class ProjectDetailComponent implements OnInit {
   pi: any;
   users$: Observable<any>;
   results$: Observable<any>;
-  permissions$: Observable<any>;
+  // permissions$: Observable<any>;
   newAnnotationForm: FormGroup;
-  newPermissionForm: FormGroup;
-  roles = ['full-access', 'read-only'];
+  // newPermissionForm: FormGroup;
+  // roles = ['full-access', 'read-only'];
+  @ViewChild(PermissionsComponent) permissionComponent: PermissionsComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -58,30 +46,19 @@ export class ProjectDetailComponent implements OnInit {
     private fileService: FileService,
     private irbService: IrbService,
     private userService: UserService,
-    private permissionService: PermissionService,
     private fb: FormBuilder) {
       this.id = this.route.snapshot.params['id'];
      }
+
+  ngAfterViewInit() {
+    // this.permissionComponent.getPermissions();
+  }
   ngOnInit(): void {
     this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem()])});
-    this.getPermissions();
-    this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('')])});
+
     if (typeof(this.id) !== 'undefined') {
       this.projectService.getProjectByID(this.route.snapshot.params['id'])
-                         .subscribe(res0 => {
-                           this.project = res0;
-                          //  if(typeof(this.project.Files) !== 'undefined'){
-                          //   this.results$ = this.fileService.getFilesByIDs(this.project.Files);
-                          //   this.irbService.getIrbsByProjID(this.project.IRB).subscribe(res => {
-                          //     this.irb$ = res[0];
-                          //     if(typeof(this.irb$) !== 'undefined'){
-                          //         this.userService.getUsersByID(this.irb$.PI)
-                          //                         .subscribe(res2 => this.pi = res2[0]);
-                          //         this.users$ = this.userService.getUsersByIDs(this.irb$.OtherUsers);
-                          //     }
-                          //   });
-                          //  }
-                          });
+                         .subscribe(res0 => this.project = res0);
     } else {
       console.log(typeof(this.id));
     }
@@ -92,46 +69,12 @@ export class ProjectDetailComponent implements OnInit {
       value: new FormControl('', Validators.required)
     });
   }
-  permissionItem(val: string) {
-    return new FormGroup({
-      Email: new FormControl(val, [Validators.required, Validators.minLength(10), UserEmailValidators.UserEmailFormat]),
-      Role: new FormControl('read-only', Validators.required)
-    });
-  }
+ 
   update(project: Project): void {
 
     this.projectService.update(project).subscribe(() => console.log('updating...'));
   }
-  getPermissions(): void {
-    this.permissions$ =  this.permissionService.getPermissionsByProjectID(this.id);
-  }
-  addPermission(formValue: any) {
-    let p =  new Permission();
-    this.userService.userValidationByEmail(formValue.Email)
-        .subscribe(res => {
-          if (typeof(res) !== 'undefined') {
-            p.User = res[0]._id;
-            p.Project = this.id;
-            p.Role = formValue.Role;
-            this.permissionService.create(p).subscribe(() => this.getPermissions());
-          } else {
-            console.log('Email is not in the user list. Please register first.');
-          }
-        });
-  }
-  submitPermissions(): void {
-    console.dir(this.newPermissionForm.get('Permissions').value);
-    this.newPermissionForm.get('Permissions').value.forEach(element => {
-      this.addPermission(element);
-      this.newPermissionForm.get('Permissions').value = null;
-    });
-  }
-  updatePermission(permission: Permission, permissionRole: roles){
-    this.permissionService.update(permission, permissionRole).subscribe(() => this.getPermissions());
-  }
-  deletePermission(permission: Permission){
-    this.permissionService.delete(permission).subscribe(() => this.getPermissions());
-  }
+  
   submitAnnotations(): void {
     this.newAnnotationForm.get('Annotations').value.forEach(element => {
       this.project.Annotations.push(element);

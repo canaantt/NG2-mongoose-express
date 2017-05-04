@@ -2,7 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser'); //parses information from POST
 
 
-function processResult(req, res){
+function processResult(req, res, next , query){
     return function(err, data){
         if (err) {
             console.log(err);

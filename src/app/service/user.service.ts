@@ -1,4 +1,4 @@
-import { Injectable }    from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
@@ -17,7 +17,7 @@ export class UserService {
   }
   getUsersByID(id: string): Observable<Response> {
     return this.http.get(this.usersUrl)
-               .map(res => res.json().filter(value => value._id === id));
+               .map(res => res.json());
   }
   getUsersByIDs(ids: string[]): Observable<Response> {
     return this.http.get(this.usersUrl)
@@ -25,9 +25,8 @@ export class UserService {
   }
   userValidationByEmail(email: string): Observable<Response> {
     return this.http.get(this.usersUrl)
-               .map(res => res.json().filter(value => value.Email === email))
+               .map(res => res.json().filter(value => value.Email === email));
   }
-
 
   delete(user: User): Observable<Response> {
     const url = `${this.usersUrl}/` + user._id;

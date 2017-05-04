@@ -11,7 +11,7 @@ import { LandingComponent } from './landing/landing.component';
 import { DocumentationComponent } from './documentation/documentation.component';
 import { AppRouterModule } from './router/app-router.module';
 import { ProjectsComponent } from './projects/projects.component';
-import { ProjectDetailComponent, UserFullNamePipe} from './project-detail/project-detail.component';
+import { ProjectDetailComponent} from './project-detail/project-detail.component';
 import { IrbComponent } from './irb/irb.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
@@ -19,7 +19,7 @@ import { ProjectAdditionComponent } from './project-addition/project-addition.co
 import { UserLogInComponent } from './user-log-in/user-log-in.component';
 import { FilesComponent } from './files/files.component';
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
-import { PermissionsComponent } from './permissions/permissions.component';
+import { PermissionsComponent, UserFullNamePipe } from './permissions/permissions.component';
 import { AnnotationsComponent } from './annotations/annotations.component';
 
 

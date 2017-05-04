@@ -1,25 +1,52 @@
-<h3>Permission List</h3>
-<div class='well well-lg'>
-  <div class='row'>
-    <div class="col-md-8">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let permission of permissions" >
-            <td><strong>{{ permission.Email }}</strong></td>
-            <td><select [(ngModel)]="permission.Role">
-                  <option *ngFor="let role of roles" [ngValue]="role">{{role}}</option>
-                </select></td>    
-            <td nowrap><button (click)="delete(permission)" class=" btn btn-primary" style=" margin-top:10px; float:right">Delete</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+<div #permissions>
+  <h3>Experiment</h3>
+          <table>
+            <!--<thead>
+                  <tr>
+                    <td>Name</td>
+                    <td>Permission</td>
+                    <td>Update</td>
+                    <td>Remove/Add</td>
+                  </tr>
+                </thead>-->
+            <tbody class="form-group row" *ngFor="let permission of permissions$ | async">
+              <tr>
+                <!--<td><span class="detail-users">{{permission.User | userFullName | async }}</span></td>-->
+                <td><span class="detail-users">{{permission.User}}</span></td>
+                <td><select [(ngModel)]="permission.Role">
+                        <option *ngFor="let role of roles" [value]="role">{{role}}</option>
+                        </select></td>
+                <!--<td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updatePermission(permission, permission.Role)"></span></td>-->
+                <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="deletePermission(permission)"></span></td> 
+              </tr>
+            </tbody>
+          </table>
+          <form class='submitForm' [formGroup]="newPermissionForm" (ngSubmit)="submitPermissions()">
+            <div class="form-group">
+              <fieldset formArrayName="Permissions">
+                <table>
+                  <thead>
+                    <tr>
+                      <!--<td>Email</td>
+                          <td>Role</td>
+                          <td>Action</td>-->
+                    </tr>
+                  </thead>
+                  <tbody class="form-group row" *ngFor="let permissionItem of newPermissionForm.get('Permissions').controls" [formGroup]='permissionItem'>
+                    <tr>
+                      <td><input class="form-control" type="text" formControlName="Email" placeholder="Enter User New Email"></td>
+                      <td><select formControlName="Role">
+                                <option *ngFor="let role of roles" [ngValue]="role">{{role}}</option>
+                              </select></td>
+                      <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
+                      <td><small [hidden]="permissionItem.controls.Email.valid" class="text-danger">Please Add Valid Email</small></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </fieldset>
+              <!--<button type="button" class="btn btn-link" (click)="newPermissionForm.get('Permissions').push(permissionItem(''))">Add Another Permit</button>-->
+              <!--<input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">-->
+            </div>
+          </form>
+          <!--<p>Form value: {{ newPermissionForm.get('Permissions').value | json }}</p>-->
+        </div>

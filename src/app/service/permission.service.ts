@@ -20,6 +20,7 @@ export class PermissionService {
             .map(res => res.json().filter(value => value._id === id));
   }
   getPermissionsByProjectID(id: string): Observable<Response> {
+    console.log(id);
     return this.http.get(this.permissionsUrl)
             .map(res => res.json().filter(value => value.Project === id));
   }

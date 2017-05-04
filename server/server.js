@@ -3,6 +3,8 @@ const cors = require('cors')
 const mongoose = require('mongoose');
 var GridFsStorage = require('multer-gridfs-storage');
 var Grid = require('gridfs-stream');
+var multer = require('multer');
+var bodyParser = require('body-parser'); //parses information from POST
 
 var User = require("./models/user");
 var Project = require("./models/project");
@@ -10,8 +12,6 @@ var File = require("./models/file");
 var IRB = require("./models/irb");
 var Permission = require("./models/permission");
 
-var routerFactory = require("./routes/routerFactory");
-var multer = require('multer');
 const corsOptions = {
 	origin: 'http://localhost:4200'
 }
@@ -19,6 +19,43 @@ mongoose.connect("mongodb://localhost:27017/mydb");
 var db = mongoose.connection;
 Grid.mongo = mongoose.mongo;
 var gfs = Grid(db.db);
+
+function processResult(req, res, next , query){
+    return function(err, data){
+        if (err) {
+            console.log(err);
+            res.status(404).send("Not Found").end();
+        }else{
+            res.json(data).end();
+        }
+    };
+};
+
+function routerFactory(Model)
+{
+    var router = express.Router();
+    router.use(bodyParser.json()); 
+    router.use(bodyParser.urlencoded({ extended: true }));
+
+    router.get('/', function(req, res){	
+        Model.find({}, processResult(req,res) );
+    });
+    router.post('/', function(req, res) {
+        Model.create(req.body, processResult(req,res));
+    });
+    router.route('/:id')
+    .get(function(req, res){
+        Model.findById(req.params.id, processResult(req,res) );
+    })
+    .put(function(req, res){
+        Model.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: false}, processResult(req,res) );
+    })
+    .delete(function(req, res){
+        Model.remove({_id: req.params.id}, processResult(req,res) );
+    });
+    return router;
+}
+
 
 db.on("error", console.error.bind(console, "connection error"));
 db.once("open", function (callback) {

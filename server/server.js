@@ -1,11 +1,11 @@
 const express = require('express');
 const cors = require('cors')
 const mongoose = require('mongoose');
+const tsv = require("node-tsv-json");
 var GridFsStorage = require('multer-gridfs-storage');
 var Grid = require('gridfs-stream');
 var multer = require('multer');
 var bodyParser = require('body-parser'); //parses information from POST
-
 var User = require("./models/user");
 var Project = require("./models/project");
 var File = require("./models/file");
@@ -53,14 +53,16 @@ function routerFactory(Model)
     .delete(function(req, res){
         Model.remove({_id: req.params.id}, processResult(req,res) );
     });
+    // router.route('/:query')
+    // .get(function(req, res){
+    //     console.log("************");
+    //     console.log(req.query.q);
+    //     var query = (req.query) ? JSON.parse(req.params.query) : {};
+    //     Model.find(query, processResult(req, res));
+    // })
     return router;
 }
-
-
-db.on("error", console.error.bind(console, "connection error"));
-db.once("open", function (callback) {
-	console.log("Connection succeeded.");
-	var app = express();
+var app = express();
 	app.use(function (req, res, next) { //allow cross origin requests
 		res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
         res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -68,6 +70,11 @@ db.once("open", function (callback) {
         res.header("Access-Control-Allow-Credentials", true);
         next();
 	});
+
+db.on("error", console.error.bind(console, "connection error"));
+db.once("open", function (callback) {
+	console.log("Connection succeeded.");
+	
 	app.use(cors(corsOptions));
 	app.use('/users', routerFactory(User));
 	app.use('/projects', routerFactory(Project));
@@ -88,24 +95,46 @@ db.once("open", function (callback) {
 	});
 });
 
-var storage = GridFsStorage({
-        gfs : gfs,
-        filename: function (req, file, cb) {
-            var datetimestamp = Date.now();
-            cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1]);
-        },
-        /** With gridfs we can store aditional meta-data along with the file */
-        metadata: function(req, file, cb) {
-            cb(null, { originalname: file.originalname});
-        },
-        root: 'uploadedFiles' //root name for collection to store files into
-    });
+// var storage = GridFsStorage({
+//         gfs : gfs,
+//         filename: function (req, file, cb) {
+//             var datetimestamp = Date.now();
+//             cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1]);
+//         },
+//         /** With gridfs we can store aditional meta-data along with the file */
+//         metadata: function(req, file, cb) {
+//             cb(null, { originalname: file.originalname});
+//         },
+//         root: 'uploadedFiles' //root name for collection to store files into
+//     });
 
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      console.log(file.originalname);
+    cb(tsvParser(file.originalname), '/upload')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now())
+  }
+})
 var upload = multer({
 	storage: storage, 
     preservePath: true
 }).single('file');
 
-
+var tsvParser = function(tsvfile){
+    tsv({
+    input: tsvfile, 
+    // output: "output.json"
+    //array of arrays, 1st array is column names 
+    parseRows: true
+  }, function(err, result) {
+    if(err) {
+      console.error(err);
+    }else {
+      console.log(result);
+    }
+  });
+}
 
 

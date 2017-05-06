@@ -33,10 +33,7 @@ export class ProjectDetailComponent implements OnInit{
   pi: any;
   users$: Observable<any>;
   results$: Observable<any>;
-  // permissions$: Observable<any>;
   newAnnotationForm: FormGroup;
-  // newPermissionForm: FormGroup;
-  // roles = ['full-access', 'read-only'];
   @ViewChild(PermissionsComponent) permissionComponent: PermissionsComponent;
 
   constructor(
@@ -75,4 +72,6 @@ export class ProjectDetailComponent implements OnInit{
       this.project.Annotations.push(element);
     });
   }
+
 }
+

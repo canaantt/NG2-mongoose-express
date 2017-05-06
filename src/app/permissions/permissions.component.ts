@@ -79,7 +79,7 @@ export class PermissionsComponent implements OnInit {
     this.permissionService.update(permission, permissionRole).subscribe(() => this.getPermissions());
   }
 
-  deletePermission(permission: Permission){
+  deletePermission(permission: Permission) {
     this.permissionService.delete(permission).subscribe(() => this.getPermissions());
   }
 }

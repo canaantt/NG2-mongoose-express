@@ -1,4 +1,4 @@
-import { Component,  OnInit} from '@angular/core';
+import { Component,  OnInit, Input} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { File } from '../file';
 import { FileService } from '../service/file.service';
@@ -19,11 +19,17 @@ export class FilesComponent implements OnInit {
   fileDataTypes: string[];
   files: any[];
 
-  constructor(private fileService: FileService) { }
+  constructor(private fileService: FileService) {
+    this.files = [];
+   }
 
   ngOnInit() {
     this.fileCategories = Object.keys(this.fileMeta);
-    console.log(this.uploader.queue);
+  }
+
+  fileItemPush(item: Object) {
+    this.files.push(item);
+    console.log(this.files);
   }
 }
 

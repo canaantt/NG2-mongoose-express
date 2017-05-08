@@ -2,10 +2,12 @@ const express = require('express');
 const cors = require('cors')
 const mongoose = require('mongoose');
 const tsv = require("node-tsv-json");
+var path = require('path');
 var GridFsStorage = require('multer-gridfs-storage');
 var Grid = require('gridfs-stream');
 var multer = require('multer');
 var bodyParser = require('body-parser'); //parses information from POST
+
 var User = require("./models/user");
 var Project = require("./models/project");
 var File = require("./models/file");
@@ -86,8 +88,24 @@ db.once("open", function (callback) {
 			if (err) {
 				res.json({ error_code: 1, err_desc: err });
 				return;
-			}
-			res.json({ error_code: 0, err_desc: null });
+			} else {
+                console.dir(res.req.file);
+                res.setHeader("Content-Type", "text/html");
+                tsv({
+                        input: res.req.file.path,
+                        output: null,
+                        parseRows: true
+                    }, function(err, result) {
+                        if(err) {
+                        console.error(err);
+                        }else {
+                        console.log(res.req.file.path);
+                        console.log(result);
+                        res.json({body: result }).end();
+                    }
+                });
+            }
+			// res.json({ error_code: 0, err_desc: null });
 		});
 	});
 	app.listen(3000, function () {
@@ -110,11 +128,13 @@ db.once("open", function (callback) {
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-      console.log(file.originalname);
-    cb(tsvParser(file.originalname), '/upload')
+     cb(null, './uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+    //cb(null, file.fieldname + '-' + Date.now())
+    var newFileName = file.fieldname + '-' + Date.now();
+    cb(null, newFileName);
+    // cb(tsvParser('./uploads/' + newFileName), newFileName);
   }
 })
 var upload = multer({
@@ -124,17 +144,18 @@ var upload = multer({
 
 var tsvParser = function(tsvfile){
     tsv({
-    input: tsvfile, 
-    // output: "output.json"
-    //array of arrays, 1st array is column names 
-    parseRows: true
-  }, function(err, result) {
-    if(err) {
-      console.error(err);
-    }else {
-      console.log(result);
-    }
-  });
+            input: tsvfile,
+            output: null,
+            //array of arrays, 1st array is column names 
+            parseRows: true
+        }, function(err, result) {
+            if(err) {
+            console.error(err);
+            }else {
+            console.log(tsvfile);
+            console.log(result);
+        }
+    });
 }
 
 

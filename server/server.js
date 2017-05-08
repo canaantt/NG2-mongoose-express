@@ -2,12 +2,13 @@ const express = require('express');
 const cors = require('cors')
 const mongoose = require('mongoose');
 const tsv = require("node-tsv-json");
+const fs = require("fs");
 var path = require('path');
 var GridFsStorage = require('multer-gridfs-storage');
 var Grid = require('gridfs-stream');
 var multer = require('multer');
 var bodyParser = require('body-parser'); //parses information from POST
-
+var filebrowser = require('file-browser');
 var User = require("./models/user");
 var Project = require("./models/project");
 var File = require("./models/file");
@@ -90,10 +91,10 @@ db.once("open", function (callback) {
 				return;
 			} else {
                 console.dir(res.req.file);
-                res.setHeader("Content-Type", "text/html");
+                res.setHeader("Content-Type", "application/json");
                 tsv({
                         input: res.req.file.path,
-                        output: null,
+                        output: res.req.file.path + '.json',
                         parseRows: true
                     }, function(err, result) {
                         if(err) {
@@ -101,13 +102,14 @@ db.once("open", function (callback) {
                         }else {
                         console.log(res.req.file.path);
                         console.log(result);
-                        res.json({body: result }).end();
+                        res.json({data: result }).end();
                     }
                 });
             }
 			// res.json({ error_code: 0, err_desc: null });
 		});
 	});
+    app.use('/upload/', express.static('./uploads'));
 	app.listen(3000, function () {
 		console.log('listening on 3000...');
 	});

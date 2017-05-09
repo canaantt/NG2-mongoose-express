@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const tsv = require("node-tsv-json");
 const fs = require("fs");
 var path = require('path');
-var GridFsStorage = require('multer-gridfs-storage');
-var Grid = require('gridfs-stream');
+// var GridFsStorage = require('multer-gridfs-storage');
+// var Grid = require('gridfs-stream');
 var multer = require('multer');
 var bodyParser = require('body-parser'); //parses information from POST
 var filebrowser = require('file-browser');
@@ -20,8 +20,8 @@ const corsOptions = {
 }
 mongoose.connect("mongodb://localhost:27017/mydb");
 var db = mongoose.connection;
-Grid.mongo = mongoose.mongo;
-var gfs = Grid(db.db);
+// Grid.mongo = mongoose.mongo;
+// var gfs = Grid(db.db);
 
 function processResult(req, res, next , query){
     return function(err, data){
@@ -144,20 +144,5 @@ var upload = multer({
     preservePath: true
 }).single('file');
 
-var tsvParser = function(tsvfile){
-    tsv({
-            input: tsvfile,
-            output: null,
-            //array of arrays, 1st array is column names 
-            parseRows: true
-        }, function(err, result) {
-            if(err) {
-            console.error(err);
-            }else {
-            console.log(tsvfile);
-            console.log(result);
-        }
-    });
-}
 
 

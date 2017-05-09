@@ -2,10 +2,13 @@ const express = require('express');
 const cors = require('cors')
 const mongoose = require('mongoose');
 const tsv = require("node-tsv-json");
-var GridFsStorage = require('multer-gridfs-storage');
-var Grid = require('gridfs-stream');
+const fs = require("fs");
+var path = require('path');
+// var GridFsStorage = require('multer-gridfs-storage');
+// var Grid = require('gridfs-stream');
 var multer = require('multer');
 var bodyParser = require('body-parser'); //parses information from POST
+var filebrowser = require('file-browser');
 var User = require("./models/user");
 var Project = require("./models/project");
 var File = require("./models/file");
@@ -17,8 +20,8 @@ const corsOptions = {
 }
 mongoose.connect("mongodb://localhost:27017/mydb");
 var db = mongoose.connection;
-Grid.mongo = mongoose.mongo;
-var gfs = Grid(db.db);
+// Grid.mongo = mongoose.mongo;
+// var gfs = Grid(db.db);
 
 function processResult(req, res, next , query){
     return function(err, data){
@@ -86,10 +89,27 @@ db.once("open", function (callback) {
 			if (err) {
 				res.json({ error_code: 1, err_desc: err });
 				return;
-			}
-			res.json({ error_code: 0, err_desc: null });
+			} else {
+                console.dir(res.req.file);
+                res.setHeader("Content-Type", "application/json");
+                tsv({
+                        input: res.req.file.path,
+                        output: res.req.file.path + '.json',
+                        parseRows: true
+                    }, function(err, result) {
+                        if(err) {
+                        console.error(err);
+                        }else {
+                        console.log(res.req.file.path);
+                        console.log(result);
+                        res.json({data: result }).end();
+                    }
+                });
+            }
+			// res.json({ error_code: 0, err_desc: null });
 		});
 	});
+    app.use('/upload/', express.static('./uploads'));
 	app.listen(3000, function () {
 		console.log('listening on 3000...');
 	});
@@ -110,11 +130,13 @@ db.once("open", function (callback) {
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-      console.log(file.originalname);
-    cb(tsvParser(file.originalname), '/upload')
+     cb(null, './uploads')
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now())
+    //cb(null, file.fieldname + '-' + Date.now())
+    var newFileName = file.fieldname + '-' + Date.now();
+    cb(null, newFileName);
+    // cb(tsvParser('./uploads/' + newFileName), newFileName);
   }
 })
 var upload = multer({
@@ -122,19 +144,5 @@ var upload = multer({
     preservePath: true
 }).single('file');
 
-var tsvParser = function(tsvfile){
-    tsv({
-    input: tsvfile, 
-    // output: "output.json"
-    //array of arrays, 1st array is column names 
-    parseRows: true
-  }, function(err, result) {
-    if(err) {
-      console.error(err);
-    }else {
-      console.log(result);
-    }
-  });
-}
 
 

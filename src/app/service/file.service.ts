@@ -1,4 +1,4 @@
-import { Injectable }    from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { File } from '../file';
@@ -7,8 +7,8 @@ import { File } from '../file';
 export class FileService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
-  private filesUrl = 'http://localhost:3000/files'; 
-  private fileUploadingUrl = 'http://localhost:3000/upload';
+  private filesUrl = 'http://localhost:3000/files';
+  private fileUploadingUrl = 'http://localhost:3000/uploads';
   constructor(private http: Http) {}
 
   getFiles(): Observable<Response> {

@@ -5,7 +5,8 @@
       <form>
         <div class="form-group">
           <label for="single">single</label>
-          <input type="file" class="form-control" name="single" ng2FileSelect [uploader]="uploader" />
+          <!--<input id="fileupload" type="file" class="form-control" name="single"  ng2FileSelect [uploader]="uploader"/>-->
+          <input id="fileupload" type="file" class="form-control" name="single"  (change)="onChange($event)" />
         </div>
       </form>
     </div>

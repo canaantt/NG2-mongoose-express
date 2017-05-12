@@ -8,7 +8,7 @@ export class FileService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
   private filesUrl = 'http://localhost:3000/files';
-  private fileUploadingUrl = 'http://localhost:3000/uploads';
+  private fileUploadingUrl = 'http://localhost:3000/upload';
   constructor(private http: Http) {}
 
   getFiles(): Observable<Response> {

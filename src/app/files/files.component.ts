@@ -20,6 +20,8 @@ export class FilesComponent implements OnInit {
   fileCategories: string[];
   fileDataTypes: string[];
   files: any[];
+  file: any;
+
   private fileUploadingUrl = 'http://localhost:3000/uploads';
 
   constructor(private fileService: FileService) {
@@ -30,14 +32,42 @@ export class FilesComponent implements OnInit {
     this.fileCategories = Object.keys(this.fileMeta);
   }
 
-  // uploadedData(): Observable<Response> {
-  //   return this.http.get()
-  // }
-
+  csvJSON(string: string) {
+      var lines = string.split("\n");
+      var result = [];
+      var headers = lines[0].split(",");
+      for (var i = 1; i < lines.length; i++) {
+          var obj = {};
+          var currentline = lines[i].split(",");
+          for (var j = 0; j < headers.length; j++) {
+              obj[headers[j]] = currentline[j];
+          }
+          result.push(obj);
+      }
+      return JSON.stringify(result); //JSON
+  }
 
   fileItemPush(item: Object) {
     this.files.push(item);
     console.log(this.files);
   }
+
+  
+  onChange(event: EventTarget) {
+        let self = this;
+        let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
+        let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
+        let files: FileList = target.files;
+        this.file = files[0];
+        console.log(this.file);
+        let reader = new FileReader();
+        reader.onload = function(e) {
+          var text = reader.result;
+          console.log(text);
+          var json = self.csvJSON(text);
+          console.log(json);
+        }
+        reader.readAsText(this.file);
+    }
 }
 

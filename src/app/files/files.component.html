@@ -2,15 +2,30 @@
 <div class='well well-lg'>
   <div class="row">
     <div class="col-md-5">
-      <form>
+      <form class='submitForm' [formGroup]="newFileForm">
         <div class="form-group">
-          <label for="single">single</label>
-          <!--<input id="fileupload" type="file" class="form-control" name="single"  ng2FileSelect [uploader]="uploader"/>-->
-          <input id="fileupload" type="file" class="form-control" name="single"  (change)="onChange($event)" />
+          <fieldset formArrayName="Files">
+            <table>
+              <tbody class="form-group row" *ngFor="let fileItem of newFileForm.get('Files').controls" [formGroup]='fileItem'>
+                <tr>
+                  <td><select formControlName="Category">
+                        <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
+                      </select></td>
+                  <td><select formControlName="DataType">
+                        <option *ngFor="let datatype of fileMeta.clinical" [ngValue]="datatype">{{datatype}}</option>
+                      </select><td>
+                  <!--<input id="fileupload" type="file" class="form-control" name="single"  ng2FileSelect [uploader]="uploader"/>-->
+                  <td><input type="file" class="form-control col-md-5" name="single" (change)="fileSelection($event)" formControlName="file"
+                    /></td>
+                  <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
         </div>
       </form>
     </div>
-    <div class="col-md-8" >
+    <!--<div class="col-md-8">
       Queue length: {{ uploader?.queue?.length }}
       <table class="table">
         <thead>
@@ -27,12 +42,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let item of uploader.queue" >
+          <tr *ngFor="let item of uploader.queue">
             <td><strong>{{ item.file.name }}</strong></td>
             <td><strong>{{ item.file.type }}</strong></td>
             <td><select [(ngModel)]="item.file.category">
                   <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
-                </select></td>    
+                </select></td>
             <td><select [(ngModel)]="item.file.dataType">
                   <option *ngFor="let datatype of fileMeta[item.file.category]" [ngValue]="datatype">{{datatype}}</option>
                 </select></td>
@@ -81,6 +96,6 @@
                                     <span class="glyphicon glyphicon-trash"></span> Remove all
                                 </button>
       </div>
-    </div>
+    </div>-->
   </div>
 </div>

@@ -90,7 +90,7 @@ db.once("open", function (callback) {
 				res.json({ error_code: 1, err_desc: err });
 				return;
 			} else {
-                console.dir(res.req.file);
+                console.dir(res.req);
                 res.setHeader("Content-Type", "application/json");
                 tsv({
                         input: res.req.file.path,
@@ -102,7 +102,7 @@ db.once("open", function (callback) {
                         }else {
                         console.log(res.req.file.path);
                         console.log(result);
-                        res.json({data: result }).end();
+                        res.json({data: result, filename: res.req.file.path+'.json'}).end();
                     }
                 });
             }

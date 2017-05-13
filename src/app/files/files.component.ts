@@ -21,15 +21,28 @@ export class FilesComponent implements OnInit {
   fileDataTypes: string[];
   files: any[];
   file: any;
+  category: string;
+  datatype: string;
+  newFileForm: FormGroup;
 
   private fileUploadingUrl = 'http://localhost:3000/uploads';
 
-  constructor(private fileService: FileService) {
+  constructor(private fb: FormBuilder,
+              private fileService: FileService) {
     this.files = [];
    }
 
   ngOnInit() {
     this.fileCategories = Object.keys(this.fileMeta);
+    this.newFileForm = this.fb.group({Files: this.fb.array([this.fileItem()])});
+  }
+
+  fileItem() {
+    return new FormGroup({
+      Category: new FormControl('clinical', Validators.required),
+      DataType: new FormControl('diagnosis', Validators.required),
+      File: new FormControl()
+    });
   }
 
   csvJSON(string: string) {
@@ -52,22 +65,21 @@ export class FilesComponent implements OnInit {
     console.log(this.files);
   }
 
-  
-  onChange(event: EventTarget) {
+  fileSelection(event: EventTarget): void {
         let self = this;
+        let json = null;
         let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
         let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
         let files: FileList = target.files;
-        this.file = files[0];
-        console.log(this.file);
         let reader = new FileReader();
+        reader.readAsText(files[0]);
         reader.onload = function(e) {
           var text = reader.result;
           console.log(text);
-          var json = self.csvJSON(text);
+          json = self.csvJSON(text);
           console.log(json);
         }
-        reader.readAsText(this.file);
+        this.file.data = json;
     }
 }
 

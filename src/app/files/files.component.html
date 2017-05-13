@@ -15,7 +15,7 @@
                         <option *ngFor="let datatype of fileMeta[fileItem.controls.Category.value]" [ngValue]="datatype">{{datatype}}</option>
                       </select><td>
                   <!--<input id="fileupload" type="file" class="form-control" name="single"  ng2FileSelect [uploader]="uploader"/>-->
-                  <td><input type="file" class="form-control col-md-5" name="single" (change)="fileSelection($event)" formControlName="File"
+                  <td><input type="file" class="form-control col-md-5" name="single" (change)="onSelection($event)" formControlName="File"
                     /></td>
                   <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
                 </tr>

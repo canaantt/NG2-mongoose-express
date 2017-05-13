@@ -65,21 +65,40 @@ export class FilesComponent implements OnInit {
     console.log(this.files);
   }
 
-  fileSelection(event: EventTarget): void {
+  fileSelection(event: EventTarget): any {
         let self = this;
         let json = null;
         let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
         let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
         let files: FileList = target.files;
         let reader = new FileReader();
+        let Obj = Object ();
         reader.readAsText(files[0]);
         reader.onload = function(e) {
           var text = reader.result;
           console.log(text);
           json = self.csvJSON(text);
           console.log(json);
+          // let Obj = Object ();
+          Obj.data = json;
+          Obj.category = self.category;
+          // console.log(Obj);
+          
+          // self.files.push(Obj);
+          // console.log(self.files);
         }
-        this.file.data = json;
+        // return null;
+        return Obj;
+    }
+
+    fileItemAppend(obj: Object): void {
+      console.log("within fileItemAppend");
+      console.log(obj);
+      this.files.push(obj);
+    }
+    onSelection(event: EventTarget): void {
+      this.fileItemAppend(this.fileSelection(event));
+      console.log(this.files);
     }
 }
 

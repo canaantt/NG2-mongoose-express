@@ -12,10 +12,10 @@
                         <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
                       </select></td>
                   <td><select formControlName="DataType">
-                        <option *ngFor="let datatype of fileMeta.clinical" [ngValue]="datatype">{{datatype}}</option>
+                        <option *ngFor="let datatype of fileMeta[fileItem.controls.Category.value]" [ngValue]="datatype">{{datatype}}</option>
                       </select><td>
                   <!--<input id="fileupload" type="file" class="form-control" name="single"  ng2FileSelect [uploader]="uploader"/>-->
-                  <td><input type="file" class="form-control col-md-5" name="single" (change)="fileSelection($event)" formControlName="file"
+                  <td><input type="file" class="form-control col-md-5" name="single" (change)="fileSelection($event)" formControlName="File"
                     /></td>
                   <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
                 </tr>
@@ -24,6 +24,9 @@
           </fieldset>
         </div>
       </form>
+      <p>Form value: {{ newFileForm.get('Files').value | json }}</p>
+      <p>Form Status: {{ newFileForm.status | json }}</p>
+
     </div>
     <!--<div class="col-md-8">
       Queue length: {{ uploader?.queue?.length }}

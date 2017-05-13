@@ -37,11 +37,11 @@ export class FilesComponent implements OnInit {
     this.newFileForm = this.fb.group({Files: this.fb.array([this.fileItem()])});
   }
 
-  fileItem(){
+  fileItem() {
     return new FormGroup({
       Category: new FormControl('clinical', Validators.required),
       DataType: new FormControl('diagnosis', Validators.required),
-      file: new FormControl('', Validators.required)
+      File: new FormControl()
     });
   }
 
@@ -65,21 +65,21 @@ export class FilesComponent implements OnInit {
     console.log(this.files);
   }
 
-  fileSelection(event: EventTarget) {
+  fileSelection(event: EventTarget): void {
         let self = this;
+        let json = null;
         let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
         let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
         let files: FileList = target.files;
-        this.file = files[0];
-        console.log(this.file);
         let reader = new FileReader();
+        reader.readAsText(files[0]);
         reader.onload = function(e) {
           var text = reader.result;
           console.log(text);
-          var json = self.csvJSON(text);
+          json = self.csvJSON(text);
           console.log(json);
         }
-        reader.readAsText(this.file);
+        this.file.data = json;
     }
 }
 

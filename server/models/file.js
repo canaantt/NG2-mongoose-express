@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var categories = ['clinical', 'molecular', 'metadata'];
-var datatypes = ['diagnosis', 'drug', 'treatment', 'mut', 'RNASeq', 'cnv'];
+var datatypes = ['diagnosis', 'drug', 'treatment', 'mut', 'RNASeq', 'cnv', 'protein'];
 
 var fileSchema = new Schema({
     Name: String,

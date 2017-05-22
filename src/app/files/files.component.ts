@@ -1,4 +1,4 @@
-import { Component,  OnInit, Input} from '@angular/core';
+import { Component,  OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { File } from '../file';
 import { FileService } from '../service/file.service';
@@ -15,7 +15,7 @@ import { Observable } from 'rxjs/Observable';
 export class FilesComponent implements OnInit {
   public uploader: FileUploader = new FileUploader({url: 'http://localhost:3000/upload'});
   fileMeta = {'clinical': ['diagnosis', 'drug', 'treatment'],
-              'molecular': ['mut', 'RNASeq', 'cnv'],
+              'molecular': ['mut', 'RNASeq', 'cnv', 'protein'],
               'metadata': ['metadata'] };
   fileCategories: string[];
   fileDataTypes: string[];
@@ -25,6 +25,8 @@ export class FilesComponent implements OnInit {
   datatype: string;
   newFileForm: FormGroup;
   data: any[];
+  // @Output() fileoutput: EventEmitter<Object> = new EventEmitter<Object>();
+  @Input() project: any; 
 
   private fileUploadingUrl = 'http://localhost:3000/uploads';
 
@@ -67,7 +69,7 @@ export class FilesComponent implements OnInit {
   //   console.log(this.files);
   // }
 
-  fileSelection(event: EventTarget): any {
+  fileSelection(event: EventTarget, projectID: string): any {
         let self = this;
         let json = null;
         let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
@@ -78,18 +80,13 @@ export class FilesComponent implements OnInit {
         reader.readAsText(files[0]);
         reader.onload = function(e) {
           let text = reader.result;
-          console.log(text);
           json = self.csvJSON(text);
-          console.log(json);
           // let Obj = Object ();
           Obj.data = json;
           Obj.name = files[0].name;
           Obj.size = files[0].size;
-          // console.log(Obj);
-          // self.files.push(Obj);
-          // console.log(self.files);
+          Obj.project = projectID;
         }
-        // return null;
         return Obj;
     }
 
@@ -98,11 +95,9 @@ export class FilesComponent implements OnInit {
     //   console.log(obj);
     //   this.data.push(obj);
     // }
-    onSelection(event: EventTarget): void {
-      // console.log(formValue.Category);
-      var Obj = this.fileSelection(event);
-      this.data.push(Obj);
-      console.log(this.data);
+    onSelection(event: EventTarget, i): void {
+      var Obj = this.fileSelection(event, this.project._id);
+      this.data[i] = Obj;
     }
 
     submitFiles(): void {
@@ -110,10 +105,15 @@ export class FilesComponent implements OnInit {
         console.log(element.Category);
         let obj = Object();
         obj.Category = element.Category;
-        obj.data = this.data[0];
+        obj.dataType = element.DataType;
+        obj.data = this.data[0].data;
         obj.name = this.data[0].name;
         obj.size = this.data[0].size;
+        obj.Project = this.data[0].project;
         this.files.push(obj);
+        // this.fileoutput.emit(this.files);
+        // this.project.files = this.files;
+        console.log(this.files);
       });
     }
 

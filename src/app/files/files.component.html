@@ -28,7 +28,7 @@
         <div class="form-group">
           <fieldset formArrayName="Files">
             <table>
-              <tbody class="form-group row" *ngFor="let fileItem of newFileForm.get('Files').controls" [formGroup]='fileItem'>
+              <tbody class="form-group row" *ngFor="let fileItem of newFileForm.get('Files').controls; let i = index;" [formGroup]='fileItem'>
                 <tr>
                   <td><select formControlName="Category">
                         <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
@@ -38,7 +38,7 @@
                       </select>
                     <td>
                       <!--<input id="fileupload" type="file" class="form-control" name="single"  ng2FileSelect [uploader]="uploader"/>-->
-                      <td><input type="file" class="form-control col-md-5" name="single" (change)="onSelection($event)" formControlName="File"
+                      <td><input type="file" class="form-control col-md-5" name="single" (change)="onSelection($event, i)" formControlName="File"
                         /></td>
                       <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
                 </tr>

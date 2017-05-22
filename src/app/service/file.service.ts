@@ -8,7 +8,7 @@ export class FileService {
 
   private headers = new Headers({'Content-Type': 'application/json'});
   private filesUrl = 'http://localhost:3000/files';
-  private fileUploadingUrl = 'http://localhost:3000/upload';
+  // private fileUploadingUrl = 'http://localhost:3000/upload';
   constructor(private http: Http) {}
 
   getFiles(): Observable<Response> {
@@ -30,6 +30,8 @@ export class FileService {
   }
 
   create(file: File): Observable<Response> {
+    console.log(file);
+    console.log("In the file service file creation");
     return this.http
       .post(this.filesUrl, JSON.stringify(file), {headers: this.headers});
   }

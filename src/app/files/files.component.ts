@@ -105,12 +105,13 @@ export class FilesComponent implements OnInit {
         console.log(element.Category);
         let obj = Object();
         obj.Category = element.Category;
-        obj.dataType = element.DataType;
-        obj.data = this.data[0].data;
-        obj.name = this.data[0].name;
-        obj.size = this.data[0].size;
+        obj.DataType = element.DataType;
+        obj.Data = this.data[0].data;
+        obj.Name = this.data[0].name;
+        obj.Size = this.data[0].size;
         obj.Project = this.data[0].project;
         this.files.push(obj);
+        this.fileService.create(obj).subscribe(() => console.log("hello."));
         // this.fileoutput.emit(this.files);
         // this.project.files = this.files;
         console.log(this.files);

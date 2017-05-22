@@ -6,6 +6,8 @@ export class File {
     Name: string;
     Category: categories;
     DataType: datatypes ;
-    Status: string;
+    Project: string;
+    Data: Object;
+    Size: Number;
     Date: Date;
 }

@@ -3,6 +3,10 @@ import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Permission } from '../permission';
 import { User } from '../user';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/observable/of';
+
 enum roles {'full-access', 'read-only'};
 @Injectable()
 export class PermissionService {
@@ -30,7 +34,10 @@ export class PermissionService {
     const url = `${this.permissionsUrl}/` + permission._id;
     return this.http.delete(url, {headers: this.headers});
   }
-
+ deleteById(id: string): Observable<Response> {
+    const url = `${this.permissionsUrl}/` + id;
+    return this.http.delete(url, {headers: this.headers});
+  }
   create(permission: Permission): Observable<Response> {
     return this.http
       .post(this.permissionsUrl, JSON.stringify(permission), {headers: this.headers});

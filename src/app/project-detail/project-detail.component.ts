@@ -74,4 +74,6 @@ export class ProjectDetailComponent implements OnInit{
     });
     this.newAnnotationForm.get('Annotations').value = null;
   }
+
 }
+

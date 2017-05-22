@@ -1,15 +1,16 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 const mongoose = require('mongoose'); 
 const _ = require("underscore");
 const validFileTypes = ['txt', 'csv', 'tsv', 'json'];
 var router = express.Router();
 var bodyParser = require('body-parser'); //parses information from POST
+const tsv = require("node-tsv-json");
+var path = require('path');
 var multer = require('multer');
 
-
 router.use(bodyParser.urlencoded({ extended: true }));
-router.use(fileUpload());
+// router.use(fileUpload());
 
 // router.post('/', function(req, res) {
 //   if (!req.files)
@@ -32,32 +33,49 @@ router.use(fileUpload());
 // });
 
 router.post('/', function(res, res){
-	res.send('POST handler for /files route.');
-});
-var storage = multer.diskStorage({ //multers disk storage settings
-        destination: function (req, file, cb) {
-            cb(null, './uploads/');
-        },
-        filename: function (req, file, cb) {
-            var datetimestamp = Date.now();
-            cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1]);
-        }
-    });
-
-    var upload = multer({ //multer settings
-                    storage: storage
-                }).single('file');
-
-    /** API path that will upload the files */
-    router.post('/upload', function(req, res) {
-        upload(req,res,function(err){
-			console.log(req.file);
-            if(err){
-                 res.json({error_code:1,err_desc:err});
-                 return;
+	upload(req, res, function (err) {
+			if (err) {
+				res.json({ error_code: 1, err_desc: err });
+				return;
+			} else {
+                console.dir(res.req.file);
+                res.setHeader("Content-Type", "text/html");
+                tsv({
+                        input: res.req.file.path,
+                        output: null,
+                        parseRows: true
+                    }, function(err, result) {
+                        if(err) {
+                        console.error(err);
+                        }else {
+                        console.log(res.req.file.path);
+                        console.log(result);
+                        res.json({data: result }).end();
+                    }
+                });
             }
-             res.json({error_code:0,err_desc:null});
-        });
+			// res.json({ error_code: 0, err_desc: null });
+		});
+});
+
+router.get('/:filename', function(req, res){	
+        Model.find({}, processResult(req,res) );
     });
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+     cb(null, './uploads')
+  },
+  filename: function (req, file, cb) {
+    //cb(null, file.fieldname + '-' + Date.now())
+    var newFileName = file.fieldname + '-' + Date.now();
+    cb(null, newFileName);
+    // cb(tsvParser('./uploads/' + newFileName), newFileName);
+  }
+})
+var upload = multer({
+	storage: storage, 
+    preservePath: true
+}).single('file');
 
 module.exports = router;

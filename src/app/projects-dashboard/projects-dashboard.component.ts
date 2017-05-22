@@ -1,29 +1,33 @@
 import { Component, OnInit, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
+import { Permission } from '../permission';
+import { PermissionService } from '../service/permission.service';
 import { IRB } from '../irb';
 import { IrbService } from '../service/irb.service';
 import { User } from '../user';
 import { UserService } from '../service/user.service';
+
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/toPromise';
 
 @Component({
   selector: 'app-projects-dashboard',
   templateUrl: './projects-dashboard.component.html',
   styleUrls: ['./projects-dashboard.component.scss'],
-  providers: [IrbService, UserService]
+  providers: [IrbService, UserService, PermissionService]
 })
 export class ProjectsDashboardComponent implements OnInit {
   projects: Project[];
   selectedProject: Project;
   newProjectForm: FormGroup;
 
-  constructor( private fb: FormBuilder, 
+  constructor( private fb: FormBuilder,
                private projectService: ProjectService,
+               private permissionService: PermissionService,
                private irbService: IrbService,
                private userService: UserService) { }
 
@@ -57,16 +61,16 @@ export class ProjectsDashboardComponent implements OnInit {
   delete(project: Project): void {
     this.projectService.delete(project).subscribe(() => this.getProjects());
   }
+
   add(): void {
     this.newProjectForm = this.fb.group({
       Name: new FormControl('Name Your Fancy Project', Validators.required),
-      Description: new FormControl('You don\'t need to use ours description:) But we offer anyway --- The largest recorded snowflake was in Keogh, MT during year 1887, and was 15 inches wide. Do you know? Do you? Do you? ' , Validators.minLength(4))
+      Description: new FormControl('The largest recorded snowflake was in Keogh, MT during year 1887, 15 inches wide' , Validators.minLength(4))
     });
     this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
   }
   ngOnInit() {
     this.getProjects();
-    
   }
 
 }

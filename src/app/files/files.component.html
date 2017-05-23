@@ -2,33 +2,32 @@
 <div class='well well-lg'>
   <div class="row">
     <div class="col-md-5">
-      <div *ngIf='files.length > 0'>
+      <!--<div *ngIf='files.length > 0'>-->
       <table>
-        <thead>
+        <!--<thead>
           <td>Category</td>
+          <td>Data Type</td>
           <td>File Name</td>
           <td>File Size</td>
           <td>Actions</td>
-        </thead>
-        <tbody class="form-group row" *ngFor="let file of files">
+        </thead>-->
+        <tbody class="form-group row" *ngFor="let file of files$ | async">
           <tr>
-            <td><span class="detail-users">{{file.Category}}</span></td>
-            <td><span class="detail-users">{{file.name}}</span></td>
-            <td><span class="detail-users">{{file.size}}</span></td>
-            <!--<td><select [(ngModel)]="permission.Role">
-                <option *ngFor="let role of roles" [value]="role">{{role}}</option>
-                </select></td>-->
-            <td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updatePermission(permission, permission.Role)"></span></td>
-            <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="deletePermission(permission)"></span></td>
+            <td><span class="detail-users">{{file.Category}}/{{file.DataType}}</span></td>
+            <!--<td><span class="detail-users">{{file.DataType}}</span></td>-->
+            <td><span class="detail-users">{{file.Name}}</span></td>
+            <td><span class="detail-users">{{file.Size/1000000}}MB</span></td>
+            <td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updateFile(file)"></span></td>
+            <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="deleteFile(file)"></span></td>
           </tr>
         </tbody>
       </table>
-      </div>
+      <!--</div>-->
       <form class='submitForm' [formGroup]="newFileForm" (ngSubmit)="submitFiles()">
         <div class="form-group">
           <fieldset formArrayName="Files">
             <table>
-              <tbody class="form-group row" *ngFor="let fileItem of newFileForm.get('Files').controls" [formGroup]='fileItem'>
+              <tbody class="form-group row" *ngFor="let fileItem of newFileForm.get('Files').controls; let i = index;" [formGroup]='fileItem'>
                 <tr>
                   <td><select formControlName="Category">
                         <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
@@ -38,7 +37,7 @@
                       </select>
                     <td>
                       <!--<input id="fileupload" type="file" class="form-control" name="single"  ng2FileSelect [uploader]="uploader"/>-->
-                      <td><input type="file" class="form-control col-md-5" name="single" (change)="onSelection($event)" formControlName="File"
+                      <td><input type="file" class="form-control col-md-5" name="single" (change)="onSelection($event, i)" formControlName="File"
                         /></td>
                       <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
                 </tr>
@@ -47,8 +46,8 @@
           </fieldset>
         </div>
       </form>
-      <p>Form value: {{ newFileForm.get('Files').value | json }}</p>
-      <p>Form Status: {{ newFileForm.status | json }}</p>
+      <!--<p>Form value: {{ newFileForm.get('Files').value | json }}</p>
+      <p>Form Status: {{ newFileForm.status | json }}</p>-->
 
     </div>
     <!--<div class="col-md-8">

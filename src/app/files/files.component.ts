@@ -25,7 +25,8 @@ export class FilesComponent implements OnInit {
   datatype: string;
   newFileForm: FormGroup;
   data: any[];
-  // @Output() fileoutput: EventEmitter<Object> = new EventEmitter<Object>();
+  files$: Observable<any>;
+  id: string;
   @Input() project: any; 
 
   private fileUploadingUrl = 'http://localhost:3000/uploads';
@@ -39,8 +40,12 @@ export class FilesComponent implements OnInit {
   ngOnInit(): void {
     this.fileCategories = Object.keys(this.fileMeta);
     this.newFileForm = this.fb.group({Files: this.fb.array([this.fileItem()])});
+    this.id = this.project._id;
+    this.getFiles();
   }
-
+  getFiles(): void {
+    this.files$ = this.fileService.getFilesByProjectID(this.id);
+  }
   fileItem() {
     return new FormGroup({
       Category: new FormControl('clinical', Validators.required),
@@ -64,11 +69,6 @@ export class FilesComponent implements OnInit {
       return JSON.stringify(result); //JSON
   }
 
-  // fileItemPush(item: Object) {
-  //   this.files.push(item);
-  //   console.log(this.files);
-  // }
-
   fileSelection(event: EventTarget, projectID: string): any {
         let self = this;
         let json = null;
@@ -90,11 +90,6 @@ export class FilesComponent implements OnInit {
         return Obj;
     }
 
-    // fileItemAppend(obj: Object): void {
-    //   console.log("within fileItemAppend");
-    //   console.log(obj);
-    //   this.data.push(obj);
-    // }
     onSelection(event: EventTarget, i): void {
       var Obj = this.fileSelection(event, this.project._id);
       this.data[i] = Obj;
@@ -110,22 +105,16 @@ export class FilesComponent implements OnInit {
         obj.Name = this.data[0].name;
         obj.Size = this.data[0].size;
         obj.Project = this.data[0].project;
-        this.files.push(obj);
-        this.fileService.create(obj).subscribe(() => console.log("hello."));
-        // this.fileoutput.emit(this.files);
-        // this.project.files = this.files;
-        console.log(this.files);
+        this.fileService.create(obj).subscribe(() => this.getFiles());
       });
     }
 
-    updateFile(): void{
-
+    updateFile(file: File) {
+      this.fileService.update(file).subscribe(() => this.getFiles());
     }
 
-    deleteFile(): void {
-      //remove element from data[]
-      //remove element from files[]
-      //remove element from reactive form ?
+    deleteFile(file: File) {
+      this.fileService.delete(file).subscribe(() => this.getFiles());
     }
 }
 

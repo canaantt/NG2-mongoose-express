@@ -12,5 +12,5 @@ var fileSchema = new Schema({
     Data: Object,
     Size: Number,
     Date: {type: Date, default: Date.now}
-});
+}, {collection:'files'});
 module.exports = mongoose.model("File", fileSchema);

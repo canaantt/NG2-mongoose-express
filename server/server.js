@@ -66,14 +66,15 @@ function routerFactory(Model)
     return router;
 }
 var app = express();
-	app.use(function (req, res, next) { //allow cross origin requests
-		res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-        res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        res.header("Access-Control-Allow-Credentials", true);
-        next();
-	});
-
+app.use(function (req, res, next) { //allow cross origin requests
+    res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Credentials", true);
+    next();
+});
+app.use(bodyParser.urlencoded({limit: '50mb'}));
+app.use(bodyParser.json({limit: '50mb'}));
 db.on("error", console.error.bind(console, "connection error"));
 db.once("open", function (callback) {
 	console.log("Connection succeeded.");

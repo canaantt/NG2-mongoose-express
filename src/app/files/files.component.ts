@@ -63,8 +63,9 @@ export class FilesComponent implements OnInit {
           var currentline = lines[i].split(",");
           for (var j = 0; j < headers.length; j++) {
               obj[headers[j]] = currentline[j];
+              console.log("at line ", j);
           }
-          result.push(obj);
+          // result.push(obj);
       }
       return JSON.stringify(result); //JSON
   }
@@ -80,9 +81,9 @@ export class FilesComponent implements OnInit {
         reader.readAsText(files[0]);
         reader.onload = function(e) {
           let text = reader.result;
-          json = self.csvJSON(text);
+          json = JSON.parse(self.csvJSON(text));
           // let Obj = Object ();
-          Obj.data = json;
+          // Obj.data = text;
           Obj.name = files[0].name;
           Obj.size = files[0].size;
           Obj.project = projectID;
@@ -97,7 +98,7 @@ export class FilesComponent implements OnInit {
 
     submitFiles(): void {
       this.newFileForm.get('Files').value.forEach(element => {
-        console.log(element.Category);
+        // console.log(element.Category);
         let obj = Object();
         obj.Category = element.Category;
         obj.DataType = element.DataType;

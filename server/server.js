@@ -73,8 +73,8 @@ app.use(function (req, res, next) { //allow cross origin requests
     res.header("Access-Control-Allow-Credentials", true);
     next();
 });
-app.use(bodyParser.urlencoded({limit: '50mb'}));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '400mb'}));
+app.use(bodyParser.json({limit: '400mb'}));
 db.on("error", console.error.bind(console, "connection error"));
 db.once("open", function (callback) {
 	console.log("Connection succeeded.");

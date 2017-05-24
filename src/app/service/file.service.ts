@@ -34,8 +34,6 @@ export class FileService {
   }
 
   create(file: File): Observable<Response> {
-    console.log(file);
-    console.log("In the file service file creation");
     return this.http
       .post(this.filesUrl, JSON.stringify(file), {headers: this.headers});
   }

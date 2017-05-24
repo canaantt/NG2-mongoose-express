@@ -2,7 +2,6 @@
 <div class='well well-lg'>
   <div class="row">
     <div class="col-md-5">
-      <!--<div *ngIf='files.length > 0'>-->
       <table>
         <!--<thead>
           <td>Category</td>
@@ -17,12 +16,11 @@
             <!--<td><span class="detail-users">{{file.DataType}}</span></td>-->
             <td><span class="detail-users">{{file.Name}}</span></td>
             <td><span class="detail-users">{{file.Size/1000000}}MB</span></td>
-            <td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updateFile(file)"></span></td>
+            <!--<td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updateFile(file)"></span></td>-->
             <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="deleteFile(file)"></span></td>
           </tr>
         </tbody>
       </table>
-      <!--</div>-->
       <form class='submitForm' [formGroup]="newFileForm" (ngSubmit)="submitFiles()">
         <div class="form-group">
           <fieldset formArrayName="Files">

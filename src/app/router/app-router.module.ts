@@ -10,6 +10,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { ProjectsDashboardComponent } from '../projects-dashboard/projects-dashboard.component';
 import { ProjectAdditionComponent } from '../project-addition/project-addition.component';
 import { ProjectDetailComponent } from '../project-detail/project-detail.component';
+import { AdminComponent } from '../admin/admin.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,9 @@ const routes: Routes = [
     path: 'users',
     component: UsersComponent
   }, {
+    path: 'admin',
+    component: AdminComponent
+  },{
     path: 'documentation',
     component: DocumentationComponent
   }, {

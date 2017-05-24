@@ -7,7 +7,6 @@ export class File {
     Category: categories;
     DataType: datatypes ;
     Project: string;
-    Data: object;
     Size: number;
-    Date: Date;
+    Date: Date
 }

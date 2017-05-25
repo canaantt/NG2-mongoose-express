@@ -23,8 +23,8 @@ import { PermissionsComponent, UserFullNamePipe } from './permissions/permission
 import { AnnotationsComponent } from './annotations/annotations.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminGridComponent } from './admin-grid/admin-grid.component';
-
-
+import {DataTableModule} from "angular2-datatable";
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
@@ -46,14 +46,16 @@ import { AdminGridComponent } from './admin-grid/admin-grid.component';
     AnnotationsComponent,
     UserFullNamePipe,
     AdminComponent,
-    AdminGridComponent
+    AdminGridComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRouterModule,
     ReactiveFormsModule,
-    HttpModule
+    HttpModule,
+    DataTableModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

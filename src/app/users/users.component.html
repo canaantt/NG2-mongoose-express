@@ -2,6 +2,7 @@
     <header class="pie container-fluid">
         <div class="row">
             <h5>Users for IRB (pull in number)</h5>
+            <button class='btn btn-primary'><a routerLink="/admin"><span class="fa fa-lock fa-5x"></span></a></button>
             <div class="col-xs-12">
                 <div  *ngFor="let user of users">
                     <hr>
@@ -14,9 +15,6 @@
                 </div>
             </div>
             <user-detail [user]="selectedUser"></user-detail>
-
-
-
 
             <hr>
             <h3>Add New User</h3>

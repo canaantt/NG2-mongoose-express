@@ -22,6 +22,8 @@ import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { PermissionsComponent, UserFullNamePipe } from './permissions/permissions.component';
 import { AnnotationsComponent } from './annotations/annotations.component';
 import { AdminComponent } from './admin/admin.component';
+import { AdminGridComponent } from './admin-grid/admin-grid.component';
+
 
 
 @NgModule({
@@ -43,7 +45,8 @@ import { AdminComponent } from './admin/admin.component';
     PermissionsComponent,
     AnnotationsComponent,
     UserFullNamePipe,
-    AdminComponent
+    AdminComponent,
+    AdminGridComponent
   ],
   imports: [
     BrowserModule,

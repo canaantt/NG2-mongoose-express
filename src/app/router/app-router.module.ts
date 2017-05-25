@@ -11,6 +11,7 @@ import { ProjectsDashboardComponent } from '../projects-dashboard/projects-dashb
 import { ProjectAdditionComponent } from '../project-addition/project-addition.component';
 import { ProjectDetailComponent } from '../project-detail/project-detail.component';
 import { AdminComponent } from '../admin/admin.component';
+import { AdminGridComponent } from '../admin-grid//admin-grid.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,9 @@ const routes: Routes = [
     path: 'users',
     component: UsersComponent
   }, {
+    path: 'grid',
+    component: AdminGridComponent
+  },{
     path: 'admin',
     component: AdminComponent
   },{

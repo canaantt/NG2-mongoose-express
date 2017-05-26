@@ -128,6 +128,15 @@ export class FilesComponent implements OnInit {
                                 molec.data = _.values(_.omit(this.filter(function(v){return v.sample === molec.marker; })[0], 'sample'));
                                     return molec;
                                   }, json);
+          Obj.clinical = json.map(function(v){ return v.sample; })
+                              .reduce(function(p, c){
+                                p.push({marker: c});
+                                return p;
+                              }, [])
+                              .map(function(molec){ 
+                                molec.data = _.values(_.omit(this.filter(function(v){return v.sample === molec.marker; })[0], 'sample'));
+                                    return molec;
+                                  }, json);                        
           Obj.data = json;
           Obj.name = files[0].name;
           Obj.size = files[0].size;
@@ -149,7 +158,8 @@ export class FilesComponent implements OnInit {
         obj.Category = element.Category;
         obj.DataType = element.DataType;
         obj.SampleMap = {samples:this.data[0].sampleMap};
-        obj.Molecular = this.data[0].molecular.map(function(v){ v.type = obj.DataType; return v; });
+        obj.Molecular = this.data[0].molecular.map(function(v){ v.type = obj.Category; return v; });
+        // obj.Clinical = this.data[0].clinical.map(function(v){ v.type = obj.Category; return v; });
         obj.Name = this.data[0].name;
         obj.Size = this.data[0].size;
         obj.Project = this.data[0].project;

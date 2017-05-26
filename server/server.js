@@ -76,15 +76,22 @@ function fileRouterFactory(){
     router.post('/', function(req, res, next) {
         // Model.create(req.body, processResult(req,res));
         // Category, DataType, Data, Name, Size, Project
-        req.body.Project = "guid";
+        // req.body.Project = "guid";
+        var molecularColleciton = mongoose.model(req.body.Project+"_data_molecular", File.schema);
+        var sampleMapCollection = mongoose.model(req.body.Project+"_data_samples", File.schema);
+        var clinicalColleciton = mongoose.model(req.body.Project+"_data_clinical", File.schema);
         db.collection(req.body.Project+"_data_molecular").insertMany(req.body.Molecular, function(err, result){
             if (err) console.log(err);
        
         });
-          db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap, function(err, result){
-              if (err) console.log(err);
-                res.send("WORKED");
-            });  
+        db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap, function(err, result){
+            if (err) console.log(err);
+            res.send("WORKED");
+        });  
+        db.collection(req.body.Project+"_data_clinical").insertMany(req.body.Clinical, function(err, result){
+            if (err) console.log(err);
+       
+        });
          
 
 

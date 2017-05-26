@@ -5,6 +5,7 @@ import { FileService } from '../service/file.service';
 import { FileUploader } from 'ng2-file-upload';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import * as _ from 'underscore';
 
 @Component({
   selector: 'app-files',
@@ -27,7 +28,7 @@ export class FilesComponent implements OnInit {
   data: any[];
   files$: Observable<any>;
   id: string;
-  @Input() project: any; 
+  @Input() project: any;
 
   private fileUploadingUrl = 'http://localhost:3000/uploads';
 
@@ -55,15 +56,35 @@ export class FilesComponent implements OnInit {
   }
 
   csvJSON(string: string) {
-      var lines = string.split("\n");
+      var lines = string.split('\n');
       var result = [];
-      var headers = lines[0].split("\t");
+      var headers = lines[0].split(',');
       for (var i = 1; i < lines.length; i++) {
           var obj = {};
-          var currentline = lines[i].split("\t");
-          for (var j = 0; j < headers.length; j++) {
-              obj[headers[j]] = currentline[j];
-              // console.log("at line ", j);
+          var currentline = lines[i].split(',');
+          if( currentline !== undefined ){
+            for (var j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j];
+                // console.log("at line ", j);
+            }
+          }
+          result.push(obj);
+      }
+      return JSON.stringify(result); //JSON
+  }
+
+  tsvJSON(string: string) {
+      var lines = string.split('\n');
+      var result = [];
+      var headers = lines[0].split('\t');
+      for (var i = 1; i < lines.length; i++) {
+          var obj = {};
+          var currentline = lines[i].split('\t');
+          if( currentline !== undefined ){
+            for (var j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j];
+                // console.log("at line ", j);
+            }
           }
           result.push(obj);
       }
@@ -76,22 +97,46 @@ export class FilesComponent implements OnInit {
         let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
         let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
         let files: FileList = target.files;
+        console.log(files[0]);
         let reader = new FileReader();
         let Obj = Object ();
         reader.readAsText(files[0]);
         reader.onload = function(e) {
           let text = reader.result;
-          json = JSON.parse(self.csvJSON(text));
-          Obj.sampleMap = json.map(function(v){ return v.SampleID; });
-          Obj.molecular = Object.keys(json[0]).reduce(function(p,c){
-              if (c !== 'SampleID') { p.push({marker:c}); }
-              return p;
-          }, []).map(function(molec){
-            molec.data = this.map(function(v){ return v[molec.marker]; })
-            return molec;
-          },json);
+          if(files[0].type === 'text/csv'){
+            json = JSON.parse(self.csvJSON(text));
+          } else {
+            json = JSON.parse(self.tsvJSON(text));
+          }
+          // Obj.sampleMap = json.map(function(v){ return v.sample; });
+          // Obj.molecular = Object.keys(json[0]).reduce(function(p, c){
+          //     if (c !== 'sample') { p.push({marker: c}); }
+          //     return p;
+          // }, []).map(function(molec){
+          //   molec.data = this.map(function(v){ return v[molec.marker]; });
+          //   return molec;
+          // }, json);
 
-          // let Obj = Object ();
+          Obj.sampleMap = _.without(json.map(function(m){return Object.keys(m); })
+                              .reduce(function(a, b){return _.uniq(a.concat(b)); }), 'sample');
+          Obj.molecular = json.map(function(v){ return v.sample; })
+                              .reduce(function(p, c){
+                                p.push({marker: c});
+                                return p;
+                              }, [])
+                              .map(function(molec){ 
+                                molec.data = _.values(_.omit(this.filter(function(v){return v.sample === molec.marker; })[0], 'sample'));
+                                    return molec;
+                                  }, json);
+          Obj.clinical = json.map(function(v){ return v.sample; })
+                              .reduce(function(p, c){
+                                p.push({marker: c});
+                                return p;
+                              }, [])
+                              .map(function(molec){ 
+                                molec.data = _.values(_.omit(this.filter(function(v){return v.sample === molec.marker; })[0], 'sample'));
+                                    return molec;
+                                  }, json);                        
           Obj.data = json;
           Obj.name = files[0].name;
           Obj.size = files[0].size;
@@ -113,11 +158,11 @@ export class FilesComponent implements OnInit {
         obj.Category = element.Category;
         obj.DataType = element.DataType;
         obj.SampleMap = {samples:this.data[0].sampleMap};
-        obj.Molecular = this.data[0].molecular.map(function(v){ v.type = obj.DataType; return v; });
+        obj.Molecular = this.data[0].molecular.map(function(v){ v.type = obj.Category; return v; });
+        // obj.Clinical = this.data[0].clinical.map(function(v){ v.type = obj.Category; return v; });
         obj.Name = this.data[0].name;
         obj.Size = this.data[0].size;
         obj.Project = this.data[0].project;
-        debugger;
         this.fileService.create(obj).subscribe(() => this.getFiles());
       });
     }

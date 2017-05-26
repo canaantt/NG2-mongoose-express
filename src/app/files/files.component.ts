@@ -57,15 +57,15 @@ export class FilesComponent implements OnInit {
   csvJSON(string: string) {
       var lines = string.split("\n");
       var result = [];
-      var headers = lines[0].split(",");
+      var headers = lines[0].split("\t");
       for (var i = 1; i < lines.length; i++) {
           var obj = {};
-          var currentline = lines[i].split(",");
+          var currentline = lines[i].split("\t");
           for (var j = 0; j < headers.length; j++) {
               obj[headers[j]] = currentline[j];
-              console.log("at line ", j);
+              // console.log("at line ", j);
           }
-          // result.push(obj);
+          result.push(obj);
       }
       return JSON.stringify(result); //JSON
   }
@@ -82,8 +82,17 @@ export class FilesComponent implements OnInit {
         reader.onload = function(e) {
           let text = reader.result;
           json = JSON.parse(self.csvJSON(text));
+          Obj.sampleMap = json.map(function(v){ return v.SampleID; });
+          Obj.molecular = Object.keys(json[0]).reduce(function(p,c){
+              if (c !== 'SampleID') { p.push({marker:c}); }
+              return p;
+          }, []).map(function(molec){
+            molec.data = this.map(function(v){ return v[molec.marker]; })
+            return molec;
+          },json);
+
           // let Obj = Object ();
-          // Obj.data = text;
+          Obj.data = json;
           Obj.name = files[0].name;
           Obj.size = files[0].size;
           Obj.project = projectID;
@@ -99,13 +108,16 @@ export class FilesComponent implements OnInit {
     submitFiles(): void {
       this.newFileForm.get('Files').value.forEach(element => {
         // console.log(element.Category);
+        console.dir(this.data[0].data);
         let obj = Object();
         obj.Category = element.Category;
         obj.DataType = element.DataType;
-        obj.Data = this.data[0].data;
+        obj.SampleMap = {samples:this.data[0].sampleMap};
+        obj.Molecular = this.data[0].molecular.map(function(v){ v.type = obj.DataType; return v; });
         obj.Name = this.data[0].name;
         obj.Size = this.data[0].size;
         obj.Project = this.data[0].project;
+        debugger;
         this.fileService.create(obj).subscribe(() => this.getFiles());
       });
     }

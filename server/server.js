@@ -65,6 +65,33 @@ function routerFactory(Model)
     // })
     return router;
 }
+
+function fileRouterFactory(){
+    var router = express.Router();
+    router.use(bodyParser.json()); 
+    router.use(bodyParser.urlencoded({ extended: true }));
+    router.get('/', function(req, res){	
+        File.find({}, processResult(req,res) );
+    });
+    router.post('/', function(req, res, next) {
+        // Model.create(req.body, processResult(req,res));
+        // Category, DataType, Data, Name, Size, Project
+        req.body.Project = "guid";
+        db.collection(req.body.Project+"_data_molecular").insertMany(req.body.Molecular, function(err, result){
+            if (err) console.log(err);
+       
+        });
+          db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap, function(err, result){
+              if (err) console.log(err);
+                res.send("WORKED");
+            });  
+         
+
+
+    });
+    return router;
+}
+
 var app = express();
 app.use(function (req, res, next) { //allow cross origin requests
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
@@ -82,7 +109,7 @@ db.once("open", function (callback) {
 	app.use(cors(corsOptions));
 	app.use('/users', routerFactory(User));
 	app.use('/projects', routerFactory(Project));
-	app.use('/files', routerFactory(File));
+	app.use('/files', fileRouterFactory());
 	app.use('/irbs', routerFactory(IRB));
 	app.use('/permissions', routerFactory(Permission));
 	app.post('/upload', function (req, res) {

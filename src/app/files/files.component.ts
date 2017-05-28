@@ -91,7 +91,7 @@ export class FilesComponent implements OnInit {
       return JSON.stringify(result); //JSON
   }
 
-  fileSelection(event: EventTarget, projectID: string): any {
+  fileSelection(event: EventTarget, projectID: string, ): any {
         let self = this;
         let json = null;
         let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
@@ -103,40 +103,11 @@ export class FilesComponent implements OnInit {
         reader.readAsText(files[0]);
         reader.onload = function(e) {
           let text = reader.result;
-          if(files[0].type === 'text/csv'){
+          if (files[0].type === 'text/csv') {
             json = JSON.parse(self.csvJSON(text));
           } else {
             json = JSON.parse(self.tsvJSON(text));
           }
-          // Obj.sampleMap = json.map(function(v){ return v.sample; });
-          // Obj.molecular = Object.keys(json[0]).reduce(function(p, c){
-          //     if (c !== 'sample') { p.push({marker: c}); }
-          //     return p;
-          // }, []).map(function(molec){
-          //   molec.data = this.map(function(v){ return v[molec.marker]; });
-          //   return molec;
-          // }, json);
-
-          Obj.sampleMap = _.without(json.map(function(m){return Object.keys(m); })
-                              .reduce(function(a, b){return _.uniq(a.concat(b)); }), 'sample');
-          Obj.molecular = json.map(function(v){ return v.sample; })
-                              .reduce(function(p, c){
-                                p.push({marker: c});
-                                return p;
-                              }, [])
-                              .map(function(molec){ 
-                                molec.data = _.values(_.omit(this.filter(function(v){return v.sample === molec.marker; })[0], 'sample'));
-                                    return molec;
-                                  }, json);
-          Obj.clinical = json.map(function(v){ return v.sample; })
-                              .reduce(function(p, c){
-                                p.push({marker: c});
-                                return p;
-                              }, [])
-                              .map(function(molec){ 
-                                molec.data = _.values(_.omit(this.filter(function(v){return v.sample === molec.marker; })[0], 'sample'));
-                                    return molec;
-                                  }, json);                        
           Obj.data = json;
           Obj.name = files[0].name;
           Obj.size = files[0].size;
@@ -145,34 +116,60 @@ export class FilesComponent implements OnInit {
         return Obj;
     }
 
-    onSelection(event: EventTarget, i): void {
-      var Obj = this.fileSelection(event, this.project._id);
-      this.data[i] = Obj;
-    }
+  onSelection(event: EventTarget, i): void {
+    var Obj = this.fileSelection(event, this.project._id);
+    // console.log("what is i: ", i); i is always 0;
+    this.data[i] = Obj;
+  }
 
-    submitFiles(): void {
-      this.newFileForm.get('Files').value.forEach(element => {
-        // console.log(element.Category);
-        console.dir(this.data[0].data);
-        let obj = Object();
-        obj.Category = element.Category;
-        obj.DataType = element.DataType;
-        obj.SampleMap = {samples:this.data[0].sampleMap};
-        obj.Molecular = this.data[0].molecular.map(function(v){ v.type = obj.Category; return v; });
-        // obj.Clinical = this.data[0].clinical.map(function(v){ v.type = obj.Category; return v; });
-        obj.Name = this.data[0].name;
-        obj.Size = this.data[0].size;
-        obj.Project = this.data[0].project;
-        this.fileService.create(obj).subscribe(() => this.getFiles());
-      });
-    }
+  submitFiles(): void {
+    this.newFileForm.get('Files').value.forEach(element => {
+      // console.log(element.Category);
+      console.dir(this.data[0].data);
+      let obj = Object();
+      obj.Category = element.Category;
+      obj.DataType = element.DataType;
+      let json = this.data[0].data;
+      if (element.Category === 'molecular') {
+        let sampleMap = _.without(json.map(function(m){return Object.keys(m); })
+                              .reduce(function(a, b){return _.uniq(a.concat(b)); }), 'sample');
+        let molecular = json.map(function(v){ return v.sample; })
+                              .reduce(function(p, c){
+                                p.push({marker: c});
+                                return p;
+                              }, [])
+                              .map(function(molec){
+                                molec.data = _.values(_.omit(this.filter(function(v){return v.sample === molec.marker; })[0], 'sample'));
+                                    return molec;
+                                  }, json);
+        obj.SampleMap_Molecular = {samples_molecular: sampleMap};
+        obj.Molecular = molecular.map(function(v){ v.type = obj.DataType; return v; });
+      }
+      if (element.Category === 'clinical') {
+        let sampleMap = _.without(json.map(function(m){return Object.keys(m); })
+                              .reduce(function(a, b){return _.uniq(a.concat(b)); }), 'sample');
+        let clinical = json.map(function(v){ return v.sample; })
+                              .reduce(function(p, c){
+                                p.push({marker: c});
+                                return p;
+                              }, [])
+                              .map(function(clinic){
+                                clinic.data = _.values(_.omit(this.filter(function(v){return v.sample === clinic.marker; })[0], 'sample'));
+                                    return clinic;
+                                  }, json);
+        obj.SampleMap_Clinical = {samples_clinical: sampleMap};
+        obj.Clinical = clinical.map(function(v){ v.type = obj.DataType; return v; });
+     }
+      // obj.Clinical = this.data[0].clinical.map(function(v){ v.type = obj.Category; return v; });
+      obj.Name = this.data[0].name;
+      obj.Size = this.data[0].size;
+      obj.Project = this.data[0].project;
+      this.fileService.create(obj).subscribe(() => this.getFiles());
+    });
+  }
 
-    updateFile(file: File) {
-      this.fileService.update(file).subscribe(() => this.getFiles());
-    }
-
-    deleteFile(file: File) {
-      this.fileService.delete(file).subscribe(() => this.getFiles());
-    }
+  deleteFile(file: File) {
+    this.fileService.delete(file).subscribe(() => this.getFiles());
+  }
 }
 

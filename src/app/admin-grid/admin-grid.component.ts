@@ -5,6 +5,7 @@ import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
 import { Permission } from '../permission';
 import { PermissionService } from '../service/permission.service';
+import * as _ from 'underscore';
 
 @Component({
   selector: 'app-admin-grid',
@@ -16,6 +17,7 @@ export class AdminGridComponent implements OnInit {
   allUsers: User[];
   allProjects: Project[];
   allPermissions: Permission[];
+  grid: any[];
 
   constructor(private userService: UserService,
               private projectService: ProjectService,
@@ -36,15 +38,28 @@ export class AdminGridComponent implements OnInit {
   }
 
   check = function(){
-    console.log('All Users: ');
-    console.log(this.allUsers);
-    console.log('All Permissions: ');
-    console.log(this.allPermissions);
-    console.log('All Projects: ');
-    console.log(this.allProjects);
+    this.join(this.allUsers, this.allPermissions, this.allProjects);
   };
 
-  join = function() {
-    
-  }
+  join = function(users: User[], permissions: Permission[], projects: Project[]): any {
+    this.grid = permissions.map(function(v){
+        let obj = Object();
+        obj = v;
+        const user = users.filter(function(m){
+          return m._id === v.User;
+        });
+        if ( user.length === 1) {
+          obj =  _.extend(obj, user[0]);
+        }
+        const proj = projects.filter(function(m){
+          return m._id === v.Project;
+        });
+        if ( proj.length === 1) {
+          obj =  _.extend(obj, proj[0]);
+        }
+        
+        return obj;
+      });
+  };
+
 }

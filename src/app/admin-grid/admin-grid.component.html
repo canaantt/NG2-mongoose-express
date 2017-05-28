@@ -3,9 +3,28 @@
         <div class="row">
             <h2>adminGrid View</h2>
             <button class='btn btn-primary'><a routerLink="/admin"><span class="fa fa-lock fa-5x"></span></a></button>
-            <!--<li class="btn btn-primary"><a routerLink="/projects/dashboard"><span class="fa fa-dashboard"></span>Projects</a></li>
-            <li class="btn btn-primary"><a routerLink="/users"><span class="fa fa-users"></span>Users</a></li>
-            <li class="btn btn-primary"><a routerLink="/adminGrid"><span class="fa fa-bell-o"></span>adminGrid</a></li>-->
+             <div class="col-xs-12">
+                <div>
+                    <table>
+                        <thead>
+                            <td>First Name</td>
+                            <td>Last Name</td>
+                            <td>Project Name</td>
+                            <td>Role</td>
+                            <td>Email</td>
+                        </thead>
+                        <tbody *ngFor="let elem of grid">
+                        <tr>
+                            <td>{{elem.FirstName}}</td>
+                            <td>{{elem.LastName}}</td>
+                            <td>{{elem.Name}}</td>
+                            <td>{{elem.Role}}</td>
+                            <td>{{elem.Email}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </header>
 </div>

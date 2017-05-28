@@ -80,18 +80,38 @@ function fileRouterFactory(){
         var molecularColleciton = mongoose.model(req.body.Project+"_data_molecular", File.schema);
         var sampleMapCollection = mongoose.model(req.body.Project+"_data_samples", File.schema);
         var clinicalColleciton = mongoose.model(req.body.Project+"_data_clinical", File.schema);
-        db.collection(req.body.Project+"_data_molecular").insertMany(req.body.Molecular, function(err, result){
-            if (err) console.log(err);
+        // mongoose.listCollections({name: req.body.Project+"_data_molecular"})
+        //         .next(function(err, collinfo) {
+        //             if (collinfo) {
+        //                 console.log(req.body.Project+"_data_molecular exists.");
+        //             } else {
+        //                 var molecularColleciton = mongoose.model(req.body.Project+"_data_molecular", File.schema);
+        //             }
+        //         });
+        
+        if('SampleMap_Clinical' in req.body){
+             db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Clinical, function(err, result){
+                if (err) console.log(err);
+                res.send("WORKED");
+            });  
+            db.collection(req.body.Project+"_data_clinical").insertMany(req.body.Clinical, function(err, result){
+                if (err) console.log(err);
+        
+            });
+        }
+
+         if('SampleMap_Molecular' in req.body){
+             db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Molecular, function(err, result){
+                if (err) console.log(err);
+                res.send("WORKED");
+            });  
+            db.collection(req.body.Project+"_data_molecular").insertMany(req.body.Molecular, function(err, result){
+                if (err) console.log(err);
+        
+            });
+        }
        
-        });
-        db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap, function(err, result){
-            if (err) console.log(err);
-            res.send("WORKED");
-        });  
-        db.collection(req.body.Project+"_data_clinical").insertMany(req.body.Clinical, function(err, result){
-            if (err) console.log(err);
-       
-        });
+        
          
 
 

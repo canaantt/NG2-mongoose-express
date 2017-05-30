@@ -71,7 +71,7 @@ function fileRouterFactory(){
     router.use(bodyParser.json()); 
     router.use(bodyParser.urlencoded({ extended: true }));
     router.get('/', function(req, res){	
-        File.find({}, processResult(req,res) );
+        // File.find({}, processResult(req,res) );
     });
     router.post('/', function(req, res, next) {
         // Model.create(req.body, processResult(req,res));
@@ -116,6 +116,26 @@ function fileRouterFactory(){
 
 
     });
+    router.route('/:projectID-:dataType')
+    .get(function(req, res){
+        console.log(req.params);
+        var CollectionName = req.params.projectID + "_data_" + req.params.dataType;
+        console.log(CollectionName);
+        // db.collection("5928a5e99bd43c24c145a548_data_clinical").find().toArray().then(function(result, err){
+        //     if(err) console.log(err);
+        //     console.log(result);
+        // })
+        db.collection(CollectionName).find().toArray().then(function(res, err){
+            if(err) console.log(err);
+            processResult(req, res);
+        })
+    })
+    // .put(function(req, res){
+    //     Model.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: false}, processResult(req,res) );
+    // })
+    // .delete(function(req, res){
+    //     Model.remove({_id: req.params.id}, processResult(req,res) );
+    // });
     return router;
 }
 
@@ -132,7 +152,6 @@ app.use(bodyParser.json({limit: '400mb'}));
 db.on("error", console.error.bind(console, "connection error"));
 db.once("open", function (callback) {
 	console.log("Connection succeeded.");
-	
 	app.use(cors(corsOptions));
 	app.use('/users', routerFactory(User));
 	app.use('/projects', routerFactory(Project));

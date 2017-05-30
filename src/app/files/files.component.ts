@@ -42,10 +42,10 @@ export class FilesComponent implements OnInit {
     this.fileCategories = Object.keys(this.fileMeta);
     this.newFileForm = this.fb.group({Files: this.fb.array([this.fileItem()])});
     this.id = this.project._id;
-    this.getFiles();
+    this.getFilesByProjectID('molecular');
   }
-  getFiles(): void {
-    this.files$ = this.fileService.getFilesByProjectID(this.id);
+  getFilesByProjectID(dataType: string): void {
+    this.files$ = this.fileService.getFilesByProjectID(this.id, 'molecular');
   }
   fileItem() {
     return new FormGroup({
@@ -164,12 +164,12 @@ export class FilesComponent implements OnInit {
       obj.Name = this.data[0].name;
       obj.Size = this.data[0].size;
       obj.Project = this.data[0].project;
-      this.fileService.create(obj).subscribe(() => this.getFiles());
+      this.fileService.create(obj).subscribe(() => this.getFilesByProjectID("molecular"));
     });
   }
 
-  deleteFile(file: File) {
-    this.fileService.delete(file).subscribe(() => this.getFiles());
-  }
+  // deleteFile(file: File) {
+  //   this.fileService.delete(file).subscribe(() => this.getFilesByProjectID(obj.Project, "molecular"));
+  // }
 }
 

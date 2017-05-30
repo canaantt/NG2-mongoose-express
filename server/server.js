@@ -125,9 +125,16 @@ function fileRouterFactory(){
         //     if(err) console.log(err);
         //     console.log(result);
         // })
-        db.collection(CollectionName).find().toArray().then(function(res, err){
+        db.collection(CollectionName).find().toArray().then(function(data, err){
             if(err) console.log(err);
-            processResult(req, res);
+            return function(err, data){
+                if (err) {
+                    console.log(err);
+                    res.status(404).send("Not Found").end();
+                }else{
+                    res.json(data).end();
+                }
+            };
         })
     })
     // .put(function(req, res){

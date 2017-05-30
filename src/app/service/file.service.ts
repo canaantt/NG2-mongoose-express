@@ -24,9 +24,15 @@ export class FileService {
     const url = `${this.filesUrl}/` + id;
     return this.http.get(url);
   }
-  getFilesByProjectID(id: string): Observable<Response> {
+  getFilesByProjectID(id: string, dataType: string): Observable<Response> {
+    const url = `${this.filesUrl}/` + id + '-' + dataType;
+    console.log(url);
     return this.http.get(this.filesUrl)
-            .map(res => res.json().filter(value => value.Project === id));
+               .map(res => {
+                 console.log(res);
+                  return res.json();
+                });
+            // .map(res => res.json().filter(value => value.Project === id));
   }
   delete(file: File): Observable<Response> {
     const url = `${this.filesUrl}/` + file._id;

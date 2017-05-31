@@ -8,6 +8,7 @@ var fileSchema = new Schema({
     Name: String,
     Category: { type: String, enum: categories }, 
     DataType: { type: String, enum: datatypes },
+    FileType: { type: String },
     Project: String,
     Data: Object,
     Size: Number,

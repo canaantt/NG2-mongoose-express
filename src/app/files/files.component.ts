@@ -112,6 +112,7 @@ export class FilesComponent implements OnInit {
           Obj.data = text;
           Obj.name = files[0].name;
           Obj.size = files[0].size;
+          Obj.type = files[0].type;
           Obj.project = projectID;
         }
         return Obj;

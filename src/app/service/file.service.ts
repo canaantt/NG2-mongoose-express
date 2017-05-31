@@ -10,7 +10,7 @@ import 'rxjs/add/observable/of';
 export class FileService {
   private headers = new Headers({'Content-Type': 'application/json'});
   private filesUrl = 'http://localhost:3000/files';
-  // private fileUploadingUrl = 'http://localhost:3000/upload';
+  private fileUploadingUrl = 'http://localhost:3000/upload';
   constructor(private http: Http) {}
 
   getFiles(): Observable<Response> {
@@ -44,6 +44,13 @@ export class FileService {
       .post(this.filesUrl, JSON.stringify(file), {headers: this.headers});
   }
 
+  upload(file: File): Observable<Response> {
+    const url = `${this.fileUploadingUrl}/` + file._id;
+    console.log(file._id);
+    return this.http
+      .post(url, JSON.stringify(file), {headers: this.headers});
+  }
+  
   update(file: File): Observable<Response> {
     const url = `${this.filesUrl}/` + file._id;
     return this.http

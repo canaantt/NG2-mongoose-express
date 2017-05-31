@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors')
 const mongoose = require('mongoose');
 const tsv = require("node-tsv-json");
+const csv=require('csvtojson');
+var excel2json = require("excel-to-json");
 const fs = require("fs");
 var path = require('path');
 // var GridFsStorage = require('multer-gridfs-storage');
@@ -65,25 +67,6 @@ function routerFactory(Model)
     // })
     return router;
 }
-function tsvJSON(string) {
-    console.log(string);
-      var lines = string.split('\n');
-      var result = [];
-      var headers = lines[0].split('\t');
-      console.log(hearders);
-      for (var i = 1; i < lines.length; i++) {
-          var obj = {};
-          var currentline = lines[i].split('\t');
-          if( currentline !== undefined ){
-            for (var j = 0; j < headers.length; j++) {
-                obj[headers[j]] = currentline[j];
-                // console.log("at line ", j);
-            }
-          }
-          result.push(obj);
-      }
-      return JSON.stringify(result); //JSON
-  }
 
 function fileRouterFactory(){
     var router = express.Router();
@@ -95,7 +78,6 @@ function fileRouterFactory(){
     router.post('/', function(req, res, next) {
         // Model.create(req.body, processResult(req,res));
         // Category, DataType, Data, Name, Size, Project
-        // req.body.Project = "guid";
         var molecularColleciton = mongoose.model(req.body.Project+"_data_molecular", File.schema);
         var sampleMapCollection = mongoose.model(req.body.Project+"_data_samples", File.schema);
         var clinicalColleciton = mongoose.model(req.body.Project+"_data_clinical", File.schema);
@@ -108,36 +90,59 @@ function fileRouterFactory(){
         //             }
         //         });
         var data = req.body.Molecular;
-             console.log("Within Server Molecular");
-        console.log(tsvJSON(data));
-
-        if('SampleMap_Clinical' in req.body){
-             db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Clinical, function(err, result){
-                if (err) console.log(err);
-                res.send("WORKED");
-            });  
-            db.collection(req.body.Project+"_data_clinical").insertMany(req.body.Clinical, function(err, result){
-                if (err) console.log(err);
-        
+        var type = req.body.type;
+        console.log("Within Server Molecular");
+        var arr = [];
+        var index = 0;
+        // tsv()
+        csv({noheader:false})
+            .fromString(data)
+            .on('csv',(csvRow)=>{ // this func will be called 3 times 
+                    if( index == 0 ) {
+                        db.collection(req.body.Project+"_data_samples").insert(csvRow, function(err, result){
+                                if (err) console.log(err);
+                                res.send("WORKED");
+                            });  
+                        index++;    
+                    } else {
+                        console.log(csvRow);// => [1,2,3] , [4,5,6]  , [7,8,9] 
+                        var Obj = {};
+                        Obj.marker = csvRow[0];
+                        Obj.data = csvRow.splice(1, csvRow.length-1); 
+                        Obj.type = req.body.DataType;
+                        arr.push(Obj);
+                    }
+                })
+            .on('done',()=>{
+                db.collection(req.body.Project+"_data_molecular").insertMany(arr, function(err, result){
+                    if (err) console.log(err);
+                });
             });
-        }
+            
+        // if('SampleMap_Clinical' in req.body){
+        //      db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Clinical, function(err, result){
+        //         if (err) console.log(err);
+        //         res.send("WORKED");
+        //     });  
+        //     db.collection(req.body.Project+"_data_clinical").insertMany(req.body.Clinical, function(err, result){
+        //         if (err) console.log(err);
+        
+        //     });
+        // }
 
-         if('SampleMap_Molecular' in req.body){
+        //  if('SampleMap_Molecular' in req.body){
              
-             db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Molecular, function(err, result){
-                if (err) console.log(err);
-                res.send("WORKED");
-            });  
-            db.collection(req.body.Project+"_data_molecular").insertMany(req.body.Molecular, function(err, result){
-                if (err) console.log(err);
+        //      db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Molecular, function(err, result){
+        //         if (err) console.log(err);
+        //         res.send("WORKED");
+        //     });  
+        //     db.collection(req.body.Project+"_data_molecular").insertMany(arr, function(err, result){
+        //         if (err) console.log(err);
         
-            });
-        }
+        //     });
+        // }
        
-        
-         
-
-
+      
     });
     router.route('/:projectID-:dataType')
     .get(function(req, res){

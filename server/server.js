@@ -65,6 +65,25 @@ function routerFactory(Model)
     // })
     return router;
 }
+function tsvJSON(string) {
+    console.log(string);
+      var lines = string.split('\n');
+      var result = [];
+      var headers = lines[0].split('\t');
+      console.log(hearders);
+      for (var i = 1; i < lines.length; i++) {
+          var obj = {};
+          var currentline = lines[i].split('\t');
+          if( currentline !== undefined ){
+            for (var j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j];
+                // console.log("at line ", j);
+            }
+          }
+          result.push(obj);
+      }
+      return JSON.stringify(result); //JSON
+  }
 
 function fileRouterFactory(){
     var router = express.Router();
@@ -88,7 +107,10 @@ function fileRouterFactory(){
         //                 var molecularColleciton = mongoose.model(req.body.Project+"_data_molecular", File.schema);
         //             }
         //         });
-        
+        var data = req.body.Molecular;
+             console.log("Within Server Molecular");
+        console.log(tsvJSON(data));
+
         if('SampleMap_Clinical' in req.body){
              db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Clinical, function(err, result){
                 if (err) console.log(err);
@@ -101,6 +123,7 @@ function fileRouterFactory(){
         }
 
          if('SampleMap_Molecular' in req.body){
+             
              db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Molecular, function(err, result){
                 if (err) console.log(err);
                 res.send("WORKED");

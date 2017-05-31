@@ -103,12 +103,13 @@ export class FilesComponent implements OnInit {
         reader.readAsText(files[0]);
         reader.onload = function(e) {
           let text = reader.result;
-          if (files[0].type === 'text/csv') {
-            json = JSON.parse(self.csvJSON(text));
-          } else {
-            json = JSON.parse(self.tsvJSON(text));
-          }
-          Obj.data = json;
+          // if (files[0].type === 'text/csv') {
+          //   json = JSON.parse(self.csvJSON(text));
+          // } else {
+          //   json = JSON.parse(self.tsvJSON(text));
+          // }
+          // Obj.data = json;
+          Obj.data = text;
           Obj.name = files[0].name;
           Obj.size = files[0].size;
           Obj.project = projectID;
@@ -131,20 +132,24 @@ export class FilesComponent implements OnInit {
       obj.DataType = element.DataType;
       let json = this.data[0].data;
       if (element.Category === 'molecular') {
-        let sampleMap = _.without(json.map(function(m){return Object.keys(m); })
-                              .reduce(function(a, b){return _.uniq(a.concat(b)); }), 'sample');
-        let molecular = json.map(function(v){ return v.sample; })
-                              .reduce(function(p, c){
-                                p.push({marker: c});
-                                return p;
-                              }, [])
-                              .map(function(molec){
-                                molec.data = _.values(_.omit(this.filter(function(v){return v.sample === molec.marker; })[0], 'sample'));
-                                    return molec;
-                                  }, json);
+        // let sampleMap = _.without(json.map(function(m){return Object.keys(m); })
+        //                       .reduce(function(a, b){return _.uniq(a.concat(b)); }), 'sample');
+        // let molecular = json.map(function(v){ return v.sample; })
+        //                       .reduce(function(p, c){
+        //                         p.push({marker: c});
+        //                         return p;
+        //                       }, [])
+        //                       .map(function(molec){
+        //                         molec.data = _.values(_.omit(this.filter(function(v){return v.sample === molec.marker; })[0], 'sample'));
+        //                             return molec;
+        //                           }, json);
+        let sampleMap = null;
+        let molecular = json;
         obj.SampleMap_Molecular = {samples_molecular: sampleMap};
-        obj.Molecular = molecular.map(function(v){ v.type = obj.DataType; return v; });
+        // obj.Molecular = molecular.map(function(v){ v.type = obj.DataType; return v; });
+        obj.Molecular = molecular;
       }
+
       if (element.Category === 'clinical') {
         let sampleMap = _.without(json.map(function(m){return Object.keys(m); })
                               .reduce(function(a, b){return _.uniq(a.concat(b)); }), 'sample');

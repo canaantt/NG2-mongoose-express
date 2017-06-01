@@ -36,7 +36,7 @@
                     <td>
                       <!--<input id="fileupload" type="file" class="form-control" name="single"  ng2FileSelect [uploader]="uploader"/>-->
                       <td><input type="file" class="form-control col-md-5" name="single" (change)="onSelection($event, i)" formControlName="File"
-                        /></td>
+                        ng2FileSelect [uploader]="uploader"/></td>
                       <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
                 </tr>
               </tbody>
@@ -48,15 +48,15 @@
       <p>Form Status: {{ newFileForm.status | json }}</p>-->
 
     </div>
-    <!--<div class="col-md-8">
+    <div class="col-md-8">
       Queue length: {{ uploader?.queue?.length }}
       <table class="table">
         <thead>
           <tr>
             <th width="70%">Name</th>
             <th>Type</th>
-            <th>Category</th>
-            <th>Datatype</th>
+            <!--<th>Category</th>
+            <th>Datatype</th>-->
             <th>Size</th>
             <th>Progress</th>
             <th>Status</th>
@@ -68,12 +68,12 @@
           <tr *ngFor="let item of uploader.queue">
             <td><strong>{{ item.file.name }}</strong></td>
             <td><strong>{{ item.file.type }}</strong></td>
-            <td><select [(ngModel)]="item.file.category">
+            <!--<td><select [(ngModel)]="item.file.category">
                   <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
                 </select></td>
             <td><select [(ngModel)]="item.file.dataType">
                   <option *ngFor="let datatype of fileMeta[item.file.category]" [ngValue]="datatype">{{datatype}}</option>
-                </select></td>
+                </select></td>-->
             <td nowrap>{{ item.file.size/1024/1024 | number:'.2' }} MB</td>
             <td>
               <div class="progress" style="margin-bottom: 0;">
@@ -89,7 +89,7 @@
               {{item.file | json}}
             </td>
             <td nowrap>
-              <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" (click)="fileItemPush(item)" [disabled]="item.isReady || item.isUploading || item.isSuccess">
+              <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
                                             <span class="glyphicon glyphicon-upload"></span> Upload
                                         </button>
               <button type="button" class="btn btn-warning btn-xs" (click)="item.cancel()" [disabled]="!item.isUploading">
@@ -119,6 +119,6 @@
                                     <span class="glyphicon glyphicon-trash"></span> Remove all
                                 </button>
       </div>
-    </div>-->
+    </div>
   </div>
 </div>

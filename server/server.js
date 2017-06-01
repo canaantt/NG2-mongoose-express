@@ -3,7 +3,7 @@ const cors = require('cors')
 const mongoose = require('mongoose');
 const tsv = require("node-tsv-json");
 const csv=require('csvtojson');
-var excel2json = require("excel-to-json");
+var convertExcel = require('excel-as-json').processFile
 const fs = require("fs");
 var path = require('path');
 // var GridFsStorage = require('multer-gridfs-storage');
@@ -199,21 +199,30 @@ db.once("open", function (callback) {
 				res.json({ error_code: 1, err_desc: err });
 				return;
 			} else {
-                console.dir(res.req);
+                // console.dir(res.req);
                 res.setHeader("Content-Type", "application/json");
-                tsv({
-                        input: res.req.file.path,
-                        output: res.req.file.path + '.json',
-                        parseRows: true
-                    }, function(err, result) {
-                        if(err) {
-                        console.error(err);
-                        }else {
-                        console.log(res.req.file.path);
-                        console.log(result);
-                        res.json({data: result, filename: res.req.file.path+'.json'}).end();
-                    }
-                });
+                // convertExcel(src, dst, options, callback);
+                options ={
+                        "sheet": '1',
+                        "isColOriented": true,
+                        "omitEmtpyFields": true}
+                convertExcel(res.req.file.path, undefined, options, function(err, data){
+                    if (err) console.log(err);
+                    console.log("Within convert Excel function");
+                    console.log(data);});
+                // tsv({
+                //         input: res.req.file.path,
+                //         output: res.req.file.path + '.json',
+                //         parseRows: true
+                //     }, function(err, result) {
+                //         if(err) {
+                //         console.error(err);
+                //         }else {
+                //         console.log(res.req.file.path);
+                //         // console.log(result);
+                //         res.json({data: result, filename: res.req.file.path+'.json'}).end();
+                //     }
+                // });
             }
 			// res.json({ error_code: 0, err_desc: null });
 		});
@@ -242,10 +251,8 @@ var storage = multer.diskStorage({
      cb(null, './uploads')
   },
   filename: function (req, file, cb) {
-    //cb(null, file.fieldname + '-' + Date.now())
     var newFileName = file.fieldname + '-' + Date.now();
     cb(null, newFileName);
-    // cb(tsvParser('./uploads/' + newFileName), newFileName);
   }
 })
 var upload = multer({

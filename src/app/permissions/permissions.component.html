@@ -1,6 +1,14 @@
 <div #permissions>
   <label>User Permissions</label>
   <table>
+    <!--<thead>
+      <tr>
+        <td>Name</td>
+        <td>Permission</td>
+        <td>Update</td>
+        <td>Delete</td>
+      </tr>
+    </thead>-->
     <tbody class="form-group row" *ngFor="let permission of permissions$ | async">
       <tr>
         <td><span class="detail-users">{{permission.User | userFullName | async }}</span></td>

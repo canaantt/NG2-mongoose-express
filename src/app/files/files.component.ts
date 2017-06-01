@@ -1,10 +1,11 @@
-import { Component,  OnInit, Input} from '@angular/core';
+import { Component,  OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { File } from '../file';
 import { FileService } from '../service/file.service';
 import { FileUploader } from 'ng2-file-upload';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import * as _ from 'underscore';
 
 @Component({
   selector: 'app-files',
@@ -15,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
 export class FilesComponent implements OnInit {
   public uploader: FileUploader = new FileUploader({url: 'http://localhost:3000/upload'});
   fileMeta = {'clinical': ['diagnosis', 'drug', 'treatment'],
-              'molecular': ['mut', 'RNASeq', 'cnv'],
+              'molecular': ['mut', 'RNASeq', 'cnv', 'protein'],
               'metadata': ['metadata'] };
   fileCategories: string[];
   fileDataTypes: string[];
@@ -25,6 +26,9 @@ export class FilesComponent implements OnInit {
   datatype: string;
   newFileForm: FormGroup;
   data: any[];
+  files$: Observable<any>;
+  id: string;
+  @Input() project: any;
 
   private fileUploadingUrl = 'http://localhost:3000/uploads';
 
@@ -37,8 +41,12 @@ export class FilesComponent implements OnInit {
   ngOnInit(): void {
     this.fileCategories = Object.keys(this.fileMeta);
     this.newFileForm = this.fb.group({Files: this.fb.array([this.fileItem()])});
+    this.id = this.project._id;
+    this.getFiles();
   }
-
+  getFiles(): void {
+    this.files$ = this.fileService.getFilesByProjectID(this.id);
+  }
   fileItem() {
     return new FormGroup({
       Category: new FormControl('clinical', Validators.required),
@@ -48,83 +56,120 @@ export class FilesComponent implements OnInit {
   }
 
   csvJSON(string: string) {
-      var lines = string.split("\n");
+      var lines = string.split('\n');
       var result = [];
-      var headers = lines[0].split(",");
+      var headers = lines[0].split(',');
       for (var i = 1; i < lines.length; i++) {
           var obj = {};
-          var currentline = lines[i].split(",");
-          for (var j = 0; j < headers.length; j++) {
-              obj[headers[j]] = currentline[j];
+          var currentline = lines[i].split(',');
+          if( currentline !== undefined ){
+            for (var j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j];
+                // console.log("at line ", j);
+            }
           }
           result.push(obj);
       }
       return JSON.stringify(result); //JSON
   }
 
-  // fileItemPush(item: Object) {
-  //   this.files.push(item);
-  //   console.log(this.files);
-  // }
+  tsvJSON(string: string) {
+      var lines = string.split('\n');
+      var result = [];
+      var headers = lines[0].split('\t');
+      for (var i = 1; i < lines.length; i++) {
+          var obj = {};
+          var currentline = lines[i].split('\t');
+          if( currentline !== undefined ){
+            for (var j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j];
+                // console.log("at line ", j);
+            }
+          }
+          result.push(obj);
+      }
+      return JSON.stringify(result); //JSON
+  }
 
-  fileSelection(event: EventTarget): any {
+  fileSelection(event: EventTarget, projectID: string, ): any {
         let self = this;
         let json = null;
         let eventObj: MSInputMethodContext = <MSInputMethodContext> event;
         let target: HTMLInputElement = <HTMLInputElement> eventObj.target;
         let files: FileList = target.files;
+        console.log(files[0]);
         let reader = new FileReader();
         let Obj = Object ();
         reader.readAsText(files[0]);
         reader.onload = function(e) {
           let text = reader.result;
-          console.log(text);
-          json = self.csvJSON(text);
-          console.log(json);
-          // let Obj = Object ();
+          if (files[0].type === 'text/csv') {
+            json = JSON.parse(self.csvJSON(text));
+          } else {
+            json = JSON.parse(self.tsvJSON(text));
+          }
           Obj.data = json;
           Obj.name = files[0].name;
           Obj.size = files[0].size;
-          // console.log(Obj);
-          // self.files.push(Obj);
-          // console.log(self.files);
+          Obj.project = projectID;
         }
-        // return null;
         return Obj;
     }
 
-    // fileItemAppend(obj: Object): void {
-    //   console.log("within fileItemAppend");
-    //   console.log(obj);
-    //   this.data.push(obj);
-    // }
-    onSelection(event: EventTarget): void {
-      // console.log(formValue.Category);
-      var Obj = this.fileSelection(event);
-      this.data.push(Obj);
-      console.log(this.data);
-    }
+  onSelection(event: EventTarget, i): void {
+    var Obj = this.fileSelection(event, this.project._id);
+    // console.log("what is i: ", i); i is always 0;
+    this.data[i] = Obj;
+  }
 
-    submitFiles(): void {
-      this.newFileForm.get('Files').value.forEach(element => {
-        console.log(element.Category);
-        let obj = Object();
-        obj.Category = element.Category;
-        obj.data = this.data[0];
-        obj.name = this.data[0].name;
-        obj.size = this.data[0].size;
-        this.files.push(obj);
-      });
-    }
+  submitFiles(): void {
+    this.newFileForm.get('Files').value.forEach(element => {
+      // console.log(element.Category);
+      console.dir(this.data[0].data);
+      let obj = Object();
+      obj.Category = element.Category;
+      obj.DataType = element.DataType;
+      let json = this.data[0].data;
+      if (element.Category === 'molecular') {
+        let sampleMap = _.without(json.map(function(m){return Object.keys(m); })
+                              .reduce(function(a, b){return _.uniq(a.concat(b)); }), 'sample');
+        let molecular = json.map(function(v){ return v.sample; })
+                              .reduce(function(p, c){
+                                p.push({marker: c});
+                                return p;
+                              }, [])
+                              .map(function(molec){
+                                molec.data = _.values(_.omit(this.filter(function(v){return v.sample === molec.marker; })[0], 'sample'));
+                                    return molec;
+                                  }, json);
+        obj.SampleMap_Molecular = {samples_molecular: sampleMap};
+        obj.Molecular = molecular.map(function(v){ v.type = obj.DataType; return v; });
+      }
+      if (element.Category === 'clinical') {
+        let sampleMap = _.without(json.map(function(m){return Object.keys(m); })
+                              .reduce(function(a, b){return _.uniq(a.concat(b)); }), 'sample');
+        let clinical = json.map(function(v){ return v.sample; })
+                              .reduce(function(p, c){
+                                p.push({marker: c});
+                                return p;
+                              }, [])
+                              .map(function(clinic){
+                                clinic.data = _.values(_.omit(this.filter(function(v){return v.sample === clinic.marker; })[0], 'sample'));
+                                    return clinic;
+                                  }, json);
+        obj.SampleMap_Clinical = {samples_clinical: sampleMap};
+        obj.Clinical = clinical.map(function(v){ v.type = obj.DataType; return v; });
+     }
+      // obj.Clinical = this.data[0].clinical.map(function(v){ v.type = obj.Category; return v; });
+      obj.Name = this.data[0].name;
+      obj.Size = this.data[0].size;
+      obj.Project = this.data[0].project;
+      this.fileService.create(obj).subscribe(() => this.getFiles());
+    });
+  }
 
-    updateFile(): void{
-
-    }
-
-    deleteFile(): void {
-      //remove element from data[]
-      //remove element from files[]
-      //remove element from reactive form ?
-    }
+  deleteFile(file: File) {
+    this.fileService.delete(file).subscribe(() => this.getFiles());
+  }
 }
 

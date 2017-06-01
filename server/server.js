@@ -65,15 +65,70 @@ function routerFactory(Model)
     // })
     return router;
 }
-var app = express();
-	app.use(function (req, res, next) { //allow cross origin requests
-		res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-        res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        res.header("Access-Control-Allow-Credentials", true);
-        next();
-	});
 
+function fileRouterFactory(){
+    var router = express.Router();
+    router.use(bodyParser.json()); 
+    router.use(bodyParser.urlencoded({ extended: true }));
+    router.get('/', function(req, res){	
+        File.find({}, processResult(req,res) );
+    });
+    router.post('/', function(req, res, next) {
+        // Model.create(req.body, processResult(req,res));
+        // Category, DataType, Data, Name, Size, Project
+        // req.body.Project = "guid";
+        var molecularColleciton = mongoose.model(req.body.Project+"_data_molecular", File.schema);
+        var sampleMapCollection = mongoose.model(req.body.Project+"_data_samples", File.schema);
+        var clinicalColleciton = mongoose.model(req.body.Project+"_data_clinical", File.schema);
+        // mongoose.listCollections({name: req.body.Project+"_data_molecular"})
+        //         .next(function(err, collinfo) {
+        //             if (collinfo) {
+        //                 console.log(req.body.Project+"_data_molecular exists.");
+        //             } else {
+        //                 var molecularColleciton = mongoose.model(req.body.Project+"_data_molecular", File.schema);
+        //             }
+        //         });
+        
+        if('SampleMap_Clinical' in req.body){
+             db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Clinical, function(err, result){
+                if (err) console.log(err);
+                res.send("WORKED");
+            });  
+            db.collection(req.body.Project+"_data_clinical").insertMany(req.body.Clinical, function(err, result){
+                if (err) console.log(err);
+        
+            });
+        }
+
+         if('SampleMap_Molecular' in req.body){
+             db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Molecular, function(err, result){
+                if (err) console.log(err);
+                res.send("WORKED");
+            });  
+            db.collection(req.body.Project+"_data_molecular").insertMany(req.body.Molecular, function(err, result){
+                if (err) console.log(err);
+        
+            });
+        }
+       
+        
+         
+
+
+    });
+    return router;
+}
+
+var app = express();
+app.use(function (req, res, next) { //allow cross origin requests
+    res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
+    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Credentials", true);
+    next();
+});
+app.use(bodyParser.urlencoded({limit: '400mb'}));
+app.use(bodyParser.json({limit: '400mb'}));
 db.on("error", console.error.bind(console, "connection error"));
 db.once("open", function (callback) {
 	console.log("Connection succeeded.");
@@ -81,7 +136,7 @@ db.once("open", function (callback) {
 	app.use(cors(corsOptions));
 	app.use('/users', routerFactory(User));
 	app.use('/projects', routerFactory(Project));
-	app.use('/files', routerFactory(File));
+	app.use('/files', fileRouterFactory());
 	app.use('/irbs', routerFactory(IRB));
 	app.use('/permissions', routerFactory(Permission));
 	app.post('/upload', function (req, res) {

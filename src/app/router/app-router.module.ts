@@ -10,6 +10,9 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { ProjectsDashboardComponent } from '../projects-dashboard/projects-dashboard.component';
 import { ProjectAdditionComponent } from '../project-addition/project-addition.component';
 import { ProjectDetailComponent } from '../project-detail/project-detail.component';
+import { AdminComponent } from '../admin/admin.component';
+import { AdminGridComponent } from '../admin-grid//admin-grid.component';
+import { RegisterComponent } from '../register/register.component';
 
 const routes: Routes = [
   {
@@ -22,7 +25,16 @@ const routes: Routes = [
   }, {
     path: 'users',
     component: UsersComponent
-  }, {
+  },  {
+    path: 'register',
+    component: RegisterComponent
+  },{
+    path: 'grid',
+    component: AdminGridComponent
+  },{
+    path: 'admin',
+    component: AdminComponent
+  },{
     path: 'documentation',
     component: DocumentationComponent
   }, {

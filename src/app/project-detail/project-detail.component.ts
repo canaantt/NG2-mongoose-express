@@ -17,6 +17,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/of';
 import { PermissionsComponent } from '../permissions/permissions.component';
+import { FilesComponent } from '../files/files.component';
 enum roles {'full-access', 'read-only'};
 
 @Component({
@@ -35,6 +36,7 @@ export class ProjectDetailComponent implements OnInit{
   results$: Observable<any>;
   newAnnotationForm: FormGroup;
   @ViewChild(PermissionsComponent) permissionComponent: PermissionsComponent;
+  @ViewChild(FilesComponent) filesComponent: FilesComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -73,6 +75,12 @@ export class ProjectDetailComponent implements OnInit{
       this.project.Annotations.push(element);
     });
     this.newAnnotationForm.get('Annotations').value = null;
+  }
+
+  onFileSubmission(obj: Object):void {
+    alert("Files are being added ... ");
+    this.project.files = obj;
+    this.update(this.project);
   }
 
 }

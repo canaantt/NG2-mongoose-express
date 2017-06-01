@@ -21,8 +21,11 @@ import { FilesComponent } from './files/files.component';
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { PermissionsComponent, UserFullNamePipe } from './permissions/permissions.component';
 import { AnnotationsComponent } from './annotations/annotations.component';
-
-
+import { AdminComponent } from './admin/admin.component';
+import { AdminGridComponent } from './admin-grid/admin-grid.component';
+import { RegisterComponent } from './register/register.component';
+import * as _ from 'underscore';
+import {AgGridModule} from 'ag-grid-angular/main';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,13 +44,17 @@ import { AnnotationsComponent } from './annotations/annotations.component';
     FileSelectDirective,
     PermissionsComponent,
     AnnotationsComponent,
-    UserFullNamePipe
+    UserFullNamePipe,
+    AdminComponent,
+    AdminGridComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRouterModule,
     ReactiveFormsModule,
+    AgGridModule,
     HttpModule
   ],
   providers: [UserService],

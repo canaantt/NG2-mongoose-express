@@ -50,7 +50,23 @@ export class FileService {
     return this.http
       .post(url, JSON.stringify(file), {headers: this.headers});
   }
-  
+
+  sendProjectID(projectID: string): Observable<Response> {
+    console.log("Within File service sendProjectID function");
+    console.log(projectID);
+    console.log(this.filesUrl);
+    let file = new File();
+    file.Project = projectID;
+    file.Name = null;
+    file.Category = null;
+    file.DataType = null;
+    file.Size = 0;
+
+    console.log( JSON.stringify(file));
+    return this.http
+      .post(this.filesUrl, JSON.stringify(file), {headers: this.headers});
+  }
+
   update(file: File): Observable<Response> {
     const url = `${this.filesUrl}/` + file._id;
     return this.http

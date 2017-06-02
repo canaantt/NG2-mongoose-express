@@ -125,8 +125,44 @@ db.once("open", function (callback) {
                 excelParser.worksheets({inFile: res.req.file.path}, 
                         function(err, worksheets){
                             console.log(res.req.file.path);
+                            var filePath = res.req.file.path;
                             if(err) console.log(err);
                             console.log(worksheets);
+                            var sheetLength = worksheets.length;
+                            worksheets.forEach(function(sheet){
+                                if(sheet.name.split("-")[0] == "MOLECULAR"){
+                                    console.log("Within worksheet process block, sheet number is: ");
+                                    console.log(sheet.id);
+                                    var dataType = sheet.name.split("-")[1];
+                                    var arr = [];
+                                    excelParser.parse({
+                                        inFile: filePath,
+                                        worksheet: sheet.id,
+                                        skipEmpty: true,
+                                        // searchFor: {
+                                        //     term: ['my serach term'],
+                                        //     type: 'loose'
+                                        // }
+                                        },function(err, records){
+                                            if(err) console.error(err);
+                                            // console.log(records);
+                                            arr = records.map(function(v){
+                                                var obj = {};
+                                                obj.type = dataType;
+                                                obj.marker = v[0];
+                                                obj.data = v.splice(1, v.length);
+                                                return obj;
+                                            });
+                                            db.collection(projectID+"_data_samples").insert(arr[0], function(err, result){
+                                               if (err) console.log(err);
+                                            //    res.send("WORKED");
+                                            });
+                                            db.collection(projectID+"_data_molecular").insertMany(arr.splice(1, arr.length), function(err, result){
+                                                if (err) console.log(err);
+                                            });
+                                        });
+                                }
+                            });
                         });
             }
 		});

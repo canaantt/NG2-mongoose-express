@@ -58,13 +58,6 @@ function routerFactory(Model)
     .delete(function(req, res){
         Model.remove({_id: req.params.id}, processResult(req,res) );
     });
-    // router.route('/:query')
-    // .get(function(req, res){
-    //     console.log("************");
-    //     console.log(req.query.q);
-    //     var query = (req.query) ? JSON.parse(req.params.query) : {};
-    //     Model.find(query, processResult(req, res));
-    // })
     return router;
 }
 
@@ -74,103 +67,12 @@ function fileRouterFactory(){
     router.use(bodyParser.urlencoded({ extended: true }));
     router.get('/', function(req, res){	
         // File.find({}, processResult(req,res) );
+        console.log("in Files");
+        res.status(200).end();
     });
-    router.post('/', function(req, res, next) {
-        // Model.create(req.body, processResult(req,res));
-        // Category, DataType, Data, Name, Size, Project
-        var molecularColleciton = mongoose.model(req.body.Project+"_data_molecular", File.schema);
-        var sampleMapCollection = mongoose.model(req.body.Project+"_data_samples", File.schema);
-        var clinicalColleciton = mongoose.model(req.body.Project+"_data_clinical", File.schema);
-        // mongoose.listCollections({name: req.body.Project+"_data_molecular"})
-        //         .next(function(err, collinfo) {
-        //             if (collinfo) {
-        //                 console.log(req.body.Project+"_data_molecular exists.");
-        //             } else {
-        //                 var molecularColleciton = mongoose.model(req.body.Project+"_data_molecular", File.schema);
-        //             }
-        //         });
-        var data = req.body.Molecular;
-        var type = req.body.type;
-        console.log("Within Server Molecular");
-        var arr = [];
-        var index = 0;
-        // tsv()
-        csv({noheader:false})
-            .fromString(data)
-            .on('csv',(csvRow)=>{ // this func will be called 3 times 
-                    if( index == 0 ) {
-                        db.collection(req.body.Project+"_data_samples").insert(csvRow, function(err, result){
-                                if (err) console.log(err);
-                                res.send("WORKED");
-                            });  
-                        index++;    
-                    } else {
-                        console.log(csvRow);// => [1,2,3] , [4,5,6]  , [7,8,9] 
-                        var Obj = {};
-                        Obj.marker = csvRow[0];
-                        Obj.data = csvRow.splice(1, csvRow.length-1); 
-                        Obj.type = req.body.DataType;
-                        arr.push(Obj);
-                    }
-                })
-            .on('done',()=>{
-                db.collection(req.body.Project+"_data_molecular").insertMany(arr, function(err, result){
-                    if (err) console.log(err);
-                });
-            });
-            
-        // if('SampleMap_Clinical' in req.body){
-        //      db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Clinical, function(err, result){
-        //         if (err) console.log(err);
-        //         res.send("WORKED");
-        //     });  
-        //     db.collection(req.body.Project+"_data_clinical").insertMany(req.body.Clinical, function(err, result){
-        //         if (err) console.log(err);
-        
-        //     });
-        // }
-
-        //  if('SampleMap_Molecular' in req.body){
-             
-        //      db.collection(req.body.Project+"_data_samples").insert(req.body.SampleMap_Molecular, function(err, result){
-        //         if (err) console.log(err);
-        //         res.send("WORKED");
-        //     });  
-        //     db.collection(req.body.Project+"_data_molecular").insertMany(arr, function(err, result){
-        //         if (err) console.log(err);
-        
-        //     });
-        // }
-       
-      
+    router.post('/', function(req, res) {
+        console.log("in post");
     });
-    router.route('/:projectID-:dataType')
-    .get(function(req, res){
-        console.log(req.params);
-        var CollectionName = req.params.projectID + "_data_" + req.params.dataType;
-        console.log(CollectionName);
-        // db.collection("5928a5e99bd43c24c145a548_data_clinical").find().toArray().then(function(result, err){
-        //     if(err) console.log(err);
-        //     console.log(result);
-        // })
-        db.collection(CollectionName).find().toArray().then(function(data, err){
-            if(err) console.log(err);
-            return function(err, data){
-                if (err) {
-                    console.log(err);
-                    res.status(404).send("Not Found").end();
-                }else{
-                    res.json(data).end();
-                }
-            };
-        })
-    })
-    // .put(function(req, res){
-    //     Model.findOneAndUpdate({_id: req.params.id}, req.body, {upsert: false}, processResult(req,res) );
-    // })
-    // .delete(function(req, res){
-    //     Model.remove({_id: req.params.id}, processResult(req,res) );
-    // });
     return router;
 }
 
@@ -193,38 +95,33 @@ db.once("open", function (callback) {
 	app.use('/files', fileRouterFactory());
 	app.use('/irbs', routerFactory(IRB));
 	app.use('/permissions', routerFactory(Permission));
-	app.post('/upload', function (req, res) {
+	app.post('/upload/:id', function (req, res) {
+        console.log(req.params.id);
+        var projectID = req.params.id;
+        var molecularColleciton = mongoose.model(projectID + "_data_molecular", File.schema);
+        var sampleMapCollection = mongoose.model(projectID + "_data_samples", File.schema);
+        var clinicalColleciton = mongoose.model(projectID + "_data_clinical", File.schema);
 		upload(req, res, function (err) {
 			if (err) {
 				res.json({ error_code: 1, err_desc: err });
 				return;
 			} else {
                 // console.dir(res.req);
-                res.setHeader("Content-Type", "application/json");
-                // convertExcel(src, dst, options, callback);
-                options ={
-                        "sheet": '1',
-                        "isColOriented": true,
-                        "omitEmtpyFields": true}
+                // res.setHeader("Content-Type", "application/json");
+                options = { "sheet": '1',
+                            "isColOriented": true,
+                            "omitEmtpyFields": true };
                 convertExcel(res.req.file.path, undefined, options, function(err, data){
                     if (err) console.log(err);
                     console.log("Within convert Excel function");
-                    console.log(data);});
-                // tsv({
-                //         input: res.req.file.path,
-                //         output: res.req.file.path + '.json',
-                //         parseRows: true
-                //     }, function(err, result) {
-                //         if(err) {
-                //         console.error(err);
-                //         }else {
-                //         console.log(res.req.file.path);
-                //         // console.log(result);
-                //         res.json({data: result, filename: res.req.file.path+'.json'}).end();
-                //     }
-                // });
+                    console.log(data);
+                    db.collection(projectID+"_data_samples").insert(data[0], function(err, result){
+                                if (err) console.log(err);
+                                res.send("WORKED");
+                            });
+                    // res.json(data).end();
+                });
             }
-			// res.json({ error_code: 0, err_desc: null });
 		});
 	});
     app.use('/upload/', express.static('./uploads'));
@@ -232,19 +129,6 @@ db.once("open", function (callback) {
 		console.log('listening on 3000...');
 	});
 });
-
-// var storage = GridFsStorage({
-//         gfs : gfs,
-//         filename: function (req, file, cb) {
-//             var datetimestamp = Date.now();
-//             cb(null, file.fieldname + '-' + datetimestamp + '.' + file.originalname.split('.')[file.originalname.split('.').length -1]);
-//         },
-//         /** With gridfs we can store aditional meta-data along with the file */
-//         metadata: function(req, file, cb) {
-//             cb(null, { originalname: file.originalname});
-//         },
-//         root: 'uploadedFiles' //root name for collection to store files into
-//     });
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {

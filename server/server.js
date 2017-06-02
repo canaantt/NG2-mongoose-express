@@ -3,7 +3,8 @@ const cors = require('cors')
 const mongoose = require('mongoose');
 const tsv = require("node-tsv-json");
 const csv=require('csvtojson');
-var convertExcel = require('excel-as-json').processFile
+var convertExcel = require('excel-as-json').processFile;
+var excelParser = require('excel-parser');
 const fs = require("fs");
 var path = require('path');
 // var GridFsStorage = require('multer-gridfs-storage');
@@ -108,19 +109,25 @@ db.once("open", function (callback) {
 			} else {
                 // console.dir(res.req);
                 // res.setHeader("Content-Type", "application/json");
-                options = { "sheet": '1',
-                            "isColOriented": true,
-                            "omitEmtpyFields": true };
-                convertExcel(res.req.file.path, undefined, options, function(err, data){
-                    if (err) console.log(err);
-                    console.log("Within convert Excel function");
-                    console.log(data);
-                    db.collection(projectID+"_data_samples").insert(data[0], function(err, result){
-                                if (err) console.log(err);
-                                res.send("WORKED");
-                            });
-                    // res.json(data).end();
-                });
+                // options = { "sheet": '1',
+                //             "isColOriented": true,
+                //             "omitEmtpyFields": true };
+                // convertExcel(res.req.file.path, undefined, options, function(err, data){
+                //     if (err) console.log(err);
+                //     console.log("Within convert Excel function");
+                //     console.log(data);
+                //     db.collection(projectID+"_data_samples").insert(data[0], function(err, result){
+                //                 if (err) console.log(err);
+                //                 res.send("WORKED");
+                //             });
+                //     // res.json(data).end();
+                // });
+                excelParser.worksheets({inFile: res.req.file.path}, 
+                        function(err, worksheets){
+                            console.log(res.req.file.path);
+                            if(err) console.log(err);
+                            console.log(worksheets);
+                        });
             }
 		});
 	});
@@ -135,7 +142,7 @@ var storage = multer.diskStorage({
      cb(null, './uploads')
   },
   filename: function (req, file, cb) {
-    var newFileName = file.fieldname + '-' + Date.now();
+    var newFileName = file.fieldname + '-' + Date.now() + '.xlsx';
     cb(null, newFileName);
   }
 })

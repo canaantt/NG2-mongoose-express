@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const tsv = require("node-tsv-json");
 const csv=require('csvtojson');
 var convertExcel = require('excel-as-json').processFile;
+var XLSX =require("xlsx");
 var excelParser = require('excel-parser');
 const fs = require("fs");
 var path = require('path');
@@ -122,48 +123,32 @@ db.once("open", function (callback) {
                 //             });
                 //     // res.json(data).end();
                 // });
-                excelParser.worksheets({inFile: res.req.file.path}, 
-                        function(err, worksheets){
-                            console.log(res.req.file.path);
-                            var filePath = res.req.file.path;
-                            if(err) console.log(err);
-                            console.log(worksheets);
-                            var sheetLength = worksheets.length;
-                            worksheets.forEach(function(sheet){
-                                if(sheet.name.split("-")[0] == "MOLECULAR"){
-                                    console.log("Within worksheet process block, sheet number is: ");
-                                    console.log(sheet.id);
-                                    var dataType = sheet.name.split("-")[1];
-                                    var arr = [];
-                                    excelParser.parse({
-                                        inFile: filePath,
-                                        worksheet: sheet.id,
-                                        skipEmpty: true,
-                                        // searchFor: {
-                                        //     term: ['my serach term'],
-                                        //     type: 'loose'
-                                        // }
-                                        },function(err, records){
-                                            if(err) console.error(err);
-                                            // console.log(records);
-                                            arr = records.map(function(v){
-                                                var obj = {};
-                                                obj.type = dataType;
-                                                obj.marker = v[0];
-                                                obj.data = v.splice(1, v.length);
-                                                return obj;
-                                            });
-                                            db.collection(projectID+"_data_samples").insert(arr[0], function(err, result){
-                                               if (err) console.log(err);
-                                            //    res.send("WORKED");
-                                            });
-                                            db.collection(projectID+"_data_molecular").insertMany(arr.splice(1, arr.length), function(err, result){
+                var workbook = XLSX.readFile(res.req.file.path);
+                console.dir(workbook);
+                Object.keys(workbook.Sheets).forEach(function(sheet){
+                    console.log(sheet);
+                    if(sheet.split("-")[0] == "MOLECULAR"){
+                        console.log("It's a molecular sheet.")
+                        var dataType = sheet.split("-")[1];
+                        var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
+                        var arr = [];
+                        var header = sheetObj[0];
+                        sheetObjData = sheetObj.splice(1, sheetObj.length);
+                        header.forEach(function(m){
+                            var obj = {};
+                            obj.type = dataType;
+                            obj.marker = m;
+                            obj.data = sheetObjData.map(function(n){
+                                return n[header.indexOf(m)];
+                            })
+                            arr.push(obj);
+                        })
+                        db.collection(projectID+"_data_molecular").insertMany(arr, function(err, result){
                                                 if (err) console.log(err);
                                             });
-                                        });
-                                }
-                            });
-                        });
+                    }
+                });
+                
             }
 		});
 	});

@@ -44,10 +44,10 @@ export class ProjectsDashboardComponent implements OnInit {
             .subscribe(res => {
               if (typeof (res[0]) !== 'undefined') {
                 p.irbNumber = res[0].IRBNumber;
-                this.userService.getUsersByID(res[0].PI)
-                  .subscribe(res2 => {
-                    p.pi = res2[0].FirstName + ' ' + res2[0].LastName;
-                  });
+                // this.userService.getUsersByID(res[0].PI)
+                //   .subscribe(res2 => {
+                //     p.pi = res2[0].FirstName + ' ' + res2[0].LastName;
+                //   });
                 this.userService.getUsersByIDs(res[0].OtherUsers)
                   .subscribe(res => p.users = res);
               }

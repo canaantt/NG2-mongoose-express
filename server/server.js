@@ -105,7 +105,7 @@ db.once("open", function (callback) {
         var clinicalColleciton = mongoose.model(projectID + "_data_clinical", File.schema);
 		upload(req, res, function (err) {
 			if (err) {
-				res.json({ error_code: 1, err_desc: err });
+				res.json({ error_code: 1, err_desc: err }).end();
 				return;
 			} else {
                 // console.dir(res.req);
@@ -124,16 +124,22 @@ db.once("open", function (callback) {
                 //     // res.json(data).end();
                 // });
                 var workbook = XLSX.readFile(res.req.file.path);
-                console.dir(workbook);
-                Object.keys(workbook.Sheets).forEach(function(sheet){
+                var allSheetNames =  Object.keys(workbook.Sheets);
+                if (allSheetNames.indexOf("PATIENT") === -1) {
+                   err = "PATIENT Sheet is missing!";
+                   res.json({ error_code: 1, err_desc: err }).end(); 
+                   return;
+                }
+                allSheetNames.forEach(function(sheet){
                     console.log(sheet);
-                    if(sheet.split("-")[0] == "MOLECULAR"){
+                    var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
+                    var arr = [];
+                    var header = sheetObj[0];
+                    sheetObjData = sheetObj.splice(1, sheetObj.length);
+                    if(sheet.split("-")[0] === "MOLECULAR"){
                         console.log("It's a molecular sheet.")
                         var dataType = sheet.split("-")[1];
-                        var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
-                        var arr = [];
-                        var header = sheetObj[0];
-                        sheetObjData = sheetObj.splice(1, sheetObj.length);
+                        
                         header.forEach(function(m){
                             var obj = {};
                             obj.type = dataType;
@@ -146,9 +152,16 @@ db.once("open", function (callback) {
                         db.collection(projectID+"_data_molecular").insertMany(arr, function(err, result){
                                                 if (err) console.log(err);
                                             });
+                    } else {
+                        if(sheet === "PATIENT") {
+                            console.log("PATIENT sheet");
+                            console.log(sheetObjData)
+                        } else if (sheet.split("-")[0] === "PATIENTEVENT"){
+                            console.log("EVENT sheet");
+                        }
                     }
                 });
-                
+                res.status(200).end();
             }
 		});
 	});

@@ -108,21 +108,6 @@ db.once("open", function (callback) {
 				res.json({ error_code: 1, err_desc: err }).end();
 				return;
 			} else {
-                // console.dir(res.req);
-                // res.setHeader("Content-Type", "application/json");
-                // options = { "sheet": '1',
-                //             "isColOriented": true,
-                //             "omitEmtpyFields": true };
-                // convertExcel(res.req.file.path, undefined, options, function(err, data){
-                //     if (err) console.log(err);
-                //     console.log("Within convert Excel function");
-                //     console.log(data);
-                //     db.collection(projectID+"_data_samples").insert(data[0], function(err, result){
-                //                 if (err) console.log(err);
-                //                 res.send("WORKED");
-                //             });
-                //     // res.json(data).end();
-                // });
                 var workbook = XLSX.readFile(res.req.file.path);
                 var allSheetNames =  Object.keys(workbook.Sheets);
                 if (allSheetNames.indexOf("PATIENT") === -1) {
@@ -155,7 +140,29 @@ db.once("open", function (callback) {
                     } else {
                         if(sheet === "PATIENT") {
                             console.log("PATIENT sheet");
-                            console.log(sheetObjData)
+                            var PatientIDs = sheetObjData.map(function(m){
+                                return m[0];
+                            })
+                            var PatientArr = PatientIDs.reduce(function(arr, p){
+                                var patientObjs = sheetObjData.filter(function(record){
+                                    console.log("test");
+                                    console.log(p);
+                                    console.log(record);
+                                    console.log(record[0]);
+                                    return record[0] === p;
+                                });
+                                console.log(patientObjs.length);
+                                var samples = patientObjs.map(function(m){
+                                    return m[1];
+                                })
+                                arr.push({"id":p,
+                                          "samples":samples
+                                        });
+                                return arr;
+                                }, []);
+                            db.collection(projectID+"_clinical_molecular").insertMany(PatientArr, function(err, result){
+                                                if (err) console.log(err);
+                                            });
                         } else if (sheet.split("-")[0] === "PATIENTEVENT"){
                             console.log("EVENT sheet");
                         }

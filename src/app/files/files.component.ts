@@ -25,6 +25,7 @@ export class FilesComponent implements OnInit {
   category: string;
   datatype: string;
   id: string;
+  uploaded: string = 'Not Uploaded';
   @Input() project: any;
 
   constructor(private fb: FormBuilder,
@@ -38,8 +39,9 @@ export class FilesComponent implements OnInit {
     this.uploader = new FileUploader({url: 'http://localhost:3000/upload/' + this.id });
   }
 
-  fileUpload() {
-    this.fileService.sendProjectID(this.id);
+  updateStatus() {
+    // this.fileService.sendProjectID(this.id);
+    this.uploaded = 'Uploaded';
   }
 }
 

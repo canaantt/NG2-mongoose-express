@@ -21,7 +21,7 @@ export class FilesComponent implements OnInit {
               'metadata': ['metadata'] };
   fileCategories: string[];
   fileDataTypes: string[];
-  files: any[];
+  files$: Observable<any>;
   category: string;
   datatype: string;
   id: string;
@@ -30,18 +30,22 @@ export class FilesComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private fileService: FileService) {
-    this.files = [];
    }
 
   ngOnInit(): void {
     console.log("Within file component...");
     this.id = this.project._id;
     this.uploader = new FileUploader({url: 'http://localhost:3000/upload/' + this.id });
+    this.getFiles();
   }
 
   updateStatus() {
     // this.fileService.sendProjectID(this.id);
     this.uploaded = 'Uploaded';
+  }
+
+  getFiles() {
+    this.files$ = this.fileService.getFilesByProjectID("5913c8ce15361b87151093cd");
   }
 }
 

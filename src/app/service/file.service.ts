@@ -13,21 +13,10 @@ export class FileService {
   private fileUploadingUrl = 'http://localhost:3000/upload';
   constructor(private http: Http) {}
 
-  getFiles(): Observable<Response> {
-    return this.http.get(this.filesUrl);
-  }
-  getFilesByIDs(ids: string[]): Observable<Response> {
-    return this.http.get(this.filesUrl)
-            .map(res => res.json().filter(value => ids.indexOf(value._id) > -1));
-  }
-  getFileByID(id: string): Observable<Response> {
+  getFilesByProjectID(id: string): Observable<Response> {
     const url = `${this.filesUrl}/` + id;
-    return this.http.get(url);
-  }
-  getFilesByProjectID(id: string, dataType: string): Observable<Response> {
-    const url = `${this.filesUrl}/` + id + '-' + dataType;
     console.log(url);
-    return this.http.get(this.filesUrl)
+    return this.http.get(url)
                .map(res => {
                  console.log(res);
                   return res.json();

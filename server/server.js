@@ -1,6 +1,8 @@
 const express = require('express');
-const cors = require('cors')
+const _ = require("underscore");
+const cors = require('cors');
 const mongoose = require('mongoose');
+const asyncLoop = require('node-async-loop');
 const tsv = require("node-tsv-json");
 const csv=require('csvtojson');
 var convertExcel = require('excel-as-json').processFile;
@@ -75,9 +77,84 @@ function fileRouterFactory(){
     router.post('/', function(req, res) {
         console.log("in post");
     });
+    router.get('/:id', function(req, res){
+        console.log("Getting Project-Related Collections...");
+        console.log(req.params.id);
+        var projectID = req.params.id;
+
+
+        db.db.listCollections().toArray(function(err, collectionMeta) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                var projectCollections = collectionMeta.map(function(m){
+                    return m.name;
+                }).filter(function(m){
+                    return m.indexOf(projectID) > -1;
+                });
+                
+                if(projectCollections.length === 0){
+                    res.status(404).send("Not Found").end();
+                } else {
+                    var arr = [];
+
+                    asyncLoop(projectCollections, function(m, next){ 
+                        db.collection(m).find().toArray(function(err, data){
+                            var obj = {};
+                            obj.collection = m;
+                            if(m.indexOf("clinical") > -1){
+                                obj.category = "clinical";
+                                obj.patients = data.map(function(m){return m.id});
+                                obj.metatdata = data[0].metadata;
+                                obj.enums_fields = data.map(function(m){return Object.keys(m.enums);})
+                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});
+                                obj.nums_fields = data.map(function(m){return Object.keys(m.nums);})
+                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});               
+                                obj.time_fields = data.map(function(m){return Object.keys(m.time);})
+                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});   
+                                obj.boolean_fields = data.map(function(m){return Object.keys(m.boolean);})
+                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
+                                arr.push(obj);
+                            } else {
+                                obj.category = "molecular";
+                                var types = _.uniq(data.map(function(m){return m.type}));
+                                types.forEach(function(n){
+                                    obj[n] = {};
+                                    typeObjs = data.filter(function(v){return v.type === n});
+                                    obj[n].markers = typeObjs.map(function(v){return v.marker});
+                                    obj[n].patients = _.uniq(typeObjs.map(function(v){return Object.keys(v.data);})
+                                                                     .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
+                                });
+                                arr.push(obj);
+                            }
+                            next();
+                        });
+                        
+                    }, function(err){
+                        if(err){
+                            console.log(err);
+                            res.status(404).send(err).end();
+                        } else {
+                            res.json(arr).end();
+                        }    
+                        
+                    });
+                    
+                }
+               
+                
+            }
+        });
+    });
     return router;
 }
-
+function camelToDash(str) {
+      return str.replace(/\W+/g, '-')
+                .replace(/([a-z\d])([A-Z])/g, '$1-$2')
+                .replace("-", "_")
+                .toLowerCase();
+   }
 var app = express();
 app.use(function (req, res, next) { //allow cross origin requests
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
@@ -140,23 +217,75 @@ db.once("open", function (callback) {
                     } else {
                         if(sheet === "PATIENT") {
                             console.log("PATIENT sheet");
-                            var PatientIDs = sheetObjData.map(function(m){
+                            var PatientIDs = _.uniq(sheetObjData.map(function(m){
                                 return m[0];
-                            })
+                            }));
+
+                            var enum_fields = [];
+                            var num_fields = [];
+                            var date_fields = [];
+                            var boolean_fields = [];
+                            var remaining_fields = [];
+                            header.forEach(function(h){
+                                if(h.indexOf("-Date") > -1) {
+                                    date_fields.push(h.split("-")[0]);
+                                } else if (h.indexOf("-String") > -1) {
+                                    enum_fields.push(h.split("-")[0]);
+                                } else if (h.indexOf("-Number") > -1) {
+                                    num_fields.push(h.split("-")[0]);
+                                } else if (h.indexOf("-Boolean") > -1) {
+                                    boolean_fields.push(h.split("-")[0]);
+                                } else {
+                                    remaining_fields.push(h.split("-")[0]);
+                                }
+                            });
+                            // Collect unique values of enums from the entire sheetObjData
+                            var metaObj = {};
+                            enum_fields.forEach(function(field){
+                                metaObj[camelToDash(field)] = _.uniq(sheetObjData.map(function(record){
+                                                                        console.log(record);
+                                                                        console.log(record[header.indexOf(field +"-String")])
+                                                                        return record[header.indexOf(field +"-String")];}));                                        
+                                                                    });
+
+
+
                             var PatientArr = PatientIDs.reduce(function(arr, p){
-                                var patientObjs = sheetObjData.filter(function(record){
-                                    console.log("test");
-                                    console.log(p);
-                                    console.log(record);
-                                    console.log(record[0]);
+                                var samples = [];
+                                var enumObj = {};
+                                var numObj = {};
+                                var booleanObj = {};
+                                var timeObj = {};
+                                var Other = {};
+                                sheetObjData.filter(function(record){
                                     return record[0] === p;
+                                }).forEach(function(m){
+                                   samples.push({id: m[1]});
+                                   enum_fields.forEach(function(field){
+                                    enumObj[camelToDash(field)] = m[header.indexOf(field+"-String")]; 
+                                   }); 
+                                   num_fields.forEach(function(field){
+                                    numObj[camelToDash(field)] = m[header.indexOf(field+"-Number")];
+                                   });
+                                   boolean_fields.forEach(function(field){
+                                    booleanObj[camelToDash(field)] = m[header.indexOf(field+"-Boolean")];
+                                   });
+                                   date_fields.forEach(function(field){
+                                    timeObj[camelToDash(field)] = m[header.indexOf(field+"-Date")];
+                                   });
+                                   remaining_fields.forEach(function(field){
+                                    Other[camelToDash(field)] = m[header.indexOf(field)];
+                                   });
                                 });
-                                console.log(patientObjs.length);
-                                var samples = patientObjs.map(function(m){
-                                    return m[1];
-                                })
-                                arr.push({"id":p,
-                                          "samples":samples
+                                
+                                arr.push({"id" : p,
+                                          "samples" : samples,
+                                          "enums" : enumObj,
+                                          "time": timeObj,
+                                          "nums": numObj,
+                                          "boolean": booleanObj,
+                                          "metadata": metaObj,
+                                          "events": []
                                         });
                                 return arr;
                                 }, []);

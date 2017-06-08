@@ -25,7 +25,6 @@ import { AdminComponent } from './admin/admin.component';
 import { AdminGridComponent } from './admin-grid/admin-grid.component';
 import { RegisterComponent } from './register/register.component';
 import * as _ from 'underscore';
-import {AgGridModule} from 'ag-grid-angular/main';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,14 +46,14 @@ import {AgGridModule} from 'ag-grid-angular/main';
     UserFullNamePipe,
     AdminComponent,
     AdminGridComponent,
-    RegisterComponent
+    RegisterComponent,
+    FileDropDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRouterModule,
     ReactiveFormsModule,
-    AgGridModule,
     HttpModule
   ],
   providers: [UserService],

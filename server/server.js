@@ -1,6 +1,6 @@
 const express = require('express');
 const _ = require("underscore");
-const cors = require('cors')
+const cors = require('cors');
 const mongoose = require('mongoose');
 const tsv = require("node-tsv-json");
 const csv=require('csvtojson');
@@ -92,8 +92,12 @@ function fileRouterFactory(){
                 }).filter(function(m){
                     return m.indexOf(projectID) > -1;
                 }).forEach(function(m){
-                    console.log(m);
                     
+                    db.collection(m).find().toArray(function(err, data){
+                        console.log(m);
+                        console.log(data.length);
+                        console.log(Object.keys(data));
+                    })
                 });
                 
             }

@@ -2,6 +2,7 @@ const express = require('express');
 const _ = require("underscore");
 const cors = require('cors');
 const mongoose = require('mongoose');
+const asyncLoop = require('node-async-loop');
 const tsv = require("node-tsv-json");
 const csv=require('csvtojson');
 var convertExcel = require('excel-as-json').processFile;
@@ -87,18 +88,61 @@ function fileRouterFactory(){
                 console.log(err);
             }
             else {
-                var allCollectionNames = collectionMeta.map(function(m){
+                var projectCollections = collectionMeta.map(function(m){
                     return m.name;
                 }).filter(function(m){
                     return m.indexOf(projectID) > -1;
-                }).forEach(function(m){
-                    
-                    db.collection(m).find().toArray(function(err, data){
-                        console.log(m);
-                        console.log(data.length);
-                        console.log(Object.keys(data));
-                    })
                 });
+                
+                if(projectCollections.length === 0){
+                    res.status(404).send("Not Found").end();
+                } else {
+                    var arr = [];
+
+                    asyncLoop(projectCollections, function(m, next){ 
+                        db.collection(m).find().toArray(function(err, data){
+                            var obj = {};
+                            obj.collection = m;
+                            if(m.indexOf("clinical") > -1){
+                                obj.category = "clinical";
+                                obj.patients = data.map(function(m){return m.id});
+                                obj.metatdata = data[0].metadata;
+                                obj.enums_fields = data.map(function(m){return Object.keys(m.enums);})
+                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});
+                                obj.nums_fields = data.map(function(m){return Object.keys(m.nums);})
+                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});               
+                                obj.time_fields = data.map(function(m){return Object.keys(m.time);})
+                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});   
+                                obj.boolean_fields = data.map(function(m){return Object.keys(m.boolean);})
+                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
+                                arr.push(obj);
+                            } else {
+                                obj.category = "molecular";
+                                var types = _.uniq(data.map(function(m){return m.type}));
+                                types.forEach(function(n){
+                                    obj[n] = {};
+                                    typeObjs = data.filter(function(v){return v.type === n});
+                                    obj[n].markers = typeObjs.map(function(v){return v.marker});
+                                    obj[n].patients = _.uniq(typeObjs.map(function(v){return Object.keys(v.data);})
+                                                                     .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
+                                });
+                                arr.push(obj);
+                            }
+                            next();
+                        });
+                        
+                    }, function(err){
+                        if(err){
+                            console.log(err);
+                            res.status(404).send(err).end();
+                        } else {
+                            res.json(arr).end();
+                        }    
+                        
+                    });
+                    
+                }
+               
                 
             }
         });
@@ -195,6 +239,16 @@ db.once("open", function (callback) {
                                     remaining_fields.push(h.split("-")[0]);
                                 }
                             });
+                            // Collect unique values of enums from the entire sheetObjData
+                            var metaObj = {};
+                            enum_fields.forEach(function(field){
+                                metaObj[camelToDash(field)] = _.uniq(sheetObjData.map(function(record){
+                                                                        console.log(record);
+                                                                        console.log(record[header.indexOf(field +"-String")])
+                                                                        return record[header.indexOf(field +"-String")];}));                                        
+                                                                    });
+
+
 
                             var PatientArr = PatientIDs.reduce(function(arr, p){
                                 var samples = [];
@@ -208,7 +262,7 @@ db.once("open", function (callback) {
                                 }).forEach(function(m){
                                    samples.push({id: m[1]});
                                    enum_fields.forEach(function(field){
-                                    enumObj[camelToDash(field)] = m[header.indexOf(field+"-String")];
+                                    enumObj[camelToDash(field)] = m[header.indexOf(field+"-String")]; 
                                    }); 
                                    num_fields.forEach(function(field){
                                     numObj[camelToDash(field)] = m[header.indexOf(field+"-Number")];
@@ -230,6 +284,7 @@ db.once("open", function (callback) {
                                           "time": timeObj,
                                           "nums": numObj,
                                           "boolean": booleanObj,
+                                          "metadata": metaObj,
                                           "events": []
                                         });
                                 return arr;

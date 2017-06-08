@@ -1,52 +1,33 @@
 <h3>Files Management</h3>
 <div class='well well-lg'>
   <div class="row">
-    <!--<div class="col-md-5">-->
-      <!--<table>-->
-        <!--<thead>
+    <div class="col-md-5">
+      <table>
+        <thead>
           <td>Category</td>
-          <td>Data Type</td>
-          <td>File Name</td>
-          <td>File Size</td>
-          <td>Actions</td>
-        </thead>-->
-        <!--<tbody class="form-group row" *ngFor="let file of files$ | async">
+          <td>Collection</td>
+          <td>Patient/Sample Size</td>
+        </thead>
+        <tbody class="form-group row" *ngFor="let file of files$ | async">
           <tr>
-            <td><span class="detail-users">{{file.Category}}/{{file.DataType}}</span></td>-->
-            <!--<td><span class="detail-users">{{file.DataType}}</span></td>-->
-            <!--<td><span class="detail-users">{{file.Name}}</span></td>
-            <td><span class="detail-users">{{file.Size/1000000}}MB</span></td>-->
-            <!--<td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updateFile(file)"></span></td>-->
-            <!--<td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="deleteFile(file)"></span></td>
+            <td><span class="detail-users">{{file.category}}</span></td>
+            <td><span class="detail-users">{{file.collection}}</span></td>
+            <td><span class="detail-users">{{file.DataType}}</span></td>
+            <div *ngIf="file.category === 'clinical'"><td><span class="detail-users">{{file.patients.length}}</span></td></div>
+            <div *ngIf="file.category === 'molecular'">
+              <td><span class="detail-users">{{file.CNV.patients.length}}</span></td>
+            </div>
           </tr>
-        </tbody>-->
-      <!--</table>-->
-      <!--<form class='submitForm' [formGroup]="newFileForm" (ngSubmit)="submitFiles()">
-        <div class="form-group">
-          <fieldset formArrayName="Files">
-            <table>
-              <tbody class="form-group row" *ngFor="let fileItem of newFileForm.get('Files').controls; let i = index;" [formGroup]='fileItem'>
-                <tr>
-                  <td><select formControlName="Category">
-                        <option *ngFor="let category of fileCategories" [ngValue]="category">{{category}}</option>
-                      </select></td>
-                  <td><select formControlName="DataType">
-                        <option *ngFor="let datatype of fileMeta[fileItem.controls.Category.value]" [ngValue]="datatype">{{datatype}}</option>
-                      </select>
-                    <td>-->
-                      <!--<input id="fileupload" type="file" class="form-control" name="single"  ng2FileSelect [uploader]="uploader"/>-->
-                      <!--<td><input type="file" class="form-control col-md-5" name="single" (change)="onSelection($event, i)" formControlName="File"
-                        ng2FileSelect [uploader]="uploader"/></td>
-                      <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
-                </tr>
-              </tbody>
-            </table>
-          </fieldset>
-        </div>
-      </form>
-      <!--<p>Form value: {{ newFileForm.get('Files').value | json }}</p>
-      <p>Form Status: {{ newFileForm.status | json }}</p>-->
-    <!--</div>-->
+        </tbody>
+      </table>
+    </div>
+     <div ng2FileDrop
+                 [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+                 (fileOver)="fileOverBase($event)"
+                 [uploader]="uploader"
+                 class="well my-drop-zone">
+                Base drop zone
+            </div>
     <input type="file" class="form-control col-md-5" name="single" 
                         ng2FileSelect [uploader]="uploader"/>
     <div class="col-md-8" *ngIf = "uploader?.queue?.length > 0">

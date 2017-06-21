@@ -32,7 +32,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 //   }
 // });
 
-router.post('/', function(res, res){
+router.post('/', function(req, res){
 	upload(req, res, function (err) {
 			if (err) {
 				res.json({ error_code: 1, err_desc: err });

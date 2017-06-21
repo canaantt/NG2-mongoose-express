@@ -44,7 +44,8 @@ export class UsersComponent implements OnInit {
       FirstName: new FormControl('', Validators.required),
       LastName: new FormControl('World', Validators.minLength(4)),
       Photo: new FormControl(''),
-      Email: new FormControl('')
+      Email: new FormControl(''),
+      Group: new FormControl('')
     });
   }
 }

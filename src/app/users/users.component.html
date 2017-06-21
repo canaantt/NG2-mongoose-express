@@ -25,13 +25,15 @@
 
                 <div class='well well-sm'>
                     <form [formGroup]="newUserForm" (ngSubmit)="submit()">
+                        <div class="form-inline">
                         <div class="form-group">
-                            <label for="firstName">First Name</label>
-                            <input type="text" class="form-control" id="firstName" formControlName="FirstName">
+                            <!--<label for="firstName">First Name</label>-->
+                            <input type="text" class="form-control" id="firstName" formControlName="FirstName" placeholder="First Name">
                         </div>
                         <div class="form-group">
-                            <label for="lastName">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" formControlName="LastName">
+                            <!--<label for="lastName">Last Name</label>-->
+                            <input type="text" class="form-control" id="lastName" formControlName="LastName"  placeholder="Last Name">
+                        </div>
                         </div>
                         <div class="form-group">
                             <label for="Photo">Photo</label>
@@ -43,7 +45,7 @@
                         </div>
                         <div class="form-group">
                             <label for="Group">Group</label>
-                            <input type="text" class="form-control" id="Group" formControlName="Group">
+                            <input type="text" class="form-control" id="Group" formControlName="Group" placeholder="separate multiple groups with comma">
                         </div>
                         <div class="form-group">
                             <input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">

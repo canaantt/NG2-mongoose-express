@@ -42,9 +42,9 @@ export class UsersComponent implements OnInit {
     this.getUsers();
     this.newUserForm = this.fb.group({
       FirstName: new FormControl('', Validators.required),
-      LastName: new FormControl('World', Validators.minLength(4)),
+      LastName: new FormControl('', Validators.required),
       Photo: new FormControl(''),
-      Email: new FormControl(''),
+      Email: new FormControl('', Validators.required),
       Group: new FormControl('')
     });
   }

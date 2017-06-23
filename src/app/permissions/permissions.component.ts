@@ -7,7 +7,7 @@ import { PermissionService } from '../service/permission.service';
 import { User } from '../user';
 import { UserService } from '../service/user.service';
 import { UserEmailValidators } from '../validators/userEmail.validator';
-enum roles {'full-access', 'read-only'};
+enum roles {'owner', 'full-access', 'read-only'};
 @Pipe({
   name: 'userFullName'
 })

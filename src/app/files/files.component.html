@@ -21,13 +21,13 @@
         </tbody>
       </table>
     </div>
-     <div ng2FileDrop
+     <!--<div ng2FileDrop
                  [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
                  (fileOver)="fileOverBase($event)"
                  [uploader]="uploader"
                  class="well my-drop-zone">
                 Base drop zone
-            </div>
+            </div>-->
     <input type="file" class="form-control col-md-5" name="single" 
                         ng2FileSelect [uploader]="uploader"/>
     <div class="col-md-8" *ngIf = "uploader?.queue?.length > 0">

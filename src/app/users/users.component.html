@@ -4,46 +4,61 @@
             <h5>Users for IRB (pull in number)</h5>
             <button class='btn btn-primary'><a routerLink="/admin"><span class="fa fa-lock fa-5x"></span></a></button>
             <div class="col-xs-12">
-                <div  *ngFor="let user of users">
-                    <hr>
+                <div *ngFor="let user of users">
+                    <!--<hr>-->
+                    <div class="col-xs-4" style="padding-top: 50px; padding-bottom: 30px">
+                    <img src={{user.Photo}} alt={{user.LastName}} style="width:175px;height:235px;">
                     <div class="col-xs-10" [class.selected]="user === selectedUser">{{user.FirstName}} {{user.LastName}}
-                         </div>
-                        <span>
-                        <button class="btn btn-primary" (click)="onSelect(user)">Details</button>
-                        <button class="btn btn-primary" (click)="delete(user)">Delete</button>
-                    </span>
+                        <span class="col-xs-10">
+                            <button class="btn btn-primary" (click)="onSelect(user)">Details</button>
+                            <button class="btn btn-primary" (click)="delete(user)">Delete</button>
+                        </span>
+                     </div> 
+                    </div>                                        
+                    </div>
+                     
+                </div>
+                <user-detail [user]="selectedUser"></user-detail>
+
+                <hr>
+                <h3>Add New User</h3>
+
+                <div class='well well-sm'>
+                    <form [formGroup]="newUserForm" (ngSubmit)="submit()">
+                        <div class="form-inline" style="padding-bottom: 20px">
+                            <label>Required: </label>
+                            <div class="form-group">
+                                <!--<label for="firstName">First Name</label>-->
+                                <input type="text" class="form-control" id="firstName" formControlName="FirstName" placeholder="First Name">
+                            </div>
+                            <div class="form-group">
+                                <!--<label for="lastName">Last Name</label>-->
+                                <input type="text" class="form-control" id="lastName" formControlName="LastName"  placeholder="Last Name">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="Email" formControlName="Email" placeholder="Institutional Email">
+                            </div>
+                        </div>
+                        <div class="form-inline"  style="padding-bottom: 20px">
+                            <label>Optional: </label>
+                            
+                            <div class="form-group">
+                                <!--<label for="Photo">Photo</label>-->
+                                <input type="text" class="form-control" id="Photo" formControlName="Photo" placeholder="Photo URL">
+                            </div>
+                            <div class="form-group">
+                                <!--<label for="Group">Group</label>-->
+                                <input type="text" class="form-control" id="Group" formControlName="Group" placeholder="separate multiple groups with comma">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">
+                        </div>
+                    </form>
+                    <p>Form value: {{ newUserForm.value | json }}</p>
+                    <p>Form Status: {{ newUserForm.status | json }}</p>
                 </div>
             </div>
-            <user-detail [user]="selectedUser"></user-detail>
-
-            <hr>
-            <h3>Add New User</h3>
-
-            <div class='well well-sm'>
-                <form [formGroup]="newUserForm" (ngSubmit)="submit()">
-                    <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" class="form-control" id="firstName" formControlName="FirstName">
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" formControlName="LastName">
-                    </div>
-                    <div class="form-group">
-                        <label for="Photo">Photo</label>
-                        <input type="text" class="form-control" id="Photo" formControlName="Photo">
-                    </div>
-                    <div class="form-group">
-                        <label for="Email">Email</label>
-                        <input type="text" class="form-control" id="Email" formControlName="Email">
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">
-                    </div>
-                </form>
-                <p>Form value: {{ newUserForm.value | json }}</p>
-                <p>Form Status: {{ newUserForm.status | json }}</p>
-            </div>
-        </div>
     </header>
-</div>
+    </div>

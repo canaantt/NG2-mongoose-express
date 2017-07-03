@@ -7,7 +7,7 @@ import { PermissionService } from '../service/permission.service';
 import { User } from '../user';
 import { UserService } from '../service/user.service';
 import { UserEmailValidators } from '../validators/userEmail.validator';
-enum roles {'full-access', 'read-only'};
+enum roles {'owner', 'full-access', 'read-only'};
 @Pipe({
   name: 'userFullName'
 })
@@ -40,6 +40,9 @@ export class PermissionsComponent implements OnInit {
     this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('')])});
     this.id = this.project._id;
     this.getPermissions();
+    this.newPermissionForm.valueChanges.subscribe(data => {
+      console.log(data);
+    });
   }
 
   getPermissions(): void {

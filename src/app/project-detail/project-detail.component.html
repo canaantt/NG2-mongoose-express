@@ -4,15 +4,19 @@
       <div *ngIf="project">
           <h3 class="detail-header">{{project.Name}}</h3>
           <div class="form-group">
-            <label>Project Name</label>
-            <input [(ngModel)]="project.Name" placeholder="Project Name" class="form-control" rows="1">
+            <label>Dataset Name</label>
+            <input [(ngModel)]="project.Name" placeholder="Project Name" class="form-control" rows="1"> 
+          </div>
+          <div class="form-group">
+            <label>Private</label>
+            <input type="checkbox" [(ngModel)]="project.Private">
           </div>
           <div class="form-group">
             <label>Description</label>
             <textarea [(ngModel)]="project.Description" placeholder="Description" class="form-control" rows="4"></textarea>
           </div>
           <div #annotations>
-            <label>Project Annotations</label>
+            <label>Dataset Annotations</label>
             <div *ngIf='project.Annotations.length > 0'>
               <table>
                 <thead>

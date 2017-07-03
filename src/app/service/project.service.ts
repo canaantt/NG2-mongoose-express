@@ -31,6 +31,7 @@ export class ProjectService {
   }
 
   update(project: Project): Observable<Response> {
+    console.log(project);
     const url = `${this.projectsUrl}/` + project._id;
     return this.http
       .put(url, JSON.stringify(project), {headers: this.headers});

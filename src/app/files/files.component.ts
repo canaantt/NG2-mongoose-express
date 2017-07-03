@@ -36,7 +36,7 @@ export class FilesComponent implements OnInit {
     console.log("Within file component...");
     this.id = this.project._id;
     this.uploader = new FileUploader({url: 'http://localhost:3000/upload/' + this.id });
-    this.getFiles();
+    this.getFiles(this.id);
   }
 
   updateStatus() {
@@ -44,8 +44,8 @@ export class FilesComponent implements OnInit {
     this.uploaded = 'Uploaded';
   }
 
-  getFiles() {
-    this.files$ = this.fileService.getFilesByProjectID("5913c8ce15361b87151093cd");
+  getFiles(id: string) {
+    this.files$ = this.fileService.getFilesByProjectID(id);
   }
 }
 

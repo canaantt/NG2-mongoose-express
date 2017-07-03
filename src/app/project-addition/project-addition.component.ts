@@ -32,7 +32,8 @@ export class ProjectAdditionComponent implements OnInit {
   ngOnInit(): void {
     this.newProjectForm = this.fb.group({
       Name: new FormControl('Name Your Fancy Project', Validators.required),
-      Description: new FormControl('You don\'t need to use ours description:) But we offer anyway --- The largest recorded snowflake was in Keogh, MT during year 1887, and was 15 inches wide. Do you know? Do you? Do you? ' , Validators.minLength(4))
+      Description: new FormControl('You don\'t need to use ours description:) But we offer anyway --- The largest recorded snowflake was in Keogh, MT during year 1887, and was 15 inches wide. Do you know? Do you? Do you? ' , Validators.minLength(4)),
+      Private: new FormControl(true)
     });
      this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());               
   }
@@ -42,6 +43,7 @@ export class ProjectAdditionComponent implements OnInit {
                      let project = new Project();
                      project.Name = this.newProjectForm.get('Name').value;
                      project.Description = this.newProjectForm.get('Description').value;
+                     project.Private =this.newProjectForm.get('Private').value;
                     //  project.IRB = res[0]._id;
                      this.projectService.create(project).subscribe(() => this.getProjects());
                     });

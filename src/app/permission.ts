@@ -1,6 +1,6 @@
 import { User } from './user';
 
-enum roles {'full-access', 'read-only'};
+enum roles {'owner', 'full-access', 'read-only'};
 
 export class Permission {
     _id: string;

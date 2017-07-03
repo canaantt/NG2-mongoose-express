@@ -9,6 +9,7 @@ var projectSchema = new Schema({
     Description: String,
     Annotations: [{key: String, value: String}], 
     files: Object,
+    Private: Boolean,
     // Files: [{type: Schema.ObjectId, ref:File}],
     Permissions: [{type: Schema.ObjectId, ref: Permission}],
     Date: {type: Date, default: Date.now}

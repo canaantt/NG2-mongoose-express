@@ -4,8 +4,12 @@ import { User } from '../user';
 import { UserService } from '../service/user.service';
 import { UserEmailValidators } from '../validators/userEmail.validator';
 import { Headers, Http, Response } from '@angular/http';
-// import { Observable } from 'rxjs/Observable';
-
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/switchmap';
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -21,7 +25,7 @@ export class UsersComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private http: Http
-  ) {}
+  ) { }
 
   getUsers(): void {
     this.userService.getUsers()
@@ -41,7 +45,6 @@ export class UsersComponent implements OnInit {
     this.userService.create(this.newUserForm.value).subscribe(() => this.getUsers());
   }
 
-  
   ngOnInit(): void {
     this.getUsers();
     this.newUserForm = this.fb.group({
@@ -52,10 +55,19 @@ export class UsersComponent implements OnInit {
       Group: new FormControl('')
     });
 
-    this.newUserForm.get('Email').valueChanges
-    .filter(val => val.length >= 2)
-    .map(val => this.http.get('http://localhost:3000/users'))
-    .subscribe(valid => console.log(valid));
-    
+    this.newUserForm.valueChanges
+    .filter(val => {
+      console.log(val.Email);
+      return val.Email.length >= 2;
+    }).map(val => val.Email)
+    .debounceTime(500)
+    .switchMap(val => this.users.map(users => users.Email).filter(emails => emails.indexOf(val) === -1))
+    .subscribe(val => {
+      if(val.length === 0 ){
+        console.log('valid');
+      } else {
+        console.log('invalid');
+      }
+    });
   }
 }

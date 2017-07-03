@@ -64,9 +64,10 @@ export class ProjectsDashboardComponent implements OnInit {
 
   add(): void {
     this.newProjectForm = this.fb.group({
-      Name: new FormControl('Name Your Fancy Project', Validators.required),
-      Description: new FormControl('The largest recorded snowflake was in Keogh, MT during year 1887, 15 inches wide' , Validators.minLength(4))
-    });
+      Name: new FormControl('Name Your New Dataset', Validators.required),
+      Description: new FormControl('The largest recorded snowflake was in Keogh, MT during year 1887, 15 inches wide' , Validators.minLength(4)),
+      Private: new FormControl(true)
+   });
     this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
   }
   ngOnInit() {

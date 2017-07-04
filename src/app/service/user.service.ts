@@ -25,7 +25,8 @@ export class UserService {
   }
   userValidationByEmail(email: string): Observable<Response> {
     return this.http.get(this.usersUrl)
-               .map(res => res.json().filter(value => value.Email === email));
+               .map(res => res.json().filter(value => value.Email === email))
+               .catch(err => Observable.throw(err));
   }
 
   delete(user: User): Observable<Response> {

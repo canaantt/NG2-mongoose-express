@@ -192,6 +192,7 @@ db.once("open", function (callback) {
                    res.json({ error_code: 1, err_desc: err }).end(); 
                    return;
                 }
+                var PatientIDs;
                 allSheetNames.forEach(function(sheet){
                     console.log(sheet);
                     var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
@@ -215,9 +216,10 @@ db.once("open", function (callback) {
                                                 if (err) console.log(err);
                                             });
                     } else {
+                        var PatientArr = [];
                         if(sheet === "PATIENT") {
                             console.log("PATIENT sheet");
-                            var PatientIDs = _.uniq(sheetObjData.map(function(m){
+                            PatientIDs = _.uniq(sheetObjData.map(function(m){
                                 return m[0];
                             }));
 
@@ -243,14 +245,12 @@ db.once("open", function (callback) {
                             var metaObj = {};
                             enum_fields.forEach(function(field){
                                 metaObj[camelToDash(field)] = _.uniq(sheetObjData.map(function(record){
-                                                                        console.log(record);
-                                                                        console.log(record[header.indexOf(field +"-String")])
                                                                         return record[header.indexOf(field +"-String")];}));                                        
                                                                     });
 
 
 
-                            var PatientArr = PatientIDs.reduce(function(arr, p){
+                            PatientArr = PatientIDs.reduce(function(arr_clinical, p){
                                 var samples = [];
                                 var enumObj = {};
                                 var numObj = {};
@@ -278,7 +278,7 @@ db.once("open", function (callback) {
                                    });
                                 });
                                 
-                                arr.push({"id" : p,
+                                arr_clinical.push({"id" : p,
                                           "samples" : samples,
                                           "enums" : enumObj,
                                           "time": timeObj,
@@ -287,14 +287,40 @@ db.once("open", function (callback) {
                                           "metadata": metaObj,
                                           "events": []
                                         });
-                                return arr;
+                                return arr_clinical;
                                 }, []);
-                            db.collection(projectID+"_clinical_molecular").insertMany(PatientArr, function(err, result){
+                            
+                        } else if (sheet.split("-")[0] === "PATIENTEVENT"){
+                            console.log(sheet);
+                            var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
+                            var header = sheetObj[0];
+                            sheetObjData = sheetObj.splice(1, sheetObj.length);
+                            console.log(header);
+                            var id = sheet.split("-")[1];
+                            sheetObjData.forEach(function(record){
+                                var pos = _.findIndex(PatientArr, function(a){
+                                    return a.id === record[0];
+                                })
+                                var o = {};
+                                o.id = id;
+                                o.start = record[1];
+                                o.end = record[2];
+                                header.splice(0, 3).forEach(function(h){
+                                    o[h] = record[header.indexOf(h)];
+                                });
+                                if( pos > -1){
+                                    PatientArr[pos].events.push(o);
+                                } else{
+                                    PatientArr.push({
+                                        "id": record[0],
+                                        "events":[o]
+                                    });
+                                }
+                            });
+                        }
+                        db.collection(projectID+"_data_clinical").insertMany(PatientArr, function(err, result){
                                                 if (err) console.log(err);
                                             });
-                        } else if (sheet.split("-")[0] === "PATIENTEVENT"){
-                            console.log("EVENT sheet");
-                        }
                     }
                 });
                 res.status(200).end();

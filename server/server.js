@@ -193,6 +193,7 @@ db.once("open", function (callback) {
                    return;
                 }
                 var PatientIDs;
+                var PatientArr = [];
                 allSheetNames.forEach(function(sheet){
                     console.log(sheet);
                     var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
@@ -216,7 +217,7 @@ db.once("open", function (callback) {
                                                 if (err) console.log(err);
                                             });
                     } else {
-                        var PatientArr = [];
+                        
                         if(sheet === "PATIENT") {
                             console.log("PATIENT sheet");
                             PatientIDs = _.uniq(sheetObjData.map(function(m){
@@ -247,8 +248,6 @@ db.once("open", function (callback) {
                                 metaObj[camelToDash(field)] = _.uniq(sheetObjData.map(function(record){
                                                                         return record[header.indexOf(field +"-String")];}));                                        
                                                                     });
-
-
 
                             PatientArr = PatientIDs.reduce(function(arr_clinical, p){
                                 var samples = [];
@@ -305,12 +304,16 @@ db.once("open", function (callback) {
                                 o.id = id;
                                 o.start = record[1];
                                 o.end = record[2];
-                                header.splice(0, 3).forEach(function(h){
+                                header.splice(0, 3);
+                                console.log(header);
+                                header.forEach(function(h){
                                     o[h] = record[header.indexOf(h)];
                                 });
                                 if( pos > -1){
                                     PatientArr[pos].events.push(o);
-                                } else{
+                                } else {
+                                    console.log("Not in the original patient IDs");
+                                    console.log(record[0]);
                                     PatientArr.push({
                                         "id": record[0],
                                         "events":[o]

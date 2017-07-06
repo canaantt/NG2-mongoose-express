@@ -19,7 +19,16 @@ import 'rxjs/add/observable/of';
 import { PermissionsComponent } from '../permissions/permissions.component';
 import { FilesComponent } from '../files/files.component';
 enum roles {'full-access', 'read-only'};
-
+@Pipe({
+  name: 'IrbDetailService'
+})
+export class IrbDetailService implements PipeTransform {
+  constructor(private irbService: IrbService) {}
+  transform(id: string): Observable<string> {
+      return this.irbService.getIrbObjIDByIRBNumber(id)
+          .map(response => response[0].IRBTitle);
+  }
+}
 @Component({
   selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',
@@ -30,7 +39,7 @@ export class ProjectDetailComponent implements OnInit{
   project: any;
   id: string;
   files: any;
-  irb$: any;
+  irb: any;
   pi: any;
   users$: Observable<any>;
   results$: Observable<any>;
@@ -53,10 +62,21 @@ export class ProjectDetailComponent implements OnInit{
 
     if (typeof(this.id) !== 'undefined') {
       this.projectService.getProjectByID(this.route.snapshot.params['id'])
-                         .subscribe(res0 => this.project = res0);
+                         .subscribe(res0 => {
+                           this.project = res0;
+                          //  if (this.project.IRBNumber !== '') {
+                          //     this.irbService.getIrbObjIDByIRBNumber(this.project.IRBNumber)
+                          //         // .map(response => response.json())
+                          //         .subscribe(result => this.irb = result[0]);
+                          //   }
+                          });
     } else {
       console.log(typeof(this.id));
     }
+
+    // if (this.project.IRBNumber !== ''){
+    //   this.irb$ = this.irbService.getIrbObjIDByIRBNumber(this.project.IRBNumber);
+    // }
   }
   annotationItem(val: string) {
     return new FormGroup({

@@ -48,9 +48,9 @@ export class FilesComponent implements OnInit {
     this.files$ = this.fileService.getFilesByProjectID(id);
   }
 
-  removeAllFiles(){
-    this.files$ = null;
-    this.fileService.removeAllFiles(this.id);
+  removeAllFiles() {
+    //this.files$ = null;
+    this.fileService.removeFilesByProjectID(this.id);
   }
 }
 

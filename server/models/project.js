@@ -10,6 +10,7 @@ var projectSchema = new Schema({
     Annotations: [{key: String, value: String}], 
     files: Object,
     Private: Boolean,
+    IRBNumber: String,
     // Files: [{type: Schema.ObjectId, ref:File}],
     Permissions: [{type: Schema.ObjectId, ref: Permission}],
     Date: {type: Date, default: Date.now}

@@ -145,7 +145,7 @@ function fileRouterFactory(){
         });
     })
     .delete(function(req, res){
-        console.log("Getting Project-Related Collections...");
+        console.log("in delete");
         console.log(req.params.id);
         var projectID = req.params.id;
         console.log("trying to delete all the project-related collections");
@@ -167,8 +167,7 @@ function fileRouterFactory(){
                 });
             }
         });
-        res.json().end();
-        
+        res.status(200).send("files are deleted").end();
     });
     return router;
 }
@@ -314,35 +313,7 @@ db.once("open", function (callback) {
                             
                         } else if (sheet.split("-")[0] === "PATIENTEVENT"){
                             console.log(sheet);
-                            var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
-                            var header = sheetObj[0];
-                            sheetObjData = sheetObj.splice(1, sheetObj.length);
                             console.log(header);
-                            var id = sheet.split("-")[1];
-                            sheetObjData.forEach(function(record){
-                                var pos = _.findIndex(PatientArr, function(a){
-                                    return a.id === record[0];
-                                })
-                                var o = {};
-                                o.id = id;
-                                o.start = record[1];
-                                o.end = record[2];
-                                header.splice(0, 3);
-                                console.log(header);
-                                header.forEach(function(h){
-                                    o[h] = record[header.indexOf(h)];
-                                });
-                                if( pos > -1){
-                                    PatientArr[pos].events.push(o);
-                                } else {
-                                    console.log("Not in the original patient IDs");
-                                    console.log(record[0]);
-                                    PatientArr.push({
-                                        "id": record[0],
-                                        "events":[o]
-                                    });
-                                }
-                            });
                         }
                         db.collection(projectID+"_data_clinical").insertMany(PatientArr, function(err, result){
                                                 if (err) console.log(err);

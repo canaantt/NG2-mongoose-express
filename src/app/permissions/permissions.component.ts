@@ -7,7 +7,7 @@ import { PermissionService } from '../service/permission.service';
 import { User } from '../user';
 import { UserService } from '../service/user.service';
 import { UserEmailValidators } from '../validators/userEmail.validator';
-enum roles {'owner', 'full-access', 'read-only'};
+enum roles {'admin', 'read-write', 'read-only'};
 @Pipe({
   name: 'userFullName'
 })
@@ -28,9 +28,10 @@ export class PermissionsComponent implements OnInit {
   permissions: any;
   newPermissionForm: FormGroup;
   permissions$: Observable<any>;
-  roles= ['full-access', 'read-only'];
+  roles= ['admin', 'read-write', 'read-only'];
   @Input() project: any;
   id: string;
+  emailError: string;
 
   constructor( private userService: UserService,
                private permissionService: PermissionService,
@@ -40,7 +41,7 @@ export class PermissionsComponent implements OnInit {
     this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('')])});
     this.id = this.project._id;
     this.getPermissions();
-    this.newPermissionForm.valueChanges.subscribe(data => {
+    this.newPermissionForm.valueChanges.debounceTime(500).subscribe(data => {
       console.log(data);
     });
   }
@@ -60,14 +61,16 @@ export class PermissionsComponent implements OnInit {
     const p =  new Permission();
     this.userService.userValidationByEmail(formValue.Email)
         .subscribe(res => {
-          if (typeof(res) !== 'undefined') {
+          console.log(res[0]);
+          if (typeof(res[0]) !== 'undefined') {
             p.User = res[0]._id;
             p.Project = this.project._id;
             p.Role = formValue.Role;
             this.permissionService.create(p).subscribe(() => this.getPermissions());
           } else {
-            console.log('Email is not in the user list. Please register first.');
+            this.emailError = 'Email is not in the user list.';
           }
+          console.log(this.emailError);
         });
   }
 

@@ -67,28 +67,27 @@ function routerFactory(Model)
 
 function fileRouterFactory(){
     var router = express.Router();
+    var projectCollections;
     router.use(bodyParser.json()); 
     router.use(bodyParser.urlencoded({ extended: true }));
     router.get('/', function(req, res){	
-        // File.find({}, processResult(req,res) );
         console.log("in Files");
         res.status(200).end();
     });
     router.post('/', function(req, res) {
         console.log("in post");
     });
-    router.get('/:id', function(req, res){
+    router.route('/:id')
+    .get(function(req, res){
         console.log("Getting Project-Related Collections...");
         console.log(req.params.id);
         var projectID = req.params.id;
-
-
         db.db.listCollections().toArray(function(err, collectionMeta) {
             if (err) {
                 console.log(err);
             }
             else {
-                var projectCollections = collectionMeta.map(function(m){
+                projectCollections = collectionMeta.map(function(m){
                     return m.name;
                 }).filter(function(m){
                     return m.indexOf(projectID) > -1;
@@ -108,13 +107,13 @@ function fileRouterFactory(){
                                 obj.patients = data.map(function(m){return m.id});
                                 obj.metatdata = data[0].metadata;
                                 obj.enums_fields = data.map(function(m){return Object.keys(m.enums);})
-                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});
                                 obj.nums_fields = data.map(function(m){return Object.keys(m.nums);})
-                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});               
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});               
                                 obj.time_fields = data.map(function(m){return Object.keys(m.time);})
-                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});   
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});   
                                 obj.boolean_fields = data.map(function(m){return Object.keys(m.boolean);})
-                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
                                 arr.push(obj);
                             } else {
                                 obj.category = "molecular";
@@ -124,7 +123,7 @@ function fileRouterFactory(){
                                     typeObjs = data.filter(function(v){return v.type === n});
                                     obj[n].markers = typeObjs.map(function(v){return v.marker});
                                     obj[n].patients = _.uniq(typeObjs.map(function(v){return Object.keys(v.data);})
-                                                                     .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
+                                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
                                 });
                                 arr.push(obj);
                             }
@@ -141,11 +140,35 @@ function fileRouterFactory(){
                         
                     });
                     
-                }
-               
-                
+                }  
             }
         });
+    })
+    .delete(function(req, res){
+        console.log("Getting Project-Related Collections...");
+        console.log(req.params.id);
+        var projectID = req.params.id;
+        console.log("trying to delete all the project-related collections");
+        db.db.listCollections().toArray(function(err, collectionMeta) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                collectionMeta.map(function(m){
+                    return m.name;
+                }).filter(function(m){
+                    return m.indexOf(projectID) > -1;
+                }).forEach(function(m){
+                    db.db.dropCollection(m,function(err, result) {
+                        console.log("DELETING", m);
+                        if(err) console.log(err);
+                        console.log(result);
+                    });
+                });
+            }
+        });
+        res.json().end();
+        
     });
     return router;
 }
@@ -192,6 +215,8 @@ db.once("open", function (callback) {
                    res.json({ error_code: 1, err_desc: err }).end(); 
                    return;
                 }
+                var PatientIDs;
+                var PatientArr = [];
                 allSheetNames.forEach(function(sheet){
                     console.log(sheet);
                     var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
@@ -215,9 +240,10 @@ db.once("open", function (callback) {
                                                 if (err) console.log(err);
                                             });
                     } else {
+                        
                         if(sheet === "PATIENT") {
                             console.log("PATIENT sheet");
-                            var PatientIDs = _.uniq(sheetObjData.map(function(m){
+                            PatientIDs = _.uniq(sheetObjData.map(function(m){
                                 return m[0];
                             }));
 
@@ -243,14 +269,10 @@ db.once("open", function (callback) {
                             var metaObj = {};
                             enum_fields.forEach(function(field){
                                 metaObj[camelToDash(field)] = _.uniq(sheetObjData.map(function(record){
-                                                                        console.log(record);
-                                                                        console.log(record[header.indexOf(field +"-String")])
                                                                         return record[header.indexOf(field +"-String")];}));                                        
                                                                     });
 
-
-
-                            var PatientArr = PatientIDs.reduce(function(arr, p){
+                            PatientArr = PatientIDs.reduce(function(arr_clinical, p){
                                 var samples = [];
                                 var enumObj = {};
                                 var numObj = {};
@@ -278,7 +300,7 @@ db.once("open", function (callback) {
                                    });
                                 });
                                 
-                                arr.push({"id" : p,
+                                arr_clinical.push({"id" : p,
                                           "samples" : samples,
                                           "enums" : enumObj,
                                           "time": timeObj,
@@ -287,14 +309,44 @@ db.once("open", function (callback) {
                                           "metadata": metaObj,
                                           "events": []
                                         });
-                                return arr;
+                                return arr_clinical;
                                 }, []);
-                            db.collection(projectID+"_clinical_molecular").insertMany(PatientArr, function(err, result){
+                            
+                        } else if (sheet.split("-")[0] === "PATIENTEVENT"){
+                            console.log(sheet);
+                            var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
+                            var header = sheetObj[0];
+                            sheetObjData = sheetObj.splice(1, sheetObj.length);
+                            console.log(header);
+                            var id = sheet.split("-")[1];
+                            sheetObjData.forEach(function(record){
+                                var pos = _.findIndex(PatientArr, function(a){
+                                    return a.id === record[0];
+                                })
+                                var o = {};
+                                o.id = id;
+                                o.start = record[1];
+                                o.end = record[2];
+                                header.splice(0, 3);
+                                console.log(header);
+                                header.forEach(function(h){
+                                    o[h] = record[header.indexOf(h)];
+                                });
+                                if( pos > -1){
+                                    PatientArr[pos].events.push(o);
+                                } else {
+                                    console.log("Not in the original patient IDs");
+                                    console.log(record[0]);
+                                    PatientArr.push({
+                                        "id": record[0],
+                                        "events":[o]
+                                    });
+                                }
+                            });
+                        }
+                        db.collection(projectID+"_data_clinical").insertMany(PatientArr, function(err, result){
                                                 if (err) console.log(err);
                                             });
-                        } else if (sheet.split("-")[0] === "PATIENTEVENT"){
-                            console.log("EVENT sheet");
-                        }
                     }
                 });
                 res.status(200).end();

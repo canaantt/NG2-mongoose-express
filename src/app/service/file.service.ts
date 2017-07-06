@@ -23,11 +23,14 @@ export class FileService {
                 });
             // .map(res => res.json().filter(value => value.Project === id));
   }
-  delete(file: File): Observable<Response> {
-    const url = `${this.filesUrl}/` + file._id;
-    return this.http.delete(url, {headers: this.headers});
-  }
 
+  removeAllFiles(id: string): Observable<Response> {
+    console.log("Within file service removing all the files related to the project");
+    console.log(id);
+    const url = `${this.filesUrl}/` + id;
+    console.log(url);
+    return this.http.delete(url);
+  }
   create(file: File): Observable<Response> {
     return this.http
       .post(this.filesUrl, JSON.stringify(file), {headers: this.headers});

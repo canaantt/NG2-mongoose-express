@@ -2,6 +2,10 @@
 <div class='well well-lg'>
   <div class="row">
     <div class="col-md-5">
+      <label>File summary</label>
+      <button type="button" class="btn btn-danger btn-xs" (click)="removeAllFiles()">
+                                            <span class="glyphicon glyphicon-minor"></span>Remove
+                                        </button>
       <table>
         <thead>
           <td>Category</td>
@@ -21,13 +25,6 @@
         </tbody>
       </table>
     </div>
-     <!--<div ng2FileDrop
-                 [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
-                 (fileOver)="fileOverBase($event)"
-                 [uploader]="uploader"
-                 class="well my-drop-zone">
-                Base drop zone
-            </div>-->
     <input type="file" class="form-control col-md-5" name="single" 
                         ng2FileSelect [uploader]="uploader"/>
     <div class="col-md-8" *ngIf = "uploader?.queue?.length > 0">

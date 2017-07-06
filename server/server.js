@@ -67,28 +67,27 @@ function routerFactory(Model)
 
 function fileRouterFactory(){
     var router = express.Router();
+    var projectCollections;
     router.use(bodyParser.json()); 
     router.use(bodyParser.urlencoded({ extended: true }));
     router.get('/', function(req, res){	
-        // File.find({}, processResult(req,res) );
         console.log("in Files");
         res.status(200).end();
     });
     router.post('/', function(req, res) {
         console.log("in post");
     });
-    router.get('/:id', function(req, res){
+    router.route('/:id')
+    .get(function(req, res){
         console.log("Getting Project-Related Collections...");
         console.log(req.params.id);
         var projectID = req.params.id;
-
-
         db.db.listCollections().toArray(function(err, collectionMeta) {
             if (err) {
                 console.log(err);
             }
             else {
-                var projectCollections = collectionMeta.map(function(m){
+                projectCollections = collectionMeta.map(function(m){
                     return m.name;
                 }).filter(function(m){
                     return m.indexOf(projectID) > -1;
@@ -108,13 +107,13 @@ function fileRouterFactory(){
                                 obj.patients = data.map(function(m){return m.id});
                                 obj.metatdata = data[0].metadata;
                                 obj.enums_fields = data.map(function(m){return Object.keys(m.enums);})
-                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});
                                 obj.nums_fields = data.map(function(m){return Object.keys(m.nums);})
-                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});               
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});               
                                 obj.time_fields = data.map(function(m){return Object.keys(m.time);})
-                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});   
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});   
                                 obj.boolean_fields = data.map(function(m){return Object.keys(m.boolean);})
-                                                       .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
                                 arr.push(obj);
                             } else {
                                 obj.category = "molecular";
@@ -124,7 +123,7 @@ function fileRouterFactory(){
                                     typeObjs = data.filter(function(v){return v.type === n});
                                     obj[n].markers = typeObjs.map(function(v){return v.marker});
                                     obj[n].patients = _.uniq(typeObjs.map(function(v){return Object.keys(v.data);})
-                                                                     .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
+                                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
                                 });
                                 arr.push(obj);
                             }
@@ -141,11 +140,35 @@ function fileRouterFactory(){
                         
                     });
                     
-                }
-               
-                
+                }  
             }
         });
+    })
+    .delete(function(req, res){
+        console.log("Getting Project-Related Collections...");
+        console.log(req.params.id);
+        var projectID = req.params.id;
+        console.log("trying to delete all the project-related collections");
+        db.db.listCollections().toArray(function(err, collectionMeta) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                collectionMeta.map(function(m){
+                    return m.name;
+                }).filter(function(m){
+                    return m.indexOf(projectID) > -1;
+                }).forEach(function(m){
+                    db.db.dropCollection(m,function(err, result) {
+                        console.log("DELETING", m);
+                        if(err) console.log(err);
+                        console.log(result);
+                    });
+                });
+            }
+        });
+        res.json().end();
+        
     });
     return router;
 }

@@ -43,10 +43,10 @@ export class FileService {
   //     });
   // }
 
-  checkHugoGene(id: string, collection: string): Observable<Response>{
-    return this.http.get(this.filesUrl + '/' + id + '/' + collection)
-                    .map(res => res.json());
-  }
+  // checkHugoGene(id: string, collection: string): Observable<Response>{
+  //   return this.http.get(this.filesUrl + '/' + id + '/' + collection)
+  //                   .map(res => res.json());
+  // }
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);

@@ -11,7 +11,7 @@ var projectSchema = new Schema({
     files: Object,
     Private: Boolean,
     IRBNumber: String,
-    // Files: [{type: Schema.ObjectId, ref:File}],
+    File: {filename: String, size: Number, timestamp: Date},
     Permissions: [{type: Schema.ObjectId, ref: Permission}],
     Date: {type: Date, default: Date.now}
 });

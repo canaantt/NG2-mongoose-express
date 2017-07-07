@@ -6,6 +6,9 @@
       <button type="button" class="btn btn-danger btn-xs" (click)="removeAllFiles()">
                                             <span class="glyphicon glyphicon-minor"></span>Remove
                                         </button>
+      <!--<div>
+        {{project.file}}
+      </div>-->
       <table>
         <thead>
           <td>Category</td>
@@ -57,7 +60,7 @@
             
             
             <td nowrap>
-              <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" (click)="updateStatus()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
+              <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" (click)="updateStatus(item)" [disabled]="item.isReady || item.isUploading || item.isSuccess">
                                             <span class="glyphicon glyphicon-upload"></span> {{uploaded}}
                                         </button>
             </td>

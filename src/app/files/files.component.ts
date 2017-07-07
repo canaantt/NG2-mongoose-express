@@ -39,9 +39,15 @@ export class FilesComponent implements OnInit {
     this.getFiles(this.id);
   }
 
-  updateStatus() {
+  updateStatus(fileitem: any) {
     // this.fileService.sendProjectID(this.id);
     this.uploaded = 'Uploaded';
+    // this.project.file = fileitem;
+    // console.log(Date());
+    // console.log(fileitem.file);
+    // this.project.File = {'fileitem': fileitem.name,
+    //                      'size': fileitem.size,
+    //                      'timestamp': Date()};
   }
 
   getFiles(id: string) {

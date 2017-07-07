@@ -8,7 +8,7 @@ export class Project {
     Annotations: [{key: string, value: string}];
     Private: boolean;
     IRBNumber:  string;
-    // Files: string[];
+    File: {filename: string, size: number, timestamp: Date};
     files: Object;
     Permissions: Permission[];
     Date: Date;

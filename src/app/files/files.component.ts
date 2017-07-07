@@ -37,6 +37,8 @@ export class FilesComponent implements OnInit {
     this.id = this.project._id;
     this.uploader = new FileUploader({url: 'http://localhost:3000/upload/' + this.id });
     this.getFiles(this.id);
+    this.fileService.checkHugoGene(this.id, 'uploadingSummary')
+        .subscribe(res => console.log(res));
   }
 
   updateStatus(fileitem: any) {
@@ -55,8 +57,9 @@ export class FilesComponent implements OnInit {
   }
 
   removeAllFiles() {
-    //this.files$ = null;
+    this.files$ = null;
     this.fileService.removeFilesByProjectID(this.id);
+    this.getFiles(this.id);
   }
 }
 

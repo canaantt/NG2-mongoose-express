@@ -18,32 +18,35 @@ export class FileService {
     console.log(url);
     return this.http.get(url, {headers: this.headers})
                .map(res => {
-                 console.log(res);
+                  console.log(res);
                   return res.json();
                 });
-            // .map(res => res.json().filter(value => value.Project === id));
   }
 
-  removeFilesByProjectID(id: string): Observable<Response> {
-    console.log("Within file service removing all the files related to the project");
-    console.log(id);
+  removeFilesByProjectID(id: string): any {
     const url = `${this.filesUrl}/` + id;
-    console.log(url);
-    return this.http.delete(url, {headers: this.headers});
-    //return this.http.delete(url, {headers: this.headers});
+    this.http.delete(url, {headers: this.headers}).subscribe(err => console.log(err));
   }
   create(file: File): Observable<Response> {
     return this.http
       .post(this.filesUrl, JSON.stringify(file), {headers: this.headers});
   }
 
-  upload(file: File): Observable<Response> {
-    const url = `${this.fileUploadingUrl}/` + file._id;
-    console.log(file._id);
-    return this.http
-      .post(url, JSON.stringify(file), {headers: this.headers});
-  }
+  // upload(file: File): Observable<Response> {
+  //   const url = `${this.fileUploadingUrl}/` + file._id;
+  //   console.log(file._id);
+  //   return this.http
+  //     .post(url, JSON.stringify(file), {headers: this.headers})
+  //     .map(res => {
+  //       console.log(res.json());
+  //       return res.json();
+  //     });
+  // }
 
+  checkHugoGene(id: string, collection: string): Observable<Response>{
+    return this.http.get(this.filesUrl + '/' + id + '/' + collection)
+                    .map(res => res.json());
+  }
   private handleError(error: any): Promise<any> {
     console.error('An error occurred', error); // for demo purposes only
     return Promise.reject(error.message || error);

@@ -26,6 +26,8 @@ export class FilesComponent implements OnInit {
   datatype: string;
   id: string;
   uploaded: string = 'Not Uploaded';
+  uploadSummary: any;
+
   @Input() project: any;
 
   constructor(private fb: FormBuilder,
@@ -37,8 +39,8 @@ export class FilesComponent implements OnInit {
     this.id = this.project._id;
     this.uploader = new FileUploader({url: 'http://localhost:3000/upload/' + this.id });
     this.getFiles(this.id);
-    // this.fileService.checkHugoGene(this.id, 'uploadingSummary')
-        // .subscribe(res => console.log(res));
+    this.fileService.checkHugoGene(this.id + '_uploadingSummary')
+        .subscribe(res => this.uploadSummary = res[0]);
   }
 
   updateStatus(fileitem: any) {

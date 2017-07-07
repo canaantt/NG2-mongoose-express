@@ -115,7 +115,7 @@ function fileRouterFactory(){
                                 obj.boolean_fields = data.map(function(m){return Object.keys(m.boolean);})
                                                     .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
                                 arr.push(obj);
-                            } else {
+                            } else if (m.indexOf("molecular") > -1) {
                                 obj.category = "molecular";
                                 var types = _.uniq(data.map(function(m){return m.type}));
                                 types.forEach(function(n){
@@ -126,6 +126,8 @@ function fileRouterFactory(){
                                                                     .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
                                 });
                                 arr.push(obj);
+                            } else {
+                                arr.push(data);
                             }
                             next();
                         });
@@ -147,7 +149,6 @@ function fileRouterFactory(){
         console.log("in delete");
         console.log(req.params.id);
         var projectID = req.params.id;
-        console.log("trying to delete all the project-related collections");
         db.db.listCollections().toArray(function(err, collectionMeta) {
             if (err) {
                 console.log(err);
@@ -201,6 +202,7 @@ db.once("open", function (callback) {
         var molecularColleciton = mongoose.model(projectID + "_data_molecular", File.schema);
         var sampleMapCollection = mongoose.model(projectID + "_data_samples", File.schema);
         var clinicalColleciton = mongoose.model(projectID + "_data_clinical", File.schema);
+        var uploadingSummaryCollection = mongoose.model(projectID + "_uploadingSummary", File.schema);
 		upload(req, res, function (err) {
 			if (err) {
 				res.json({ error_code: 1, err_desc: err }).end();
@@ -215,6 +217,7 @@ db.once("open", function (callback) {
                 }
                 var PatientIDs;
                 var PatientArr = [];
+                var UploadingSummary = [];
                 allSheetNames.forEach(function(sheet){
                     console.log(sheet);
                     var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
@@ -225,12 +228,13 @@ db.once("open", function (callback) {
                     if(sheet.split("-")[0] === "MOLECULAR"){
                         console.log("It's a molecular sheet.");
                         var allSamples = header.splice(1, header.length);
-                        console.log("allSamples");
-                        console.log(allSamples);
                         sheetObjData = sheetObj.splice(1, sheetObj.length);
                         var dataType = sheet.split("-")[1];
                         var allMarkers = sheetObjData.map(function(m){return m[0]});
-                        console.log(allMarkers);
+                        UploadingSummary.push({"sheet" : sheet,
+                                                "samples" : allSamples,
+                                                "markers" : allMarkers});
+                        
                         sheetObjData.forEach(function(record){
                             var obj = {};
                             obj.type = dataType;
@@ -248,7 +252,8 @@ db.once("open", function (callback) {
                             PatientIDs = _.uniq(sheetObjData.map(function(m){
                                 return m[0];
                             }));
-
+                            UploadingSummary.push({"sheet" : sheet,
+                                                    "patients" : PatientIDs});
                             var enum_fields = [];
                             var num_fields = [];
                             var date_fields = [];
@@ -318,6 +323,9 @@ db.once("open", function (callback) {
                             console.log(sheet);
                             console.log(header);
                             var id = sheet.split("-")[1];
+                            var allPatients = _.uniq(sheetObjData.map(function(r){return r[0];}));
+                            UploadingSummary.push({"sheet" : sheet,
+                                                    "patients" : allPatients});
                             sheetObjData.forEach(function(record){
                                 var pos = _.findIndex(PatientArr, function(a){
                                     return a.id === record[0];
@@ -344,6 +352,9 @@ db.once("open", function (callback) {
                 db.collection(projectID+"_data_clinical").insertMany(PatientArr, function(err, result){
                                                 if (err) console.log(err);
                                             });
+                db.collection(projectID+"_uploadingSummary").insertMany(UploadingSummary, function(err, result){
+                                                 if (err) console.log(err);
+                                             });
                 res.status(200).end();
             }
 		});

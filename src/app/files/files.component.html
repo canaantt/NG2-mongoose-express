@@ -9,7 +9,7 @@
       <!--<div>
         {{project.file}}
       </div>-->
-      <table>
+      <!--<table>
         <thead>
           <td>Category</td>
           <td>Collection</td>
@@ -26,6 +26,23 @@
             </div>
           </tr>
         </tbody>
+      </table>-->
+
+      <table>
+         <thead>
+          <td>Sheet Name</td>
+          <td>Patient Size</td>
+          <td>Sample Size</td>
+          <td>Biomarker Size</td>
+         </thead>
+         <tbody class="form-group row" *ngFor="let sum of uploadSummary">
+          <tr>
+            <td><span>{{sum.sheet}}</span></td>
+            <td><span *ngIf="sum.patients">{{sum.patients.length}}</span></td> 
+            <td><span *ngIf="sum.samples">{{sum.samples.length}}</span></td>
+            <td><span *ngIf="sum.markers">{{sum.markers.length}}</span></td>
+          </tr>
+          </tbody>
       </table>
     </div>
     <input type="file" class="form-control col-md-5" name="single" 

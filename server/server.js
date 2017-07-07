@@ -77,108 +77,121 @@ function fileRouterFactory(){
     router.post('/', function(req, res) {
         console.log("in post");
     });
-    router.route('/:id')
+    router.route('/:id/:collection')
     .get(function(req, res){
         console.log("Getting Project-Related Collections...");
         console.log(req.params.id);
         var projectID = req.params.id;
-        db.db.listCollections().toArray(function(err, collectionMeta) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                projectCollections = collectionMeta.map(function(m){
-                    return m.name;
-                }).filter(function(m){
-                    return m.indexOf(projectID) > -1;
-                });
-                
-                if(projectCollections.length === 0){
-                    res.status(404).send("Not Found").end();
-                } else {
-                    var arr = [];
-
-                    asyncLoop(projectCollections, function(m, next){ 
-                        db.collection(m).find().toArray(function(err, data){
-                            var obj = {};
-                            obj.collection = m;
-                            if(m.indexOf("clinical") > -1){
-                                obj.category = "clinical";
-                                obj.patients = data.map(function(m){return m.id});
-                                obj.metatdata = data[0].metadata;
-                                obj.enums_fields = data.map(function(m){return Object.keys(m.enums);})
-                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});
-                                obj.nums_fields = data.map(function(m){return Object.keys(m.nums);})
-                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});               
-                                obj.time_fields = data.map(function(m){return Object.keys(m.time);})
-                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});   
-                                obj.boolean_fields = data.map(function(m){return Object.keys(m.boolean);})
-                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
-                                arr.push(obj);
-                            } else {
-                                obj.category = "molecular";
-                                var types = _.uniq(data.map(function(m){return m.type}));
-                                types.forEach(function(n){
-                                    obj[n] = {};
-                                    typeObjs = data.filter(function(v){return v.type === n});
-                                    obj[n].markers = typeObjs.map(function(v){return v.marker});
-                                    obj[n].patients = _.uniq(typeObjs.map(function(v){return Object.keys(v.data);})
-                                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
-                                });
-                                arr.push(obj);
-                            }
-                            next();
-                        });
-                        
-                    }, function(err){
-                        if(err){
-                            console.log(err);
-                            res.status(404).send(err).end();
-                        } else {
-                            res.json(arr).end();
-                        }    
-                        
+        if( typeof req.params.collection === 'undefined'){
+            db.db.listCollections().toArray(function(err, collectionMeta) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    projectCollections = collectionMeta.map(function(m){
+                        return m.name;
+                    }).filter(function(m){
+                        return m.indexOf(projectID) > -1;
                     });
                     
-                }  
-            }
-        });
+                    if(projectCollections.length === 0){
+                        res.status(404).send("Not Found").end();
+                    } else {
+                        var arr = [];
+
+                        asyncLoop(projectCollections, function(m, next){ 
+                            db.collection(m).find().toArray(function(err, data){
+                                var obj = {};
+                                obj.collection = m;
+                                if(m.indexOf("clinical") > -1){
+                                    obj.category = "clinical";
+                                    obj.patients = data.map(function(m){return m.id});
+                                    obj.metatdata = data[0].metadata;
+                                    obj.enums_fields = data.map(function(m){return Object.keys(m.enums);})
+                                                        .reduce(function(a, b){return a = _.uniq(a.concat(b));});
+                                    obj.nums_fields = data.map(function(m){return Object.keys(m.nums);})
+                                                        .reduce(function(a, b){return a = _.uniq(a.concat(b));});               
+                                    obj.time_fields = data.map(function(m){return Object.keys(m.time);})
+                                                        .reduce(function(a, b){return a = _.uniq(a.concat(b));});   
+                                    obj.boolean_fields = data.map(function(m){return Object.keys(m.boolean);})
+                                                        .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
+                                    arr.push(obj);
+                                } else {
+                                    obj.category = "molecular";
+                                    var types = _.uniq(data.map(function(m){return m.type}));
+                                    types.forEach(function(n){
+                                        obj[n] = {};
+                                        typeObjs = data.filter(function(v){return v.type === n});
+                                        obj[n].markers = typeObjs.map(function(v){return v.marker});
+                                        obj[n].patients = _.uniq(typeObjs.map(function(v){return Object.keys(v.data);})
+                                                                        .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
+                                    });
+                                    arr.push(obj);
+                                }
+                                next();
+                            });
+                            
+                        }, function(err){
+                            if(err){
+                                console.log(err);
+                                res.status(404).send(err).end();
+                            } else {
+                                res.json(arr).end();
+                            }    
+                            
+                        });
+                        
+                    }  
+                }
+            });
+        } else {
+            console.log(req.params.collection);
+            db.collection(req.params.id + "_" + req.params.collection)
+            .find()
+            .toArray(function(err, data){
+                res.json(data).end();
+            });
+        }
+        
     }).delete(function(req, res){
         console.log("in delete");
         console.log(req.params.id);
         var projectID = req.params.id;
         console.log("trying to delete all the project-related collections");
-        db.db.listCollections().toArray(function(err, collectionMeta) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                collectionMeta.map(function(m){
-                    return m.name;
-                }).filter(function(m){
-                    return m.indexOf(projectID) > -1;
-                }).forEach(function(m){
-                    db.db.dropCollection(m,function(err, result) {
-                        console.log("DELETING", m);
-                        if(err) console.log(err);
-                        console.log(result);
+        if( typeof req.params.collection === 'undefined'){
+            db.db.listCollections().toArray(function(err, collectionMeta) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    collectionMeta.map(function(m){
+                        return m.name;
+                    }).filter(function(m){
+                        return m.indexOf(projectID) > -1;
+                    }).forEach(function(m){
+                        db.db.dropCollection(m,function(err, result) {
+                            console.log("DELETING", m);
+                            if(err) console.log(err);
+                            console.log(result);
+                        });
                     });
-                });
-            }
-        });
-        res.status(200).send("files are deleted").end();
+                }
+            });
+            res.status(200).send("files are deleted").end();
+        }
+        
     });
 
-    router.route('/:id/:collection')
-    .get(function(req, res){
-        console.log(req.params.id);
-        console.log(req.params.collection);
-        db.collection(req.params.id + "_" + req.params.collection)
-          .find()
-          .toArray(function(err, data){
-              res.json(data).end();
-          });
-    });
+    // router.route('/:id/:collection')
+    // .get(function(req, res){
+    //     console.log(req.params.id);
+    //     console.log(req.params.collection);
+    //     db.collection(req.params.id + "_" + req.params.collection)
+    //       .find()
+    //       .toArray(function(err, data){
+    //           res.json(data).end();
+    //       });
+    // });
     return router;
 }
 function camelToDash(str) {

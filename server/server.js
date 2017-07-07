@@ -352,6 +352,31 @@ db.once("open", function (callback) {
                 db.collection(projectID+"_data_clinical").insertMany(PatientArr, function(err, result){
                                                 if (err) console.log(err);
                                             });
+
+                /* Quality Control */
+                    var allIDs = [];
+                    var overlapIDs = [];
+                    UploadingSummary.forEach(function(sum){
+                        if('samples' in sum){
+                            allIDs = _.uniq(allIDs.concat(sum.samples));
+                            if (overlapIDs.length == 0) {
+                                overlapIDs = sum.samples;
+                            } else {
+                                overlapIDs = _.intersection(overlapIDs, sum.samples);
+                            }
+                        } else if ('patients' in sum){
+                            allIDs = _.uniq(allIDs.concat(sum.patients));
+                            if (overlapIDs.length == 0) {
+                                overlapIDs = sum.patients;
+                            } else {
+                                overlapIDs = _.intersection(overlapIDs, sum.patients);
+                            }
+                        }
+                    })
+                    UploadingSummary.push({"meta": true, "allIDs": allIDs, "overlapIDs": overlapIDs});
+
+                
+
                 db.collection(projectID+"_uploadingSummary").insertMany(UploadingSummary, function(err, result){
                                                  if (err) console.log(err);
                                              });

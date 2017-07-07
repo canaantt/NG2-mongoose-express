@@ -29,7 +29,8 @@ export class FilesComponent implements OnInit {
   @Input() project: any;
 
   constructor(private fb: FormBuilder,
-              private fileService: FileService) {
+              private fileService: FileService,
+              private http: Http) {
    }
 
   ngOnInit(): void {
@@ -55,8 +56,16 @@ export class FilesComponent implements OnInit {
   }
 
   removeAllFiles() {
-    //this.files$ = null;
+    this.files$ = null;
     this.fileService.removeFilesByProjectID(this.id);
+    this.getFiles(this.id);
+    // let url = 'http://localhost:3000/files/' + this.id;
+    // console.log(url);
+    // this.http.delete(url).subscribe(
+    //   (err) => {
+    //     this.getFiles(this.id);
+    //   }
+    // );
   }
 }
 

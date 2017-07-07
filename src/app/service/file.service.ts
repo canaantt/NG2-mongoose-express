@@ -21,16 +21,11 @@ export class FileService {
                  console.log(res);
                   return res.json();
                 });
-            // .map(res => res.json().filter(value => value.Project === id));
   }
 
-  removeFilesByProjectID(id: string): Observable<Response> {
-    console.log("Within file service removing all the files related to the project");
-    console.log(id);
+  removeFilesByProjectID(id: string): any {
     const url = `${this.filesUrl}/` + id;
-    console.log(url);
-    return this.http.delete(url, {headers: this.headers});
-    //return this.http.delete(url, {headers: this.headers});
+    this.http.delete(url, {headers: this.headers}).subscribe(err => console.log(err));
   }
   create(file: File): Observable<Response> {
     return this.http

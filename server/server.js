@@ -77,121 +77,98 @@ function fileRouterFactory(){
     router.post('/', function(req, res) {
         console.log("in post");
     });
-    router.route('/:id/:collection')
+    router.route('/:id')
     .get(function(req, res){
         console.log("Getting Project-Related Collections...");
         console.log(req.params.id);
         var projectID = req.params.id;
-        if( typeof req.params.collection === 'undefined'){
-            db.db.listCollections().toArray(function(err, collectionMeta) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    projectCollections = collectionMeta.map(function(m){
-                        return m.name;
-                    }).filter(function(m){
-                        return m.indexOf(projectID) > -1;
-                    });
-                    
-                    if(projectCollections.length === 0){
-                        res.status(404).send("Not Found").end();
-                    } else {
-                        var arr = [];
+        db.db.listCollections().toArray(function(err, collectionMeta) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                projectCollections = collectionMeta.map(function(m){
+                    return m.name;
+                }).filter(function(m){
+                    return m.indexOf(projectID) > -1;
+                });
+                
+                if(projectCollections.length === 0){
+                    res.status(404).send("Not Found").end();
+                } else {
+                    var arr = [];
 
-                        asyncLoop(projectCollections, function(m, next){ 
-                            db.collection(m).find().toArray(function(err, data){
-                                var obj = {};
-                                obj.collection = m;
-                                if(m.indexOf("clinical") > -1){
-                                    obj.category = "clinical";
-                                    obj.patients = data.map(function(m){return m.id});
-                                    obj.metatdata = data[0].metadata;
-                                    obj.enums_fields = data.map(function(m){return Object.keys(m.enums);})
-                                                        .reduce(function(a, b){return a = _.uniq(a.concat(b));});
-                                    obj.nums_fields = data.map(function(m){return Object.keys(m.nums);})
-                                                        .reduce(function(a, b){return a = _.uniq(a.concat(b));});               
-                                    obj.time_fields = data.map(function(m){return Object.keys(m.time);})
-                                                        .reduce(function(a, b){return a = _.uniq(a.concat(b));});   
-                                    obj.boolean_fields = data.map(function(m){return Object.keys(m.boolean);})
-                                                        .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
-                                    arr.push(obj);
-                                } else {
-                                    obj.category = "molecular";
-                                    var types = _.uniq(data.map(function(m){return m.type}));
-                                    types.forEach(function(n){
-                                        obj[n] = {};
-                                        typeObjs = data.filter(function(v){return v.type === n});
-                                        obj[n].markers = typeObjs.map(function(v){return v.marker});
-                                        obj[n].patients = _.uniq(typeObjs.map(function(v){return Object.keys(v.data);})
-                                                                        .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
-                                    });
-                                    arr.push(obj);
-                                }
-                                next();
-                            });
-                            
-                        }, function(err){
-                            if(err){
-                                console.log(err);
-                                res.status(404).send(err).end();
+                    asyncLoop(projectCollections, function(m, next){ 
+                        db.collection(m).find().toArray(function(err, data){
+                            var obj = {};
+                            obj.collection = m;
+                            if(m.indexOf("clinical") > -1){
+                                obj.category = "clinical";
+                                obj.patients = data.map(function(m){return m.id});
+                                obj.metatdata = data[0].metadata;
+                                obj.enums_fields = data.map(function(m){return Object.keys(m.enums);})
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});
+                                obj.nums_fields = data.map(function(m){return Object.keys(m.nums);})
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});               
+                                obj.time_fields = data.map(function(m){return Object.keys(m.time);})
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});   
+                                obj.boolean_fields = data.map(function(m){return Object.keys(m.boolean);})
+                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));});                                                                     
+                                arr.push(obj);
+                            } else if (m.indexOf("molecular") > -1) {
+                                obj.category = "molecular";
+                                var types = _.uniq(data.map(function(m){return m.type}));
+                                types.forEach(function(n){
+                                    obj[n] = {};
+                                    typeObjs = data.filter(function(v){return v.type === n});
+                                    obj[n].markers = typeObjs.map(function(v){return v.marker});
+                                    obj[n].patients = _.uniq(typeObjs.map(function(v){return Object.keys(v.data);})
+                                                                    .reduce(function(a, b){return a = _.uniq(a.concat(b));}));
+                                });
+                                arr.push(obj);
                             } else {
-                                res.json(arr).end();
-                            }    
-                            
+                                arr.push(data);
+                            }
+                            next();
                         });
                         
-                    }  
-                }
-            });
-        } else {
-            console.log(req.params.collection);
-            db.collection(req.params.id + "_" + req.params.collection)
-            .find()
-            .toArray(function(err, data){
-                res.json(data).end();
-            });
-        }
-        
+                    }, function(err){
+                        if(err){
+                            console.log(err);
+                            res.status(404).send(err).end();
+                        } else {
+                            res.json(arr).end();
+                        }    
+                        
+                    });
+                    
+                }  
+            }
+        });
     }).delete(function(req, res){
         console.log("in delete");
         console.log(req.params.id);
         var projectID = req.params.id;
-        console.log("trying to delete all the project-related collections");
-        if( typeof req.params.collection === 'undefined'){
-            db.db.listCollections().toArray(function(err, collectionMeta) {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    collectionMeta.map(function(m){
-                        return m.name;
-                    }).filter(function(m){
-                        return m.indexOf(projectID) > -1;
-                    }).forEach(function(m){
-                        db.db.dropCollection(m,function(err, result) {
-                            console.log("DELETING", m);
-                            if(err) console.log(err);
-                            console.log(result);
-                        });
+        db.db.listCollections().toArray(function(err, collectionMeta) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                collectionMeta.map(function(m){
+                    return m.name;
+                }).filter(function(m){
+                    return m.indexOf(projectID) > -1;
+                }).forEach(function(m){
+                    db.db.dropCollection(m,function(err, result) {
+                        console.log("DELETING", m);
+                        if(err) console.log(err);
+                        console.log(result);
                     });
-                }
-            });
-            res.status(200).send("files are deleted").end();
-        }
-        
+                });
+            }
+        });
+        res.status(200).send("files are deleted").end();
     });
-
-    // router.route('/:id/:collection')
-    // .get(function(req, res){
-    //     console.log(req.params.id);
-    //     console.log(req.params.collection);
-    //     db.collection(req.params.id + "_" + req.params.collection)
-    //       .find()
-    //       .toArray(function(err, data){
-    //           res.json(data).end();
-    //       });
-    // });
     return router;
 }
 function camelToDash(str) {
@@ -246,18 +223,18 @@ db.once("open", function (callback) {
                     var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
                     var arr = [];
                     var header = sheetObj[0];
+                    //console.log(sheetObj);
+                    
                     if(sheet.split("-")[0] === "MOLECULAR"){
                         console.log("It's a molecular sheet.");
                         var allSamples = header.splice(1, header.length);
-                        console.log("allSamples");
-                        console.log(allSamples);
                         sheetObjData = sheetObj.splice(1, sheetObj.length);
                         var dataType = sheet.split("-")[1];
                         var allMarkers = sheetObjData.map(function(m){return m[0]});
-                        console.log(allMarkers);
                         UploadingSummary.push({"sheet" : sheet,
-                                               "samples" : allSamples,
-                                               "markers" : allMarkers});
+                                                "samples" : allSamples,
+                                                "markers" : allMarkers});
+                        
                         sheetObjData.forEach(function(record){
                             var obj = {};
                             obj.type = dataType;
@@ -276,7 +253,7 @@ db.once("open", function (callback) {
                                 return m[0];
                             }));
                             UploadingSummary.push({"sheet" : sheet,
-                                                   "patients" : PatientIDs});
+                                                    "patients" : PatientIDs});
                             var enum_fields = [];
                             var num_fields = [];
                             var date_fields = [];
@@ -330,25 +307,25 @@ db.once("open", function (callback) {
                                    });
                                 });
                                 
-                                arr_clinical.push({ "id" : p,
-                                                    "samples" : samples,
-                                                    "enums" : enumObj,
-                                                    "time": timeObj,
-                                                    "nums": numObj,
-                                                    "boolean": booleanObj,
-                                                    "metadata": metaObj,
-                                                    "events": []
-                                                    });
+                                arr_clinical.push({"id" : p,
+                                          "samples" : samples,
+                                          "enums" : enumObj,
+                                          "time": timeObj,
+                                          "nums": numObj,
+                                          "boolean": booleanObj,
+                                          "metadata": metaObj,
+                                          "events": []
+                                        });
                                 return arr_clinical;
                                 }, []);
                             
                         } else if (sheet.split("-")[0] === "PATIENTEVENT"){
                             console.log(sheet);
                             console.log(header);
+                            var id = sheet.split("-")[1];
                             var allPatients = _.uniq(sheetObjData.map(function(r){return r[0];}));
                             UploadingSummary.push({"sheet" : sheet,
-                                                   "patients" : allPatients});
-                            var id = sheet.split("-")[1];
+                                                    "patients" : allPatients});
                             sheetObjData.forEach(function(record){
                                 var pos = _.findIndex(PatientArr, function(a){
                                     return a.id === record[0];
@@ -375,9 +352,34 @@ db.once("open", function (callback) {
                 db.collection(projectID+"_data_clinical").insertMany(PatientArr, function(err, result){
                                                 if (err) console.log(err);
                                             });
+
+                /* Quality Control */
+                    var allIDs = [];
+                    var overlapIDs = [];
+                    UploadingSummary.forEach(function(sum){
+                        if('samples' in sum){
+                            allIDs = _.uniq(allIDs.concat(sum.samples));
+                            if (overlapIDs.length == 0) {
+                                overlapIDs = sum.samples;
+                            } else {
+                                overlapIDs = _.intersection(overlapIDs, sum.samples);
+                            }
+                        } else if ('patients' in sum){
+                            allIDs = _.uniq(allIDs.concat(sum.patients));
+                            if (overlapIDs.length == 0) {
+                                overlapIDs = sum.patients;
+                            } else {
+                                overlapIDs = _.intersection(overlapIDs, sum.patients);
+                            }
+                        }
+                    })
+                    UploadingSummary.push({"meta": true, "allIDs": allIDs, "overlapIDs": overlapIDs});
+
+                
+
                 db.collection(projectID+"_uploadingSummary").insertMany(UploadingSummary, function(err, result){
-                                                if (err) console.log(err);
-                                            });
+                                                 if (err) console.log(err);
+                                             });
                 res.status(200).end();
             }
 		});
@@ -401,7 +403,6 @@ var upload = multer({
 	storage: storage, 
     preservePath: true
 }).single('file');
-
 
 
 

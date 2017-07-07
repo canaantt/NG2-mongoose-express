@@ -43,8 +43,8 @@ export class FileService {
   //     });
   // }
 
-  checkHugoGene(id: string, collection: string): Observable<Response>{
-    return this.http.get(this.filesUrl + '/' + id + '/' + collection)
+  checkHugoGene(id: string): Observable<Response> {
+    return this.http.get(this.filesUrl + '/' + id )
                     .map(res => res.json());
   }
   private handleError(error: any): Promise<any> {

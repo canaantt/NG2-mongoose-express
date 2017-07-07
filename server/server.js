@@ -168,6 +168,17 @@ function fileRouterFactory(){
         });
         res.status(200).send("files are deleted").end();
     });
+
+    router.route('/:id/:collection')
+    .get(function(req, res){
+        console.log(req.params.id);
+        console.log(req.params.collection);
+        db.collection(req.params.id + "_" + req.params.collection)
+          .find()
+          .toArray(function(err, data){
+              res.json(data).end();
+          });
+    });
     return router;
 }
 function camelToDash(str) {
@@ -201,6 +212,7 @@ db.once("open", function (callback) {
         var molecularColleciton = mongoose.model(projectID + "_data_molecular", File.schema);
         var sampleMapCollection = mongoose.model(projectID + "_data_samples", File.schema);
         var clinicalColleciton = mongoose.model(projectID + "_data_clinical", File.schema);
+        var uploadingSummaryCollection = mongoose.model(projectID + "_uploadingSummary", File.schema);
 		upload(req, res, function (err) {
 			if (err) {
 				res.json({ error_code: 1, err_desc: err }).end();
@@ -215,13 +227,12 @@ db.once("open", function (callback) {
                 }
                 var PatientIDs;
                 var PatientArr = [];
+                var UploadingSummary = [];
                 allSheetNames.forEach(function(sheet){
                     console.log(sheet);
                     var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
                     var arr = [];
                     var header = sheetObj[0];
-                    //console.log(sheetObj);
-                    
                     if(sheet.split("-")[0] === "MOLECULAR"){
                         console.log("It's a molecular sheet.");
                         var allSamples = header.splice(1, header.length);
@@ -231,6 +242,9 @@ db.once("open", function (callback) {
                         var dataType = sheet.split("-")[1];
                         var allMarkers = sheetObjData.map(function(m){return m[0]});
                         console.log(allMarkers);
+                        UploadingSummary.push({"sheet" : sheet,
+                                               "samples" : allSamples,
+                                               "markers" : allMarkers});
                         sheetObjData.forEach(function(record){
                             var obj = {};
                             obj.type = dataType;
@@ -248,7 +262,8 @@ db.once("open", function (callback) {
                             PatientIDs = _.uniq(sheetObjData.map(function(m){
                                 return m[0];
                             }));
-
+                            UploadingSummary.push({"sheet" : sheet,
+                                                   "patients" : PatientIDs});
                             var enum_fields = [];
                             var num_fields = [];
                             var date_fields = [];
@@ -302,21 +317,24 @@ db.once("open", function (callback) {
                                    });
                                 });
                                 
-                                arr_clinical.push({"id" : p,
-                                          "samples" : samples,
-                                          "enums" : enumObj,
-                                          "time": timeObj,
-                                          "nums": numObj,
-                                          "boolean": booleanObj,
-                                          "metadata": metaObj,
-                                          "events": []
-                                        });
+                                arr_clinical.push({ "id" : p,
+                                                    "samples" : samples,
+                                                    "enums" : enumObj,
+                                                    "time": timeObj,
+                                                    "nums": numObj,
+                                                    "boolean": booleanObj,
+                                                    "metadata": metaObj,
+                                                    "events": []
+                                                    });
                                 return arr_clinical;
                                 }, []);
                             
                         } else if (sheet.split("-")[0] === "PATIENTEVENT"){
                             console.log(sheet);
                             console.log(header);
+                            var allPatients = _.uniq(sheetObjData.map(function(r){return r[0];}));
+                            UploadingSummary.push({"sheet" : sheet,
+                                                   "patients" : allPatients});
                             var id = sheet.split("-")[1];
                             sheetObjData.forEach(function(record){
                                 var pos = _.findIndex(PatientArr, function(a){
@@ -342,6 +360,9 @@ db.once("open", function (callback) {
                     }
                 });
                 db.collection(projectID+"_data_clinical").insertMany(PatientArr, function(err, result){
+                                                if (err) console.log(err);
+                                            });
+                db.collection(projectID+"_uploadingSummary").insertMany(UploadingSummary, function(err, result){
                                                 if (err) console.log(err);
                                             });
                 res.status(200).end();

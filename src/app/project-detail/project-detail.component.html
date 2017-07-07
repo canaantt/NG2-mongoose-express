@@ -14,7 +14,7 @@
           <div class="form-group">
             <label>IRB</label>
             <input [(ngModel)]="project.IRBNumber" placeholder="IRB#" class="col-sx-3">
-            <div *ngIf="project.IRBNumber" class="col-sx-3">{{project.IRBNumber | IrbDetailService | async}}</div>
+            <div *ngIf="project.IRBNumber" class="col-sx-3">IRB Title : {{project.IRBNumber | IrbDetailService | async}}</div>
           </div>
           <div class="form-group">
             <label>Description</label>

@@ -29,8 +29,7 @@ export class FilesComponent implements OnInit {
   @Input() project: any;
 
   constructor(private fb: FormBuilder,
-              private fileService: FileService,
-              private http: Http) {
+              private fileService: FileService) {
    }
 
   ngOnInit(): void {
@@ -38,6 +37,8 @@ export class FilesComponent implements OnInit {
     this.id = this.project._id;
     this.uploader = new FileUploader({url: 'http://localhost:3000/upload/' + this.id });
     this.getFiles(this.id);
+    this.fileService.checkHugoGene(this.id, 'uploadingSummary')
+        .subscribe(res => console.log(res));
   }
 
   updateStatus(fileitem: any) {
@@ -59,13 +60,6 @@ export class FilesComponent implements OnInit {
     this.files$ = null;
     this.fileService.removeFilesByProjectID(this.id);
     this.getFiles(this.id);
-    // let url = 'http://localhost:3000/files/' + this.id;
-    // console.log(url);
-    // this.http.delete(url).subscribe(
-    //   (err) => {
-    //     this.getFiles(this.id);
-    //   }
-    // );
   }
 }
 

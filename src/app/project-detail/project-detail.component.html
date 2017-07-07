@@ -5,11 +5,16 @@
           <h3 class="detail-header">{{project.Name}}</h3>
           <div class="form-group">
             <label>Dataset Name</label>
-            <input [(ngModel)]="project.Name" placeholder="Project Name" class="form-control" rows="1"> 
+            <input [(ngModel)]="project.Name" placeholder="Dataset Name" class="form-control" rows="1"> 
           </div>
           <div class="form-group">
             <label>Private</label>
             <input type="checkbox" [(ngModel)]="project.Private">
+          </div>
+          <div class="form-group">
+            <label>IRB</label>
+            <input [(ngModel)]="project.IRBNumber" placeholder="IRB#" class="col-sx-3">
+            <div *ngIf="project.IRBNumber" class="col-sx-3">{{project.IRBNumber | IrbDetailService | async}}</div>
           </div>
           <div class="form-group">
             <label>Description</label>

@@ -5,8 +5,21 @@ import { FileService } from '../service/file.service';
 import { FileUploader } from 'ng2-file-upload';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { Pipe, PipeTransform } from '@angular/core';
 import * as _ from 'underscore';
-
+@Pipe({
+  name: 'Overlapping'
+})
+export class Overlapping implements PipeTransform {
+  constructor() {}
+  transform(arr1, arr2): any {
+      let overlapped = _.intersection(arr1, arr2);
+      // console.log(overlapped);
+      return overlapped.length/arr1.length*100;
+      // return {'overlapped': overlapped.length/arr1.length,
+      //         'different': _.difference(arr1, overlapped)};
+  }
+}
 @Component({
   selector: 'app-files',
   templateUrl: './files.component.html',
@@ -28,7 +41,8 @@ export class FilesComponent implements OnInit {
   uploaded: string = 'Not Uploaded';
   uploadSummaryClinical: any;
   uploadSummaryMolecular: any;
-
+  allSamplesUploaded: any;
+  allPatientsUploaded: any;
 
   @Input() project: any;
 
@@ -43,8 +57,11 @@ export class FilesComponent implements OnInit {
     this.getFiles(this.id);
     this.fileService.checkHugoGene(this.id + '_uploadingSummary')
         .subscribe(res => {
-          this.uploadSummaryClinical = res[0].filter(function(m){return "patients" in m;});
-          this.uploadSummaryMolecular = res[0].filter(function(m){return "samples" in m;});
+          this.uploadSummaryClinical = res[0].filter(function(m){return 'patients' in m; });
+          this.uploadSummaryMolecular = res[0].filter(function(m){return 'markers' in m; });
+          let meta: any = res[0].filter(function(m) {return m.meta })[0];
+          this.allSamplesUploaded = meta.allSampleIDs;
+          this.allPatientsUploaded = meta.allPatientIDs;
         });
   }
 

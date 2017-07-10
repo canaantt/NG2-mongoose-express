@@ -17,7 +17,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
 import { ProjectAdditionComponent } from './project-addition/project-addition.component';
 import { UserLogInComponent } from './user-log-in/user-log-in.component';
-import { FilesComponent } from './files/files.component';
+import { FilesComponent, Overlapping } from './files/files.component';
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { PermissionsComponent, UserFullNamePipe } from './permissions/permissions.component';
 import { AnnotationsComponent } from './annotations/annotations.component';
@@ -52,7 +52,7 @@ import 'rxjs/add/operator/catch';
     AdminComponent,
     AdminGridComponent,
     RegisterComponent,
-    FileDropDirective
+    Overlapping
   ],
   imports: [
     BrowserModule,

@@ -29,27 +29,30 @@
       </table>-->
       <table>
          <thead>
-          <td>Sheet Name</td>
+          <td>Clinical Sheet Name</td>
           <td>Patient Size</td>
           <td>Sample Size</td>
-          <td>Overlaping Samples with Molecular Data</td>
+          <td>Overlaping Samples</td>
+          <td>Overlaping Patients</td>
          </thead>
          <tbody class="form-group row" *ngFor="let sum of uploadSummaryClinical">
             <tr>
               <td><span>{{sum.sheet}}</span></td>  
               <td><span *ngIf="sum.patients">{{sum.patients.length}}</span></td>
               <td><span *ngIf="sum.samples">{{sum.samples.length}}</span></td>
+              <td><span *ngIf="sum.samples">{{sum.samples | Overlapping: this.allSamplesUploaded}}% </span></td>
+              <td><span>{{sum.patients | Overlapping: this.allPatientsUploaded}}% </span></td>
             </tr>
           </tbody>
       </table>
       <hr>
       <table>
          <thead>
-          <td>Sheet Name</td>
+          <td>Molecular Sheet Name</td>
           <td>Sample Size</td>
           <td>Biomarker Size</td>
-          <td>Hugo Gene Symbol Percentage</td>
-          <td>non-Hugo Biomarkers</td>
+          <td>Hugo Gene Biomarker Percentage</td>
+          <td>Non-Hugo Biomarkers</td>
          </thead>
          <tbody class="form-group row" *ngFor="let sum of uploadSummaryMolecular">
             <tr>
@@ -57,7 +60,7 @@
               <td><span *ngIf="sum.samples">{{sum.samples.length}}</span></td>
               <td><span *ngIf="sum.markers">{{sum.markers.length}}</span></td>
               <td><span *ngIf="sum.geneSymbolValidation">{{(sum.geneSymbolValidation.validNameNumber/sum.markers.length).toFixed(2)*100}}%</span></td>
-              <td><span *ngIf="sum.geneSymbolValidation">{{sum.geneSymbolValidation.unvalidNamesArr.splice(0,5)}}</span></td>
+              <td><span *ngIf="sum.geneSymbolValidation">{{sum.geneSymbolValidation.unvalidNamesArr}}</span></td>
             </tr>
           </tbody>
       </table>

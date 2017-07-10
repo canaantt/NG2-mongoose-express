@@ -26,7 +26,9 @@ export class FilesComponent implements OnInit {
   datatype: string;
   id: string;
   uploaded: string = 'Not Uploaded';
-  uploadSummary: any;
+  uploadSummaryClinical: any;
+  uploadSummaryMolecular: any;
+
 
   @Input() project: any;
 
@@ -40,7 +42,10 @@ export class FilesComponent implements OnInit {
     this.uploader = new FileUploader({url: 'http://localhost:3000/upload/' + this.id });
     this.getFiles(this.id);
     this.fileService.checkHugoGene(this.id + '_uploadingSummary')
-        .subscribe(res => this.uploadSummary = res[0]);
+        .subscribe(res => {
+          this.uploadSummaryClinical = res[0].filter(function(m){return "patients" in m;});
+          this.uploadSummaryMolecular = res[0].filter(function(m){return "samples" in m;});
+        });
   }
 
   updateStatus(fileitem: any) {

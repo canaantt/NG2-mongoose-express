@@ -1,7 +1,7 @@
 <h3>Files Management</h3>
 <div class='well well-lg'>
   <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-12">
       <label>File summary</label>
       <button type="button" class="btn btn-danger btn-xs" (click)="removeAllFiles()">
                                             <span class="glyphicon glyphicon-minor"></span>Remove
@@ -27,23 +27,41 @@
           </tr>
         </tbody>
       </table>-->
-
       <table>
          <thead>
           <td>Sheet Name</td>
           <td>Patient Size</td>
           <td>Sample Size</td>
-          <td>Biomarker Size</td>
+          <td>Overlaping Samples with Molecular Data</td>
          </thead>
-         <tbody class="form-group row" *ngFor="let sum of uploadSummary">
-          <tr>
-            <td><span>{{sum.sheet}}</span></td>
-            <td><span *ngIf="sum.patients">{{sum.patients.length}}</span></td> 
-            <td><span *ngIf="sum.samples">{{sum.samples.length}}</span></td>
-            <td><span *ngIf="sum.markers">{{sum.markers.length}}</span></td>
-          </tr>
+         <tbody class="form-group row" *ngFor="let sum of uploadSummaryClinical">
+            <tr>
+              <td><span>{{sum.sheet}}</span></td>  
+              <td><span *ngIf="sum.patients">{{sum.patients.length}}</span></td>
+              <td><span *ngIf="sum.samples">{{sum.samples.length}}</span></td>
+            </tr>
           </tbody>
       </table>
+      <hr>
+      <table>
+         <thead>
+          <td>Sheet Name</td>
+          <td>Sample Size</td>
+          <td>Biomarker Size</td>
+          <td>Hugo Gene Symbol Percentage</td>
+          <td>non-Hugo Biomarkers</td>
+         </thead>
+         <tbody class="form-group row" *ngFor="let sum of uploadSummaryMolecular">
+            <tr>
+              <td><span>{{sum.sheet}}</span></td>  
+              <td><span *ngIf="sum.samples">{{sum.samples.length}}</span></td>
+              <td><span *ngIf="sum.markers">{{sum.markers.length}}</span></td>
+              <td><span *ngIf="sum.geneSymbolValidation">{{(sum.geneSymbolValidation.validNameNumber/sum.markers.length).toFixed(2)*100}}%</span></td>
+              <td><span *ngIf="sum.geneSymbolValidation">{{sum.geneSymbolValidation.unvalidNamesArr.splice(0,5)}}</span></td>
+            </tr>
+          </tbody>
+      </table>
+
     </div>
     <input type="file" class="form-control col-md-5" name="single" 
                         ng2FileSelect [uploader]="uploader"/>

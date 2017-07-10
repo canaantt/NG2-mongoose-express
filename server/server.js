@@ -1,4 +1,5 @@
 const express = require('express');
+const request = require('request');
 const _ = require("underscore");
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -20,6 +21,17 @@ var Project = require("./models/project");
 var File = require("./models/file");
 var IRB = require("./models/irb");
 var Permission = require("./models/permission");
+// var GeneSymbolLookupTable = require('dev-lookup_oncoscape_genes.json');
+var GeneSymbolLookupTable;
+var HugoGenes;
+
+request('http://dev.oncoscape.sttrcancer.io/api/lookup_oncoscape_genes/?q=&apikey=password', function(err, resp, body){
+    GeneSymbolLookupTable = JSON.parse(body);
+    HugoGenes = GeneSymbolLookupTable.map(function(m){return m.hugo;});
+    if(err) console.log(err);
+    console.log("**********");
+    console.log(HugoGenes.length);
+});
 
 const corsOptions = {
 	origin: 'http://localhost:4200'
@@ -230,7 +242,7 @@ db.once("open", function (callback) {
                         var allSamples = header.splice(1, header.length);
                         sheetObjData = sheetObj.splice(1, sheetObj.length);
                         var dataType = sheet.split("-")[1];
-                        var allMarkers = sheetObjData.map(function(m){return m[0]});
+                        var allMarkers = sheetObjData.map(function(m){return m[0].trim()});
                         UploadingSummary.push({"sheet" : sheet,
                                                 "samples" : allSamples,
                                                 "markers" : allMarkers});
@@ -252,8 +264,9 @@ db.once("open", function (callback) {
                             PatientIDs = _.uniq(sheetObjData.map(function(m){
                                 return m[0];
                             }));
-                            UploadingSummary.push({"sheet" : sheet,
-                                                    "patients" : PatientIDs});
+                            Samples = _.uniq(sheetObjData.map(function(m){
+                                return m[1];
+                            }));
                             var enum_fields = [];
                             var num_fields = [];
                             var date_fields = [];
@@ -316,16 +329,19 @@ db.once("open", function (callback) {
                                           "metadata": metaObj,
                                           "events": []
                                         });
+                                      
                                 return arr_clinical;
                                 }, []);
-                            
+                                UploadingSummary.push({"sheet" : sheet,
+                                                       "patients" : PatientIDs,
+                                                       "samples": Samples});
                         } else if (sheet.split("-")[0] === "PATIENTEVENT"){
                             console.log(sheet);
                             console.log(header);
                             var id = sheet.split("-")[1];
                             var allPatients = _.uniq(sheetObjData.map(function(r){return r[0];}));
                             UploadingSummary.push({"sheet" : sheet,
-                                                    "patients" : allPatients});
+                                                   "patients" : allPatients});
                             sheetObjData.forEach(function(record){
                                 var pos = _.findIndex(PatientArr, function(a){
                                     return a.id === record[0];
@@ -356,30 +372,60 @@ db.once("open", function (callback) {
                 /* Quality Control */
                     var allIDs = [];
                     var overlapIDs = [];
-                    UploadingSummary.forEach(function(sum){
-                        if('samples' in sum){
-                            allIDs = _.uniq(allIDs.concat(sum.samples));
-                            if (overlapIDs.length == 0) {
-                                overlapIDs = sum.samples;
-                            } else {
-                                overlapIDs = _.intersection(overlapIDs, sum.samples);
+                    asyncLoop(UploadingSummary, function(sum, next){ 
+                            if('samples' in sum){
+                                sum.geneSymbolValidation = checkHugoGeneSymbols(sum.markers);
+                                allIDs = _.uniq(allIDs.concat(sum.samples));
+                                if (overlapIDs.length == 0) {
+                                    overlapIDs = sum.samples;
+                                } else {
+                                    overlapIDs = _.intersection(overlapIDs, sum.samples);
+                                }
+                                next();
+                            } else if ('patients' in sum){
+                                allIDs = _.uniq(allIDs.concat(sum.patients));
+                                if (overlapIDs.length == 0) {
+                                    overlapIDs = sum.patients;
+                                } else {
+                                    overlapIDs = _.intersection(overlapIDs, sum.patients);
+                                }
+                                next();
                             }
-                        } else if ('patients' in sum){
-                            allIDs = _.uniq(allIDs.concat(sum.patients));
-                            if (overlapIDs.length == 0) {
-                                overlapIDs = sum.patients;
+                        } , function(err){
+                            if(err){
+                                console.log(err);
+                                res.status(404).send(err).end();
                             } else {
-                                overlapIDs = _.intersection(overlapIDs, sum.patients);
-                            }
-                        }
-                    })
-                    UploadingSummary.push({"meta": true, "allIDs": allIDs, "overlapIDs": overlapIDs});
+                                console.log(UploadingSummary);
+                                UploadingSummary.push({"meta": true, "allIDs": allIDs, "overlapIDs": overlapIDs});
+                                db.collection(projectID+"_uploadingSummary").insertMany(UploadingSummary, function(err, result){
+                                                                if (err) console.log(err);
+                                                            });
+                                }    
+                            
+                        });
 
-                
-
-                db.collection(projectID+"_uploadingSummary").insertMany(UploadingSummary, function(err, result){
-                                                 if (err) console.log(err);
-                                             });
+                    // UploadingSummary = UploadingSummary.map(function(sum){
+                    //     if('samples' in sum){
+                    //         sum.geneSymbolValidation = checkHugoGeneSymbols(sum.markers);
+                    //         allIDs = _.uniq(allIDs.concat(sum.samples));
+                    //         if (overlapIDs.length == 0) {
+                    //             overlapIDs = sum.samples;
+                    //         } else {
+                    //             overlapIDs = _.intersection(overlapIDs, sum.samples);
+                    //         }
+                    //         return sum;
+                    //     } else if ('patients' in sum){
+                    //         allIDs = _.uniq(allIDs.concat(sum.patients));
+                    //         if (overlapIDs.length == 0) {
+                    //             overlapIDs = sum.patients;
+                    //         } else {
+                    //             overlapIDs = _.intersection(overlapIDs, sum.patients);
+                    //         }
+                    //         return sum;
+                    //     }
+                    // })
+                    
                 res.status(200).end();
             }
 		});
@@ -404,5 +450,11 @@ var upload = multer({
     preservePath: true
 }).single('file');
 
-
-
+var checkHugoGeneSymbols = function (geneArr) {
+    var overLappedNames = _.intersection(geneArr, HugoGenes);
+    var unvalidGeneNames = _.difference(geneArr, overLappedNames);
+    return {
+        validNameNumber: overLappedNames.length,
+        unvalidNamesArr: unvalidGeneNames
+    }
+};

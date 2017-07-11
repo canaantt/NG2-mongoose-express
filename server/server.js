@@ -370,34 +370,22 @@ db.once("open", function (callback) {
                                             });
 
                 /* Quality Control */
-                    var allIDs = [];
-                    var overlapIDs = [];
+                    var allSampleIDs = [];
+                    var allPatientIDs = [];
                     asyncLoop(UploadingSummary, function(sum, next){ 
-                            if('samples' in sum){
+                            if('markers' in sum){
                                 sum.geneSymbolValidation = checkHugoGeneSymbols(sum.markers);
-                                allIDs = _.uniq(allIDs.concat(sum.samples));
-                                if (overlapIDs.length == 0) {
-                                    overlapIDs = sum.samples;
-                                } else {
-                                    overlapIDs = _.intersection(overlapIDs, sum.samples);
-                                }
-                                next();
+                                allSampleIDs = _.uniq(allSampleIDs.concat(sum.samples));
                             } else if ('patients' in sum){
-                                allIDs = _.uniq(allIDs.concat(sum.patients));
-                                if (overlapIDs.length == 0) {
-                                    overlapIDs = sum.patients;
-                                } else {
-                                    overlapIDs = _.intersection(overlapIDs, sum.patients);
-                                }
-                                next();
+                                allPatientIDs = _.uniq(allPatientIDs.concat(sum.patients));
                             }
+                            next();
                         } , function(err){
                             if(err){
                                 console.log(err);
                                 res.status(404).send(err).end();
                             } else {
-                                console.log(UploadingSummary);
-                                UploadingSummary.push({"meta": true, "allIDs": allIDs, "overlapIDs": overlapIDs});
+                                UploadingSummary.push({"meta": true, "allSampleIDs": allSampleIDs, "allPatientIDs": allPatientIDs});
                                 db.collection(projectID+"_uploadingSummary").insertMany(UploadingSummary, function(err, result){
                                                                 if (err) console.log(err);
                                                             });
@@ -405,30 +393,12 @@ db.once("open", function (callback) {
                             
                         });
 
-                    // UploadingSummary = UploadingSummary.map(function(sum){
-                    //     if('samples' in sum){
-                    //         sum.geneSymbolValidation = checkHugoGeneSymbols(sum.markers);
-                    //         allIDs = _.uniq(allIDs.concat(sum.samples));
-                    //         if (overlapIDs.length == 0) {
-                    //             overlapIDs = sum.samples;
-                    //         } else {
-                    //             overlapIDs = _.intersection(overlapIDs, sum.samples);
-                    //         }
-                    //         return sum;
-                    //     } else if ('patients' in sum){
-                    //         allIDs = _.uniq(allIDs.concat(sum.patients));
-                    //         if (overlapIDs.length == 0) {
-                    //             overlapIDs = sum.patients;
-                    //         } else {
-                    //             overlapIDs = _.intersection(overlapIDs, sum.patients);
-                    //         }
-                    //         return sum;
-                    //     }
-                    // })
                     
-                res.status(200).end();
+                    
+                
             }
 		});
+        res.status(200).end();
 	});
     app.use('/upload/', express.static('./uploads'));
 	app.listen(3000, function () {

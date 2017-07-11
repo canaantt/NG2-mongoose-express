@@ -1,63 +1,60 @@
 <h3>Files Management</h3>
 <div class='well well-lg'>
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" *ngIf="project.File">
+      <table>
+        <thead>
+          <td>File Name</td>
+          <td>Size</td>
+          <td>Timestamp</td>
+        </thead>
+        <tbody>
+          <td>{{project.File.filename}}</td>
+          <td>{{project.File.size}}</td>
+          <td>{{project.File.timestamp}}</td>
+        </tbody>
+      </table>
+    </div>
+    <hr>
+    <div class="col-md-12" *ngIf="uploadStatus.uploadSummaryClinical">
       <label>File summary</label>
       <button type="button" class="btn btn-danger btn-xs" (click)="removeAllFiles()">
                                             <span class="glyphicon glyphicon-minor"></span>Remove
                                         </button>
-      <!--<div>
-        {{project.file}}
-      </div>-->
-      <!--<table>
-        <thead>
-          <td>Category</td>
-          <td>Collection</td>
-          <td>Patient/Sample Size</td>
-        </thead>
-        <tbody class="form-group row" *ngFor="let file of files$ | async">
-          <tr>
-            <td><span class="detail-users">{{file.category}}</span></td>
-            <td><span class="detail-users">{{file.collection}}</span></td>
-            <td><span class="detail-users">{{file.DataType}}</span></td>
-            <div *ngIf="file.category === 'clinical'"><td><span class="detail-users">{{file.patients.length}}</span></td></div>
-            <div *ngIf="file.category === 'molecular'">
-              <td><span class="detail-users">{{file.CNV.patients.length}}</span></td>
-            </div>
-          </tr>
-        </tbody>
-      </table>-->
       <table>
          <thead>
-          <td>Sheet Name</td>
+          <td>Clinical Sheet Name</td>
           <td>Patient Size</td>
           <td>Sample Size</td>
-          <td>Overlaping Samples with Molecular Data</td>
+          <td>Overlaping Samples</td>
+          <td>Overlaping Patients</td>
          </thead>
-         <tbody class="form-group row" *ngFor="let sum of uploadSummaryClinical">
+         <tbody class="form-group row" *ngFor="let sum of uploadStatus.uploadSummaryClinical">
             <tr>
               <td><span>{{sum.sheet}}</span></td>  
               <td><span *ngIf="sum.patients">{{sum.patients.length}}</span></td>
               <td><span *ngIf="sum.samples">{{sum.samples.length}}</span></td>
+              <td><span *ngIf="sum.samples">{{sum.samples | Overlapping: this.uploadStatus.allSamplesUploaded}}% </span></td>
+              <td><span>{{sum.patients | Overlapping: this.uploadStatus.allPatientsUploaded}}% </span></td>
             </tr>
           </tbody>
       </table>
       <hr>
       <table>
          <thead>
-          <td>Sheet Name</td>
+          <td>Molecular Sheet Name</td>
           <td>Sample Size</td>
           <td>Biomarker Size</td>
-          <td>Hugo Gene Symbol Percentage</td>
-          <td>non-Hugo Biomarkers</td>
+          <td>Hugo Gene Biomarker Percentage</td>
+          <td>Non-Hugo Biomarkers</td>
          </thead>
-         <tbody class="form-group row" *ngFor="let sum of uploadSummaryMolecular">
+         <tbody class="form-group row" *ngFor="let sum of uploadStatus.uploadSummaryMolecular">
             <tr>
               <td><span>{{sum.sheet}}</span></td>  
               <td><span *ngIf="sum.samples">{{sum.samples.length}}</span></td>
               <td><span *ngIf="sum.markers">{{sum.markers.length}}</span></td>
               <td><span *ngIf="sum.geneSymbolValidation">{{(sum.geneSymbolValidation.validNameNumber/sum.markers.length).toFixed(2)*100}}%</span></td>
-              <td><span *ngIf="sum.geneSymbolValidation">{{sum.geneSymbolValidation.unvalidNamesArr.splice(0,5)}}</span></td>
+              <td><span *ngIf="sum.geneSymbolValidation">{{sum.geneSymbolValidation.unvalidNamesArr}}</span></td>
             </tr>
           </tbody>
       </table>
@@ -96,7 +93,7 @@
             
             <td nowrap>
               <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" (click)="updateStatus(item)" [disabled]="item.isReady || item.isUploading || item.isSuccess">
-                                            <span class="glyphicon glyphicon-upload"></span> {{uploaded}}
+                                            <span class="glyphicon glyphicon-upload"></span> {{uploadedstring}}
                                         </button>
             </td>
             <td class="text-center">

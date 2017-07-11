@@ -43,7 +43,7 @@ export class FileService {
   //     });
   // }
 
-  checkHugoGene(id: string): Observable<Response> {
+  uploadingValidation(id: string): Observable<Response> {
     return this.http.get(this.filesUrl + '/' + id )
                     .map(res => res.json());
   }

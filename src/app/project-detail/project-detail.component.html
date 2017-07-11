@@ -58,7 +58,7 @@
           </div>
         <app-permissions [project]="project"></app-permissions>
         <!--<app-files (fileoutput)='onFileSubmission($event)'></app-files>-->
-        <app-files [project]="project"></app-files>
+        <app-files [project]="project" (uploaded)="someMethod($event)"></app-files>
         <div class="form-group">
           <label>Date Created {{project.Date}}</label>
         </div>

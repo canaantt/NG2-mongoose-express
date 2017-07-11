@@ -8,7 +8,6 @@ var projectSchema = new Schema({
     Name: String,
     Description: String,
     Annotations: [{key: String, value: String}], 
-    files: Object,
     Private: Boolean,
     IRBNumber: String,
     File: {filename: String, size: Number, timestamp: Date},

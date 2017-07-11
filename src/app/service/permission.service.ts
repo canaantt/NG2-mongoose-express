@@ -30,11 +30,18 @@ export class PermissionService {
     return this.http.get(this.permissionsUrl)
             .map(res => res.json().filter(value => ids.indexOf(value._id) > -1));
   }
+  removePermisionsByProjectID(id: string): any  {
+    return this.http.get(this.permissionsUrl)
+             .map(res => res.json().filter(value => value.Project === id)
+                                   .map(permission => this.delete(permission)
+                                                          .subscribe(err => console.log(err))));
+  }
   delete(permission: Permission): Observable<Response> {
     const url = `${this.permissionsUrl}/` + permission._id;
     return this.http.delete(url, {headers: this.headers});
   }
   deleteById(id: string): Observable<Response> {
+    console.log(id);
     const url = `${this.permissionsUrl}/` + id;
     return this.http.delete(url, {headers: this.headers});
   }

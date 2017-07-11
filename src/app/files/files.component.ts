@@ -14,7 +14,7 @@ export class Overlapping implements PipeTransform {
   constructor() {}
   transform(arr1, arr2): any {
       const overlapped = _.intersection(arr1, arr2);
-      return overlapped.length/arr1.length * 100;
+      return overlapped.length / arr1.length * 100;
       // return {'overlapped': overlapped.length/arr1.length,
       //         'different': _.difference(arr1, overlapped)};
   }
@@ -29,6 +29,7 @@ export class FilesComponent implements OnInit {
   // public uploader: FileUploader = new FileUploader({url: 'http://localhost:3000/upload'});
   public uploader: FileUploader;
   files$: Observable<any>;
+  hasFiles = false;
   id: string;
   uploadedstring = 'Not Uploaded';
   uploadStatus = {
@@ -41,8 +42,8 @@ export class FilesComponent implements OnInit {
   @Output()
     uploaded: EventEmitter<string> = new EventEmitter();
 
-  uploadComplete() {
-    this.uploaded.emit('complete');
+  uploadComplete(message: string) {
+    this.uploaded.emit(message);
   }
   constructor(private fb: FormBuilder,
               private fileService: FileService) {
@@ -52,8 +53,15 @@ export class FilesComponent implements OnInit {
     this.id = this.project._id;
     this.uploader = new FileUploader({url: 'http://localhost:3000/upload/' + this.id });
     // this.getFiles(this.id);
+    this.filerefresh();
+  }
+  filerefresh() {
+    console.log('in File component refresh()');
     this.fileService.uploadingValidation(this.id + '_uploadingSummary')
         .subscribe(res => {
+          if(res[0].length  > 0 ){
+            this.hasFiles = true;
+          }
           this.uploadStatus.uploadSummaryClinical = res[0].filter(function(m){return 'patients' in m; });
           this.uploadStatus.uploadSummaryMolecular = res[0].filter(function(m){return 'markers' in m; });
           const meta: any = res[0].filter(function(m) {return m.meta; })[0];
@@ -72,7 +80,7 @@ export class FilesComponent implements OnInit {
       'size' : fileitem.file.size,
       'timestamp' : Date()
     };
-    this.uploadComplete();
+    this.uploadComplete('Being uploaded');
   }
 
   // getFiles(id: string) {
@@ -80,11 +88,18 @@ export class FilesComponent implements OnInit {
   // }
 
   removeAllFiles() {
-    this.fileService.removeFilesByProjectID(this.id)
-        .subscribe((err) =>{
-          if (err) {console.log(err); }
-          // this.getFiles(this.id);
-        });
+    alert('Are you sure you want to delete all the files related to this dataset? ');
+    this.fileService.removeFilesByProjectID(this.id);
+    this.project.File = null;
+    console.log('test...');
+    this.uploadComplete('Being removed');
+    this.hasFiles = false;
+        // .subscribe((err) => {
+        //   if (err) {console.log(err); }
+        //   this.project.File = null;
+        //   this.uploadComplete();
+        //   // this.getFiles(this.id);
+        // });
   }
 }
 

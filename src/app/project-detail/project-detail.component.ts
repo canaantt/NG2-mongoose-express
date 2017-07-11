@@ -1,4 +1,4 @@
-import { Component, Input, Output, SimpleChanges, OnInit, OnChanges, ViewChild} from '@angular/core';
+import { Component, Input, Output, SimpleChanges,  AfterViewInit, OnInit, OnChanges, ViewChild} from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Headers, Http, Response } from '@angular/http';
@@ -26,7 +26,14 @@ export class IrbDetailService implements PipeTransform {
   constructor(private irbService: IrbService) {}
   transform(id: string): Observable<string> {
       return this.irbService.getIrbObjIDByIRBNumber(id)
-          .map(response => response[0].IRBTitle);
+          .map((response, err) => {
+              if(err) {
+                console.log(err);
+                return err;
+              } else {
+                return  response[0].IRBTitle;
+              }
+          });
   }
 }
 @Component({
@@ -35,7 +42,7 @@ export class IrbDetailService implements PipeTransform {
   styleUrls: ['./project-detail.component.scss'],
   providers: [FileService, IrbService, UserService, FormBuilder]
 })
-export class ProjectDetailComponent implements OnInit {
+export class ProjectDetailComponent implements  OnInit, OnChanges {
   project: any;
   id: string;
   files: any;
@@ -59,15 +66,27 @@ export class ProjectDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem('')])});
-
-    if (typeof(this.id) !== 'undefined') {
-      this.projectService.getProjectByID(this.route.snapshot.params['id'])
+    this.projectService.getProjectByID(this.route.snapshot.params['id'])
                          .subscribe(res0 => {
                            this.project = res0;
+                         });
+  }
+
+  ngOnChanges(): void {
+    this.refresh();
+  }
+  refresh() {
+    console.log('project is being refreshed...');
+    console.log(this.id);
+    // if (typeof(this.id) !== 'undefined') {
+      this.projectService.getProjectByID(this.route.snapshot.params['id'])
+                         .subscribe(res0 => {
+                          //  this.project = res0;
+                           this.filesComponent.filerefresh();
                           });
-    } else {
-      console.log(typeof(this.id));
-    }
+    // } else {
+    //   console.log(typeof(this.id));
+    // }
   }
   annotationItem(val: string) {
     return new FormGroup({
@@ -77,8 +96,10 @@ export class ProjectDetailComponent implements OnInit {
   }
 
   update(project: Project): void {
-    this.permissionComponent.updatePermissions();
-    this.projectService.update(project).subscribe(() => console.log('updating...'));
+    this.projectService.update(project).subscribe(() => {
+      console.log('updating...');
+      this.refresh();
+    });
   }
 
   submitAnnotations(): void {
@@ -88,7 +109,7 @@ export class ProjectDetailComponent implements OnInit {
     this.newAnnotationForm.get('Annotations').value = null;
   }
   someMethod(event) {
-    console.log("event is triggered in parent");
+    console.log('event is triggered in parent');
     console.log(event);
     console.log(this.project);
     this.update(this.project);

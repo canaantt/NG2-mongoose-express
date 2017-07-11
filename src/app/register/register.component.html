@@ -20,30 +20,41 @@
             <h3>New User Registration</h3>
 
             <div class='well well-sm'>
-                <form [formGroup]="newUserForm" (ngSubmit)="submit()">
-                    <div class="form-group">
-                        <label for="firstName">First Name</label>
-                        <input type="text" class="form-control" id="firstName" formControlName="FirstName">
-                    </div>
-                    <div class="form-group">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" class="form-control" id="lastName" formControlName="LastName">
-                    </div>
-                    <div class="form-group">
-                        <label for="Photo">Photo</label>
-                        <input type="text" class="form-control" id="Photo" formControlName="Photo">
-                    </div>
-                    <div class="form-group">
-                        <label for="Email">Email</label>
-                        <input type="text" class="form-control" id="Email" formControlName="Email">
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">
-                    </div>
-                </form>
-                <p>Form value: {{ newUserForm.value | json }}</p>
-                <p>Form Status: {{ newUserForm.status | json }}</p>
-            </div>
+                    <form [formGroup]="newUserForm" (ngSubmit)="submit()">
+                        <div class="form-inline" style="padding-bottom: 20px">
+                            <label>Required: </label>
+                            <div class="form-group">
+                                <!--<label for="firstName">First Name</label>-->
+                                <input type="text" class="form-control" id="firstName" formControlName="FirstName" placeholder="First Name">
+                            </div>
+                            <div class="form-group">
+                                <!--<label for="lastName">Last Name</label>-->
+                                <input type="text" class="form-control" id="lastName" formControlName="LastName"  placeholder="Last Name">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="Email" formControlName="Email" placeholder="Institutional Email">
+                            </div>
+                        </div>
+                        <div class="form-inline"  style="padding-bottom: 20px">
+                            <label>Optional: </label>
+                            
+                            <div class="form-group">
+                                <!--<label for="Photo">Photo</label>-->
+                                <input type="text" class="form-control" id="Photo" formControlName="Photo" placeholder="Photo URL">
+                            </div>
+                            <div class="form-group">
+                                <!--<label for="Group">Group</label>-->
+                                <input type="text" class="form-control" id="Group" formControlName="Group" placeholder="separate multiple groups with comma">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="submit" class="form-control" value="Add" [disabled]="newUserForm?.invalid">
+                        </div>
+                    </form>
+                    <p>Form value: {{ newUserForm.value | json }}</p>
+                    <p>Form Status: {{ newUserForm.status | json }}</p>
+                </div>
         </div>
     </header>
 </div>

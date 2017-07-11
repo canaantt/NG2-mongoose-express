@@ -2,6 +2,10 @@
 <div class='well well-lg'>
   <div class="row">
     <div class="col-md-12" *ngIf="project.File">
+      <label>Existing File meta data</label>
+      <button type="button" class="btn btn-danger btn-xs" (click)="removeAllFiles()">
+                                            <span class="glyphicon glyphicon-minor"></span>Remove
+                                        </button>
       <table>
         <thead>
           <td>File Name</td>
@@ -16,11 +20,9 @@
       </table>
     </div>
     <hr>
-    <div class="col-md-12" *ngIf="uploadStatus.uploadSummaryClinical">
+    <div class="col-md-12" *ngIf="hasFiles">
       <label>File summary</label>
-      <button type="button" class="btn btn-danger btn-xs" (click)="removeAllFiles()">
-                                            <span class="glyphicon glyphicon-minor"></span>Remove
-                                        </button>
+      
       <table>
          <thead>
           <td>Clinical Sheet Name</td>

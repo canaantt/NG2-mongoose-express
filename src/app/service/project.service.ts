@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-
 import { Project } from '../project';
 
 @Injectable()
@@ -10,7 +9,8 @@ export class ProjectService {
   private headers = new Headers({'Content-Type': 'application/json'});
   private projectsUrl = 'http://localhost:3000/projects';  // URL to web api
 
-  constructor(private http: Http) {}
+  constructor(private http: Http ){}
+              // ,private fileService: FileService) {}
 
   getProjects(): Observable<Response> {
     return this.http.get(this.projectsUrl);

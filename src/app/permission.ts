@@ -7,5 +7,6 @@ export class Permission {
     User: string;
     Role: roles;
     Project: string;
+    Files: any;
     Date: Date;
 }

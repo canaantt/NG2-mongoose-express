@@ -9,7 +9,6 @@ export class Project {
     Private: boolean;
     IRBNumber:  string;
     File: {filename: string, size: number, timestamp: Date};
-    files: Object;
     Permissions: Permission[];
     Date: Date;
 }

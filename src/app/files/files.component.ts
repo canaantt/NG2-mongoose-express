@@ -13,9 +13,8 @@ import * as _ from 'underscore';
 export class Overlapping implements PipeTransform {
   constructor() {}
   transform(arr1, arr2): any {
-      let overlapped = _.intersection(arr1, arr2);
-      // console.log(overlapped);
-      return overlapped.length/arr1.length*100;
+      const overlapped = _.intersection(arr1, arr2);
+      return overlapped.length/arr1.length * 100;
       // return {'overlapped': overlapped.length/arr1.length,
       //         'different': _.difference(arr1, overlapped)};
   }
@@ -29,61 +28,63 @@ export class Overlapping implements PipeTransform {
 export class FilesComponent implements OnInit {
   // public uploader: FileUploader = new FileUploader({url: 'http://localhost:3000/upload'});
   public uploader: FileUploader;
-  fileMeta = {'clinical': ['diagnosis', 'drug', 'treatment'],
-              'molecular': ['mut', 'RNASeq', 'cnv', 'protein'],
-              'metadata': ['metadata'] };
-  fileCategories: string[];
-  fileDataTypes: string[];
   files$: Observable<any>;
-  category: string;
-  datatype: string;
   id: string;
-  uploaded: string = 'Not Uploaded';
-  uploadSummaryClinical: any;
-  uploadSummaryMolecular: any;
-  allSamplesUploaded: any;
-  allPatientsUploaded: any;
-
+  uploadedstring = 'Not Uploaded';
+  uploadStatus = {
+    'uploadSummaryClinical': [],
+    'uploadSummaryMolecular': [],
+    'allSamplesUploaded': [],
+    'allPatientsUploaded': []
+  };
   @Input() project: any;
+  @Output()
+    uploaded: EventEmitter<string> = new EventEmitter();
 
+  uploadComplete() {
+    this.uploaded.emit('complete');
+  }
   constructor(private fb: FormBuilder,
               private fileService: FileService) {
    }
 
   ngOnInit(): void {
-    console.log("Within file component...");
     this.id = this.project._id;
     this.uploader = new FileUploader({url: 'http://localhost:3000/upload/' + this.id });
-    this.getFiles(this.id);
-    this.fileService.checkHugoGene(this.id + '_uploadingSummary')
+    // this.getFiles(this.id);
+    this.fileService.uploadingValidation(this.id + '_uploadingSummary')
         .subscribe(res => {
-          this.uploadSummaryClinical = res[0].filter(function(m){return 'patients' in m; });
-          this.uploadSummaryMolecular = res[0].filter(function(m){return 'markers' in m; });
-          let meta: any = res[0].filter(function(m) {return m.meta })[0];
-          this.allSamplesUploaded = meta.allSampleIDs;
-          this.allPatientsUploaded = meta.allPatientIDs;
+          this.uploadStatus.uploadSummaryClinical = res[0].filter(function(m){return 'patients' in m; });
+          this.uploadStatus.uploadSummaryMolecular = res[0].filter(function(m){return 'markers' in m; });
+          const meta: any = res[0].filter(function(m) {return m.meta; })[0];
+          this.uploadStatus.allSamplesUploaded = meta.allSampleIDs;
+          this.uploadStatus.allPatientsUploaded = meta.allPatientIDs;
         });
   }
 
   updateStatus(fileitem: any) {
     // this.fileService.sendProjectID(this.id);
-    this.uploaded = 'Uploaded';
-    // this.project.file = fileitem;
-    // console.log(Date());
-    // console.log(fileitem.file);
-    // this.project.File = {'fileitem': fileitem.name,
-    //                      'size': fileitem.size,
-    //                      'timestamp': Date()};
+    console.log(fileitem);
+    this.uploadedstring = 'Uploaded';
+    console.log(fileitem.file);
+    this.project.File = {
+      'filename': fileitem.file.name,
+      'size' : fileitem.file.size,
+      'timestamp' : Date()
+    };
+    this.uploadComplete();
   }
 
-  getFiles(id: string) {
-    this.files$ = this.fileService.getFilesByProjectID(id);
-  }
+  // getFiles(id: string) {
+  //   this.files$ = this.fileService.getFilesByProjectID(id);
+  // }
 
   removeAllFiles() {
-    this.files$ = null;
-    this.fileService.removeFilesByProjectID(this.id);
-    this.getFiles(this.id);
+    this.fileService.removeFilesByProjectID(this.id)
+        .subscribe((err) =>{
+          if (err) {console.log(err); }
+          // this.getFiles(this.id);
+        });
   }
 }
 

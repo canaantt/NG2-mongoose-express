@@ -35,7 +35,7 @@ export class IrbDetailService implements PipeTransform {
   styleUrls: ['./project-detail.component.scss'],
   providers: [FileService, IrbService, UserService, FormBuilder]
 })
-export class ProjectDetailComponent implements OnInit{
+export class ProjectDetailComponent implements OnInit {
   project: any;
   id: string;
   files: any;
@@ -64,19 +64,10 @@ export class ProjectDetailComponent implements OnInit{
       this.projectService.getProjectByID(this.route.snapshot.params['id'])
                          .subscribe(res0 => {
                            this.project = res0;
-                          //  if (this.project.IRBNumber !== '') {
-                          //     this.irbService.getIrbObjIDByIRBNumber(this.project.IRBNumber)
-                          //         // .map(response => response.json())
-                          //         .subscribe(result => this.irb = result[0]);
-                          //   }
                           });
     } else {
       console.log(typeof(this.id));
     }
-
-    // if (this.project.IRBNumber !== ''){
-    //   this.irb$ = this.irbService.getIrbObjIDByIRBNumber(this.project.IRBNumber);
-    // }
   }
   annotationItem(val: string) {
     return new FormGroup({
@@ -94,12 +85,17 @@ export class ProjectDetailComponent implements OnInit{
       this.project.Annotations.push(element);
     });
   }
-
-  onFileSubmission(obj: Object):void {
-    alert("Files are being added ... ");
-    this.project.files = obj;
+  someMethod(event) {
+    console.log("event is triggered in parent");
+    console.log(event);
+    console.log(this.project);
     this.update(this.project);
   }
+  // onFileSubmission(obj: Object):void {
+  //   alert('Files are being added ... ');
+  //   this.project.files = obj;
+  //   this.update(this.project);
+  // }
 
 }
 

@@ -13,7 +13,7 @@ import { ProjectDetailComponent } from '../project-detail/project-detail.compone
 import { AdminComponent } from '../admin/admin.component';
 import { AdminGridComponent } from '../admin-grid//admin-grid.component';
 import { RegisterComponent } from '../register/register.component';
-
+import { ConsentComponent } from '../consent/consent.component';
 const routes: Routes = [
   {
     path: '',
@@ -22,6 +22,9 @@ const routes: Routes = [
   }, {
     path: 'landing',
     component: LandingComponent
+  }, {
+    path: 'consent',
+    component: ConsentComponent
   }, {
     path: 'users',
     component: UsersComponent

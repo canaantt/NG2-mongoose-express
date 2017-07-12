@@ -24,11 +24,14 @@ import { AnnotationsComponent } from './annotations/annotations.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminGridComponent } from './admin-grid/admin-grid.component';
 import { RegisterComponent } from './register/register.component';
+import * as hello from 'hellojs';
 import * as _ from 'underscore';
+
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/catch';
+import { ConsentComponent } from './consent/consent.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,7 +55,8 @@ import 'rxjs/add/operator/catch';
     AdminComponent,
     AdminGridComponent,
     RegisterComponent,
-    Overlapping
+    Overlapping,
+    ConsentComponent
   ],
   imports: [
     BrowserModule,

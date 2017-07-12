@@ -13,8 +13,11 @@
                         <input type="password" class="form-control" name="password" />
                     </div>
                     <div class="form-group">
-                        <button class="btn landing-button">Login</button>
+                        <!--<button class="g-signin2" data-onsuccess="onSignIn">Login</button>-->
+                        <button class="btn landing-button" (click)="googleLogin()">Login</button>
                         <button class="btn landing-button"><a routerLink="/register">Register</a></button>
+                        <button class="btn landing-button" (click)="googleLogOut()">LogOUt</button>
+                        <!--<div class="g-signin2" data-onsuccess="onSignIn"></div>-->
                     </div>
                      <div class="form-group">
                         <a class=" btn-link">Forgot Password</a>

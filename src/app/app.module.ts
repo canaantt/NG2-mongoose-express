@@ -24,6 +24,7 @@ import { AnnotationsComponent } from './annotations/annotations.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminGridComponent } from './admin-grid/admin-grid.component';
 import { RegisterComponent } from './register/register.component';
+import { LoginServiceService } from './service/login-service.service';
 import * as hello from 'hellojs';
 import * as _ from 'underscore';
 
@@ -65,7 +66,7 @@ import { ConsentComponent } from './consent/consent.component';
     ReactiveFormsModule,
     HttpModule
   ],
-  providers: [UserService],
+  providers: [UserService, LoginServiceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

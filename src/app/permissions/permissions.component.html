@@ -8,7 +8,7 @@
                 <option *ngFor="let role of roles" [value]="role">{{role}}</option>
                 </select></td>
         <td><span type="button" class="btn glyphicon glyphicon-refresh" (click)="updatePermission(permission, permission.Role)"></span></td>
-        <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="deletePermission(permission)"></span></td> 
+        <td><span type="button" class="btn glyphicon glyphicon-minus-sign" (click)="deletePermission(permission)"></span></td>
       </tr>
     </tbody>
   </table>

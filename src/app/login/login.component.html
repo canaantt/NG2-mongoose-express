@@ -4,8 +4,9 @@
   </a>
 </li>
 <li>
-  <a  *ngIf='aunthenticated' (click)="googleLogOut()">
+  <a  *ngIf='!aunthenticated' (click)="googleLogOut()">
     <span class="fa fa-power-off"></span>Logout
   </a>
 </li>
+<div *ngIf='user'>{{user.name}}</div>
 

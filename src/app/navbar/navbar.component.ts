@@ -7,20 +7,32 @@ import { LoginComponent } from '../login/login.component';
   styleUrls: ['./navbar.component.scss']
 })
 
-export class NavbarComponent {
-  // @ViewChild('login') LoginComponent;
+export class NavbarComponent implements OnInit{
+   @ViewChild(LoginComponent) loginComponent: LoginComponent;
 //  status: any = {
 //           'authenticated': false,
 //           'user': null
 //         }
  authenticated = false;
-
+ user:any;
+ 
   constructor() {}
+  ngOnInit() {
+    console.log(this.authenticated);
+  }
 
+  authCB() {
+    console.log('in authentiation call back function');
+    this.loginComponent.monitor();
+  }
   pLoginAction (event) {
     console.log(event);
     this.authenticated = event;
-    console.log(this.authenticated);
+    this.authCB();
+  }
+  getUserInfo (event) {
+    console.log(event);
+    this.user = event;
   }
 }
 

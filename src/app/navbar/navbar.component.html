@@ -29,6 +29,7 @@
           </li>
           <li>
             <app-login 
+               [authenticated]="authenticated"
                (loginAction)="pLoginAction($event)">    
             </app-login>
           </li>

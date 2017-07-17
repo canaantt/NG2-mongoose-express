@@ -29,11 +29,11 @@
           </li>
           <li>
             <app-login 
-               [authenticated]="authenticated"
-               (loginAction)="pLoginAction($event)">    
+               [(authenticated)]="authenticated"
+               (loginAction)="pLoginAction($event)"
+               (sendUserInfo)="getUserInfo($event)">    
             </app-login>
           </li>
-          {{authenticated}}
           <!-- <li>
             <a (click)="uptdate()">
               <span class="fa fa-power-off"></span>Login

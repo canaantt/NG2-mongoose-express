@@ -28,19 +28,25 @@
             </a>
           </li>
           <li>
-            <a href="">
-              <span class="fa fa-power-off"  (click)="login()"></span>Login
+            <app-login 
+               (loginAction)="pLoginAction($event)">    
+            </app-login>
+          </li>
+          {{authenticated}}
+          <!-- <li>
+            <a (click)="uptdate()">
+              <span class="fa fa-power-off"></span>Login
             </a>
           </li>
           <li>
-            <a href="">
-              <span class="fa fa-power-off"  (click)="logout()"></span>Logout
+            <a (click)="logout()">
+              <span class="fa fa-power-off"></span>Logout
             </a>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>
   </nav>
 </div>
-<router-outlet></router-outlet>
 
+<router-outlet></router-outlet>

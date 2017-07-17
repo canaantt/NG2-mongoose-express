@@ -1,28 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { LoginServiceService } from '../service/login-service.service';
+import { Component, OnInit, ViewChild} from '@angular/core';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss'],
-  providers: [LoginServiceService]
+  styleUrls: ['./navbar.component.scss']
 })
 
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
+  // @ViewChild('login') LoginComponent;
+//  status: any = {
+//           'authenticated': false,
+//           'user': null
+//         }
+ authenticated = "false";
 
-  constructor(private loginService: LoginServiceService) {
-   }
-
-  ngOnInit() {
+  constructor() {
+    
   }
-
-  login(): any {
-    console.log('in nav component');
-    this.loginService.googleLogin();
+  
+  pLoginAction (event) {
+    console.log(event);
+    this.authenticated = event;
   }
-  logout(): any {
-    console.log('in nav component logout');
-    this.loginService.googleLogOut();
-  }
-
 }
+
+

@@ -16,7 +16,6 @@ import { IrbComponent } from './irb/irb.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
 import { ProjectAdditionComponent } from './project-addition/project-addition.component';
-import { UserLogInComponent } from './user-log-in/user-log-in.component';
 import { FilesComponent, Overlapping } from './files/files.component';
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { PermissionsComponent, UserFullNamePipe } from './permissions/permissions.component';
@@ -24,7 +23,6 @@ import { AnnotationsComponent } from './annotations/annotations.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminGridComponent } from './admin-grid/admin-grid.component';
 import { RegisterComponent } from './register/register.component';
-import { LoginServiceService } from './service/login-service.service';
 import * as hello from 'hellojs';
 import * as _ from 'underscore';
 
@@ -33,6 +31,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/catch';
 import { ConsentComponent } from './consent/consent.component';
+import { LoginComponent } from './login/login.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +45,6 @@ import { ConsentComponent } from './consent/consent.component';
     NavbarComponent,
     ProjectsDashboardComponent,
     ProjectAdditionComponent,
-    UserLogInComponent,
     FilesComponent,
     FileSelectDirective,
     PermissionsComponent,
@@ -57,7 +55,8 @@ import { ConsentComponent } from './consent/consent.component';
     AdminGridComponent,
     RegisterComponent,
     Overlapping,
-    ConsentComponent
+    ConsentComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +65,7 @@ import { ConsentComponent } from './consent/consent.component';
     ReactiveFormsModule,
     HttpModule
   ],
-  providers: [UserService, LoginServiceService],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -13,15 +13,14 @@ export class NavbarComponent {
 //           'authenticated': false,
 //           'user': null
 //         }
- authenticated = "false";
+ authenticated = false;
 
-  constructor() {
-    
-  }
-  
+  constructor() {}
+
   pLoginAction (event) {
     console.log(event);
     this.authenticated = event;
+    console.log(this.authenticated);
   }
 }
 

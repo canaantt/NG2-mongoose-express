@@ -1,0 +1,11 @@
+<li>
+  <a *ngIf='!aunthenticated' (click)="googleLogin()">
+    <span class="fa fa-power-off"></span>Login 
+  </a>
+</li>
+<li>
+  <a  *ngIf='aunthenticated' (click)="googleLogOut()">
+    <span class="fa fa-power-off"></span>Logout
+  </a>
+</li>
+

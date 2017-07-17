@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-navbar',
@@ -6,11 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./navbar.component.scss']
 })
 
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
+  // @ViewChild('login') LoginComponent;
+//  status: any = {
+//           'authenticated': false,
+//           'user': null
+//         }
+ authenticated = "false";
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor() {
+    
   }
-
+  
+  pLoginAction (event) {
+    console.log(event);
+    this.authenticated = event;
+  }
 }
+
+

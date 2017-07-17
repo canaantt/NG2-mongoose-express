@@ -27,13 +27,15 @@
               <span class="fa fa-comments"></span>Feedback
             </a>
           </li>
-          <li>
-            <app-login 
-               [(authenticated)]="authenticated"
-               (loginAction)="pLoginAction($event)"
-               (sendUserInfo)="getUserInfo($event)">    
-            </app-login>
+          <li *ngIf='user'>
+            {{user.name}} 
           </li>
+          <app-login 
+              [(authenticated)]="authenticated"
+              (loginAction)="pLoginAction($event)"
+              (sendUserInfo)="getUserInfo($event)"> 
+          </app-login>
+          
           <!-- <li>
             <a (click)="uptdate()">
               <span class="fa fa-power-off"></span>Login

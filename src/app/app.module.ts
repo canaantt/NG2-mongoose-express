@@ -25,6 +25,7 @@ import { AdminGridComponent } from './admin-grid/admin-grid.component';
 import { RegisterComponent } from './register/register.component';
 import * as hello from 'hellojs';
 import * as _ from 'underscore';
+import { StateService } from './service/state.service';
 
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
@@ -65,7 +66,7 @@ import { LoginComponent } from './login/login.component';
     ReactiveFormsModule,
     HttpModule
   ],
-  providers: [UserService],
+  providers: [UserService, StateService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

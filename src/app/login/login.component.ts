@@ -4,8 +4,7 @@ import { StateService } from '../service/state.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
-  providers:[ StateService ]
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
   GOOGLE_CLIENT_ID = '1098022410981-p7n5ejjji8qlvdtff274pol54jo5i8ks.apps.googleusercontent.com';

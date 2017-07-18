@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output } from '@angular/core';
+import { Component, OnInit, Input, Output, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -19,14 +19,16 @@ import { StateService } from '../service/state.service';
   selector: 'app-projects-dashboard',
   templateUrl: './projects-dashboard.component.html',
   styleUrls: ['./projects-dashboard.component.scss'],
-  providers: [IrbService, UserService, PermissionService, FileService, StateService]
+  providers: [IrbService, UserService, PermissionService, FileService]
 })
-export class ProjectsDashboardComponent implements OnInit {
+export class ProjectsDashboardComponent implements OnInit, AfterViewInit{
   projects: Project[];
   selectedProject: Project;
   newProjectForm: FormGroup;
-  user: any;
+  @Input()user: any;
   userID: any;
+  @Input()authenticated:boolean;
+
 
   constructor( private fb: FormBuilder,
                private projectService: ProjectService,
@@ -34,7 +36,7 @@ export class ProjectsDashboardComponent implements OnInit {
                private irbService: IrbService,
                private fileService: FileService,
                private userService: UserService,
-               private stateService: StateService ) {}
+               private stateService: StateService) {}
 
   onSelect(Project: Project): void {
     this.selectedProject = Project;
@@ -74,5 +76,19 @@ export class ProjectsDashboardComponent implements OnInit {
   }
   ngOnInit() {
     this.getProjects();
+  }
+  ngAfterViewInit() {
+     this.stateService.authenticated
+        .subscribe(res => {
+          this.authenticated = res;
+          console.log('in project dashboard');
+          console.log(this.authenticated);
+        });
+    this.stateService.user
+        .subscribe(res => {
+          console.log('in project dashboard');
+          console.log(res);
+          this.user = res;
+        });
   }
 }

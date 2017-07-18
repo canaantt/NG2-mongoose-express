@@ -11,6 +11,6 @@ import {ViewEncapsulation} from '@angular/core';
 
 export class AppComponent {
   title = 'Data Uploading';
-  
+
 
 }

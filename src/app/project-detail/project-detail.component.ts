@@ -18,6 +18,7 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/observable/of';
 import { PermissionsComponent } from '../permissions/permissions.component';
 import { FilesComponent } from '../files/files.component';
+import { StateService } from '../service/state.service';
 enum roles {'full-access', 'read-only'};
 @Pipe({
   name: 'IrbDetailService'
@@ -44,6 +45,8 @@ export class IrbDetailService implements PipeTransform {
 })
 export class ProjectDetailComponent implements  OnInit, OnChanges {
   project: any;
+  authenticated:boolean;
+  user:any;
   id: string;
   files: any;
   irb: any;
@@ -60,8 +63,11 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
     private fileService: FileService,
     private irbService: IrbService,
     private userService: UserService,
+    private stateService: StateService,
     private fb: FormBuilder) {
       this.id = this.route.snapshot.params['id'];
+      this.stateService.authenticated.subscribe(res => this.authenticated = res);
+      this.stateService.user.subscribe(res => this.user = res);
      }
 
   ngOnInit(): void {
@@ -84,9 +90,6 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
                           //  this.project = res0;
                            this.filesComponent.filerefresh();
                           });
-    // } else {
-    //   console.log(typeof(this.id));
-    // }
   }
   annotationItem(val: string) {
     return new FormGroup({
@@ -114,11 +117,6 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
     console.log(this.project);
     this.update(this.project);
   }
-  // onFileSubmission(obj: Object):void {
-  //   alert('Files are being added ... ');
-  //   this.project.files = obj;
-  //   this.update(this.project);
-  // }
 
 }
 

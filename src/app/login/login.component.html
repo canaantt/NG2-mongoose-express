@@ -3,7 +3,7 @@
     <span class="fa fa-power-off"></span>Login 
   </a>
 </li>
-<li *ngIf='user'>{{user.name}} </li>
+<li *ngIf='user'><img src={{user.thumbnail}} alt="Smiley face" height="42" width="42">{{user.name}} </li>
 <li  *ngIf='user'>
   <a (click)="googleLogOut()">
     <span class="fa fa-power-off"></span>Logout

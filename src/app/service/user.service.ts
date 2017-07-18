@@ -19,6 +19,11 @@ export class UserService {
     return this.http.get(this.usersUrl)
                .map(res => res.json().filter(value => id.indexOf(value._id) > -1));
   }
+  getUserIDByGmail(gmail: string): Observable<Response> {
+    return this.http.get(this.usersUrl)
+               .map(res => res.json().filter(value => value.Gmail === gmail))
+               .catch(err => Observable.throw(err));
+  }
   getUsersByIDs(ids: string[]): Observable<Response> {
     return this.http.get(this.usersUrl)
                .map(res => res.json().filter(value => ids.indexOf(value._id) > -1));

@@ -30,22 +30,8 @@
           <li *ngIf='user'>
             {{user.name}} 
           </li>
-          <app-login 
-              [(authenticated)]="authenticated"
-              (loginAction)="pLoginAction($event)"
-              (sendUserInfo)="getUserInfo($event)"> 
+          <app-login> 
           </app-login>
-          
-          <!-- <li>
-            <a (click)="uptdate()">
-              <span class="fa fa-power-off"></span>Login
-            </a>
-          </li>
-          <li>
-            <a (click)="logout()">
-              <span class="fa fa-power-off"></span>Logout
-            </a>
-          </li> -->
         </ul>
       </div>
     </div>

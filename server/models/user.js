@@ -6,6 +6,7 @@ var userSchema = new Schema({
     LastName: String,
     Photo: String,
     Email: String,
+    Gmail: String,
     Group: String,
     Date: {type: Date, default: Date.now}
 });

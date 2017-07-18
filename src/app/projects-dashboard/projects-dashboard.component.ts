@@ -13,24 +13,28 @@ import { UserService } from '../service/user.service';
 import { FileService } from '../service/file.service';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+import { StateService } from '../service/state.service';
 
 @Component({
   selector: 'app-projects-dashboard',
   templateUrl: './projects-dashboard.component.html',
   styleUrls: ['./projects-dashboard.component.scss'],
-  providers: [IrbService, UserService, PermissionService, FileService]
+  providers: [IrbService, UserService, PermissionService, FileService, StateService]
 })
 export class ProjectsDashboardComponent implements OnInit {
   projects: Project[];
   selectedProject: Project;
   newProjectForm: FormGroup;
+  user: any;
+  userID: any;
 
   constructor( private fb: FormBuilder,
                private projectService: ProjectService,
                private permissionService: PermissionService,
                private irbService: IrbService,
                private fileService: FileService,
-               private userService: UserService) { }
+               private userService: UserService,
+               private stateService: StateService ) {}
 
   onSelect(Project: Project): void {
     this.selectedProject = Project;
@@ -54,24 +58,21 @@ export class ProjectsDashboardComponent implements OnInit {
         this.projects = projectArr.reverse();
       });
   }
-
   delete(project: Project): void {
     alert('Are you sure you would like to delete the entire dataset?');
     this.projectService.delete(project).subscribe(() => this.getProjects());
     this.fileService.removeFilesByProjectID(project._id);
     this.permissionService.removePermisionsByProjectID(project._id);
   }
-
   add(): void {
     this.newProjectForm = this.fb.group({
       Name: new FormControl('Name Your New Dataset', Validators.required),
-      Description: new FormControl('The largest recorded snowflake was in Keogh, MT during year 1887, 15 inches wide' , Validators.minLength(4)),
+      Description: new FormControl('The largest recorded snowflake was in MT during year 1887, 15 inches wide', Validators.minLength(4)),
       Private: new FormControl(true)
-   });
+    });
     this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
   }
   ngOnInit() {
     this.getProjects();
   }
-
 }

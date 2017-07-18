@@ -20,6 +20,11 @@ export class ProjectService {
     const url = `${this.projectsUrl}/` + id;
     return this.http.get(url).map(res => res.json());
   }
+
+  getProjectByUserID(id: string): Observable<Response> {
+    const url = `${this.projectsUrl}/` + id;
+    return this.http.get(url).map(res => res.json());
+  }
   delete(project: Project): Observable<Response> {
     const url = `${this.projectsUrl}/` + project._id;
     return this.http.delete(url, {headers: this.headers});

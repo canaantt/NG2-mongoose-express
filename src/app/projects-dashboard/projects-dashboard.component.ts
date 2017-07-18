@@ -25,9 +25,9 @@ export class ProjectsDashboardComponent implements OnInit {
   projects: Project[];
   selectedProject: Project;
   newProjectForm: FormGroup;
-  @Input()user: any;
+  user: any;
   userID: any;
-  @Input()authenticated:boolean;
+  authenticated:boolean;
 
 
   constructor( private fb: FormBuilder,
@@ -43,20 +43,21 @@ export class ProjectsDashboardComponent implements OnInit {
     console.log(this.selectedProject.Name);
   }
   getProjects(): void {
+    console.log('in getting projects');
     this.projectService.getProjects()
       .subscribe(res => {
         const projectArr = res.json();
-        projectArr.forEach(p => {
-          this.irbService.getIrbsByProjID(p.IRB)
-            .subscribe(res => {
-              if (typeof (res[0]) !== 'undefined') {
-                p.irbNumber = res[0].IRBNumber;
-                this.userService.getUsersByIDs(res[0].OtherUsers)
-                  .subscribe(res => p.users = res);
-              }
+        // projectArr.forEach(p => {
+        //   this.irbService.getIrbsByProjID(p.IRB)
+        //     .subscribe(res => {
+        //       if (typeof (res[0]) !== 'undefined') {
+        //         p.irbNumber = res[0].IRBNumber;
+        //         this.userService.getUsersByIDs(res[0].OtherUsers)
+        //           .subscribe(res => p.users = res);
+        //       }
 
-            });
-        });
+        //     });
+        // });
         this.projects = projectArr.reverse();
       });
   }
@@ -67,6 +68,7 @@ export class ProjectsDashboardComponent implements OnInit {
     this.permissionService.removePermisionsByProjectID(project._id);
   }
   add(): void {
+    console.log('in adding new project');
     this.newProjectForm = this.fb.group({
       Name: new FormControl('Name Your New Dataset', Validators.required),
       Description: new FormControl('The largest recorded snowflake was in MT during year 1887, 15 inches wide', Validators.minLength(4)),
@@ -88,12 +90,13 @@ export class ProjectsDashboardComponent implements OnInit {
           this.user = res;
           console.log(this.user.email);
           this.userService.getUserIDByGmail(this.user.email)
-              .subscribe(res=>{
+              .subscribe(res => {
                 console.log(res);
                 // this.permissionService.getPermissionByID
+                 this.getProjects();
               });
         });
-    this.getProjects();
+   
   }
 
 }

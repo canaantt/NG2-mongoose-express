@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import { LoginComponent } from '../login/login.component';
 import { StateService } from '../service/state.service';
+import { UserService } from '../service/user.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -8,25 +11,45 @@ import { StateService } from '../service/state.service';
 })
 
 export class NavbarComponent {
-  // @ViewChild(LoginComponent) loginComponent: LoginComponent;
+  authenticated = false;
+  user: any;
 
- authenticated = false;
- user: any;
-
-  constructor(private stateService: StateService) {
+  constructor( private stateService: StateService,
+               private userService: UserService,
+               private router: Router) {
+    this.stateService.user
+        .subscribe(res => {
+          this.user = res;
+          // if('email' in this.user){
+          //   this.userService.getUserIDByGmail(this.user.email)
+          //     .subscribe(res => {
+          //       console.log('......' + res[0]);
+          //       console.log(res);
+          //     });
+          // }
+        });
     this.stateService.authenticated
         .subscribe(res => {
           this.authenticated = res;
           console.log('in Nav constructor');
           console.log(this.authenticated);
-        });
-    this.stateService.user
-        .subscribe(res => {
-          this.user = res;
+          if (this.authenticated) {
+            if(this.user!==null){
+              this.userService.getUserIDByGmail(this.user.email)
+                  .subscribe(res=>{
+                    if(res[0]!==null){
+                      alert("You are logged in.");
+                      this.router.navigate(['/landing']);
+                    } else {
+                      this.router.navigate(['/register']);
+                    }
+                  });
+            }
+          } else {
+            this.router.navigate(['/landing']);
+          }
         });
   }
-
-  
 
  }
 

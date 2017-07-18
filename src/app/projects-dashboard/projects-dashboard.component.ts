@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -21,7 +21,7 @@ import { StateService } from '../service/state.service';
   styleUrls: ['./projects-dashboard.component.scss'],
   providers: [IrbService, UserService, PermissionService, FileService]
 })
-export class ProjectsDashboardComponent implements OnInit, AfterViewInit{
+export class ProjectsDashboardComponent implements OnInit {
   projects: Project[];
   selectedProject: Project;
   newProjectForm: FormGroup;
@@ -75,9 +75,6 @@ export class ProjectsDashboardComponent implements OnInit, AfterViewInit{
     this.projectService.create(this.newProjectForm.value).subscribe(() => this.getProjects());
   }
   ngOnInit() {
-    this.getProjects();
-  }
-  ngAfterViewInit() {
      this.stateService.authenticated
         .subscribe(res => {
           this.authenticated = res;
@@ -89,6 +86,14 @@ export class ProjectsDashboardComponent implements OnInit, AfterViewInit{
           console.log('in project dashboard');
           console.log(res);
           this.user = res;
+          console.log(this.user.email);
+          this.userService.getUserIDByGmail(this.user.email)
+              .subscribe(res=>{
+                console.log(res);
+                // this.permissionService.getPermissionByID
+              });
         });
+    this.getProjects();
   }
+
 }

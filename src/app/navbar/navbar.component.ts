@@ -39,7 +39,7 @@ export class NavbarComponent {
                   .subscribe(res=>{
                     if(res[0]!==null){
                       alert("You are logged in.");
-                      this.router.navigate(['/landing']);
+                      this.router.navigate(['/projects', 'dashboard']);
                     } else {
                       this.router.navigate(['/register']);
                     }

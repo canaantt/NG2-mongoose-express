@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { Router, RouterModule} from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
@@ -26,7 +27,6 @@ import { RegisterComponent } from './register/register.component';
 import * as hello from 'hellojs';
 import * as _ from 'underscore';
 import { StateService } from './service/state.service';
-
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
@@ -64,9 +64,11 @@ import { LoginComponent } from './login/login.component';
     FormsModule,
     AppRouterModule,
     ReactiveFormsModule,
-    HttpModule
+    HttpModule,
+    RouterModule
   ],
   providers: [UserService, StateService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent ]
 })
 export class AppModule { }
+

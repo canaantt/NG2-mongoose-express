@@ -20,6 +20,11 @@ export class ProjectService {
     const url = `${this.projectsUrl}/` + id;
     return this.http.get(url).map(res => res.json());
   }
+  getProjectsByIDs(ids: string[]): Observable<Response> {
+    return this.http.get(this.projectsUrl)
+               .map(res => res.json().filter(value => ids.indexOf(value._id) > -1));
+
+  }
 
   getProjectByUserID(id: string): Observable<Response> {
     const url = `${this.projectsUrl}/` + id;

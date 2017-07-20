@@ -11,4 +11,5 @@ export class Project {
     File: {filename: string, size: number, timestamp: Date};
     Permissions: Permission[];
     Date: Date;
+    Author: string;
 }

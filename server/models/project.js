@@ -12,7 +12,8 @@ var projectSchema = new Schema({
     IRBNumber: String,
     File: {filename: String, size: Number, timestamp: Date},
     Permissions: [{type: Schema.ObjectId, ref: Permission}],
-    Date: {type: Date, default: Date.now}
+    Date: {type: Date, default: Date.now},
+    Author: {type: String}
 });
 module.exports = mongoose.model("Project", projectSchema);
 

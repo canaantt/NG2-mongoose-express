@@ -217,11 +217,14 @@ db.once("open", function (callback) {
         var uploadingSummaryCollection = mongoose.model(projectID + "_uploadingSummary", File.schema);
 		upload(req, res, function (err) {
 			if (err) {
-				res.json({ error_code: 1, err_desc: err }).end();
+                console.log(err);
+				//res.json({ error_code: 1, err_desc: err }).end();
 				return;
 			} else {
                 var workbook = XLSX.readFile(res.req.file.path);
                 var allSheetNames =  Object.keys(workbook.Sheets);
+                console.log(allSheetNames);
+                console.log('test1');
                 if (allSheetNames.indexOf("PATIENT") === -1) {
                    err = "PATIENT Sheet is missing!";
                    res.json({ error_code: 1, err_desc: err }).end(); 
@@ -235,7 +238,7 @@ db.once("open", function (callback) {
                     var sheetObj = XLSX.utils.sheet_to_json(workbook.Sheets[sheet], {header:1});
                     var arr = [];
                     var header = sheetObj[0];
-                    //console.log(sheetObj);
+                    console.log(sheetObj);
                     
                     if(sheet.split("-")[0] === "MOLECULAR"){
                         console.log("It's a molecular sheet.");

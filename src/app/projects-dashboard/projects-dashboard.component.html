@@ -21,7 +21,8 @@
                                 <div class="dashboard-description">{{project.Description}}</div>
                             </div>
                             <div class="col-xs-12">
-                                <a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary">Edit</a>
+                                <!-- <a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary">Edit</a> -->
+                                <button type="button"  [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary">Edit</button>
                                 <button (click)="delete(project)" class=" btn btn-primary ">Delete</button>
                             </div>
                         </div>

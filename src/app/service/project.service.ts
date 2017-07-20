@@ -15,7 +15,15 @@ export class ProjectService {
   getProjects(): Observable<Response> {
     return this.http.get(this.projectsUrl);
   }
-
+ 
+  getRecentProject(userID: string): Observable<Response> {
+    console.log('in project service, user ID is ', userID);
+     return this.http.get(this.projectsUrl)
+                 .map(res => {
+                   let filtered = res.json().filter(value => value.Author === userID);
+                   return filtered[filtered.length-1];
+                  });
+  } 
   getProjectByID(id: string): Observable<Response> {
     const url = `${this.projectsUrl}/` + id;
     return this.http.get(url).map(res => res.json());
@@ -36,6 +44,7 @@ export class ProjectService {
   }
 
   create(project: Project): Observable<Response> {
+    console.log('in project service...', project);
     return this.http
       .post(this.projectsUrl, JSON.stringify(project), {headers: this.headers});
   }

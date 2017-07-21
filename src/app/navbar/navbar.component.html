@@ -15,8 +15,8 @@
       </div>
       <div class="collapse navbar-collapse" id="header-navbar">
         <ul class="nav navbar-nav navbar-right" routerLinkActive="active">
-          <li class="nav-item"><a routerLink="/projects/dashboard"><span class="fa fa-dashboard"></span>Dashboard</a></li>
-          <li class="nav-item"><a routerLink="/admin"><span class="fa fa-lock"></span>Admin</a></li>
+          <li class="nav-item"><a type="button" (click)='goDashboard()'><span class="fa fa-dashboard"></span>Dashboard</a></li>
+          <li class="nav-item"><a type="button" (click)='goAdmin()'><span class="fa fa-lock"></span>Admin</a></li>
           <li>
             <a href="" target="_blank " routerLink="/documentation">
               <span class="glyphicon glyphicon-question-sign"></span>Help
@@ -27,9 +27,9 @@
               <span class="fa fa-comments"></span>Feedback
             </a>
           </li>
-          <app-login> 
-          </app-login>
+          <li><app-login></app-login></li>
         </ul>
+        
       </div>
     </div>
   </nav>

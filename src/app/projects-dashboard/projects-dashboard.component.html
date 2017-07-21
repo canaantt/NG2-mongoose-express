@@ -10,16 +10,10 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <div *ngFor="let project of projects">
+                 <div *ngFor="let project of projects">
                     <div class="panel panel-default panel-horizontal">
                         <div class="panel-heading">
                             <h3 class="dashboard-title">{{project.Name}}</h3>
-                            <!--<div class="dashboard-lists" *ngIf='project?.irbNumber'>IRB #: {{project.irbNumber}}</div>
-                            <div class="dashboard-lists" *ngIf='project?.pi'>PI: {{project.pi}}</div>-->
-                            <!--<div class="dashboard-lists" *ngIf='project?.users'>Users:
-                                <span *ngFor="let u of project.users; let isLast=last">{{u.FirstName}} {{u.LastName}}{{isLast ? '' : ', '}}
-                                </span>
-                            </div>-->
                             <div class="dashboard-lists">Created: {{project.Date}}</div>
                         </div>
                         <div class="row panel-body">
@@ -27,12 +21,13 @@
                                 <div class="dashboard-description">{{project.Description}}</div>
                             </div>
                             <div class="col-xs-12">
-                                <a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary">Edit</a>
+                                <!-- <a href='projects/{{project._id}}' [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary">Edit</a> -->
+                                <button type="button"  [class.selected]="project === selectedProject" (click)="onSelect(project)" class="btn btn-primary">Edit</button>
                                 <button (click)="delete(project)" class=" btn btn-primary ">Delete</button>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
             </div>
         </div>
     </div>

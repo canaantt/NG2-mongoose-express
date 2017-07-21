@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, ResolveData } from '@angular/router';
 import { UsersComponent } from '../users/users.component';
 import { LandingComponent } from '../landing/landing.component';
 import { DocumentationComponent } from '../documentation/documentation.component';
@@ -14,6 +14,7 @@ import { AdminComponent } from '../admin/admin.component';
 import { AdminGridComponent } from '../admin-grid//admin-grid.component';
 import { RegisterComponent } from '../register/register.component';
 import { ConsentComponent } from '../consent/consent.component';
+import { UserProfileComponent } from '../user-profile/user-profile.component';
 const routes: Routes = [
   {
     path: '',
@@ -46,7 +47,8 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: ProjectsDashboardComponent },
       { path: 'add', component: ProjectAdditionComponent},
-      { path: ':id', component: ProjectDetailComponent }
+      { path: ':id', component: ProjectDetailComponent },
+      { path: 'profile', component: UserProfileComponent}
     ]
   }, {
     path: 'irb',
@@ -55,7 +57,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRouterModule { }

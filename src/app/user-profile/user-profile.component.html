@@ -1,0 +1,50 @@
+<div>
+  <hr>
+  <hr>
+  <hr>
+  <hr>
+  <hr>
+  <hr>
+  <hr>
+  <hr>
+  <hr>
+  <hr>
+  <hr>
+
+  <h3>User Profile Page</h3>
+
+
+  <li>{{user.FirstName}}</li>
+  <li>{{user.LastName}}</li>
+  <li>{{user.Email}}</li>
+
+  <div>
+    <label>First name: </label>
+    <input [(ngModel)]="user.FirstName" placeholder="First Name"/>
+  </div>
+  <div>
+    <label>Last name: </label>
+    <input [(ngModel)]="user.LastName" placeholder="Last Name"/>
+  </div>
+  <div>
+    <label>Photo: </label>
+    <input [(ngModel)]="user.Photo" placeholder="photo url"/>
+  </div>
+  <div>
+    <label>Email: </label>
+    <input [(ngModel)]="user.Email" placeholder=" "/>
+  </div>
+   <div>
+    <label>Group:  </label>
+    <input [(ngModel)]="user.Group" placeholder=" "/>
+  </div>
+  <div>
+    <label>Time Created:  </label>
+    <span>{{user.Date}}</span>
+  </div>
+  <div>
+    <label>Database ID:  </label>
+    <span> {{user._id}}</span>
+  </div>
+  <button class='btn btn-primary'  (click)="update(user)">Update</button>
+</div>

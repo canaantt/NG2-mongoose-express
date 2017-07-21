@@ -48,7 +48,8 @@
                       <tr>
                         <td><input class="form-control" type="text" formControlName="key" placeholder="Sample Size"></td>
                         <td><input class="form-control" type="text" formControlName="value" placeholder="110"></td>
-                        <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
+                        <!-- <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td> -->
+                        <td><button (click)="submitAnnotations()" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
                       </tr>
                     </tbody>
                   </table>
@@ -56,8 +57,10 @@
               </div>
             </form>
           </div>
-        <app-permissions [project]="project"></app-permissions>
-        <app-files [project]="project" (uploaded)="someMethod($event)"></app-files>
+        <div *ngIf="permission">
+        <app-permissions *ngIf="permission.Role==='admin'" [project]="project"></app-permissions>
+        <app-files *ngIf="permission.Role==='admin' || permission.Role==='read-write'" [project]="project" (uploaded)="someMethod($event)"></app-files>
+        </div>
         <div class="form-group">
           <label>Date Created {{project.Date}}</label>
         </div>

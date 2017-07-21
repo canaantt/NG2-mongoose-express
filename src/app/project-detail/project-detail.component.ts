@@ -5,6 +5,7 @@ import { Headers, Http, Response } from '@angular/http';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Project } from '../project';
 import { ProjectService } from '../service/project.service';
+import { PermissionService } from '../service/permission.service';
 import { File } from '../file';
 import { FileService } from '../service/file.service';
 import { IRB } from '../irb';
@@ -41,13 +42,15 @@ export class IrbDetailService implements PipeTransform {
   selector: 'app-project-detail',
   templateUrl: './project-detail.component.html',
   styleUrls: ['./project-detail.component.scss'],
-  providers: [FileService, IrbService, UserService, FormBuilder]
+  providers: [FileService, IrbService, UserService, FormBuilder, PermissionService]
 })
 export class ProjectDetailComponent implements  OnInit, OnChanges {
   project: any;
   authenticated:boolean;
-  user:any;
+  userID: any;
   id: string;
+  permission: any;
+  role: any;
   files: any;
   irb: any;
   pi: any;
@@ -60,6 +63,7 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService,
+    private permissionService: PermissionService,
     private fileService: FileService,
     private irbService: IrbService,
     private userService: UserService,
@@ -67,9 +71,28 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
     private fb: FormBuilder) {
       this.id = this.route.snapshot.params['id'];
       this.stateService.authenticated.subscribe(res => this.authenticated = res);
-      this.stateService.user.subscribe(res => this.user = res);
+      this.stateService.user.subscribe(res => {
+        this.getUserID(res.email, this.id);
+      });
      }
-
+    getUserID(id: string, projectID: string): void{
+      console.log('in getting user id');
+      this.userService.getUserIDByGmail(id)
+                .subscribe(res => {
+                  console.log(res);
+                  this.getPermission(res[0]._id, projectID );
+                  this.userID = res[0]._id;
+                });
+     }
+    getPermission(userID: string, projectID: string) {
+      console.log('in getting permission by user by project');
+      this.permissionService.getPermissionByUserByProject(userID, projectID)
+          .subscribe(res => {
+            console.log(res);
+            this.permission = res;
+            console.log('what is the permission', res);
+          });
+    }
   ngOnInit(): void {
     this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem('')])});
     this.projectService.getProjectByID(this.route.snapshot.params['id'])
@@ -79,7 +102,7 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
-    this.refresh();
+    // this.refresh();
   }
   refresh() {
     console.log('project is being refreshed...');
@@ -109,13 +132,7 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
     this.newAnnotationForm.get('Annotations').value.forEach(element => {
       this.project.Annotations.push(element);
     });
-    this.newAnnotationForm.get('Annotations').value = null;
-  }
-  someMethod(event) {
-    console.log('event is triggered in parent');
-    console.log(event);
-    console.log(this.project);
-    this.update(this.project);
+    // this.newAnnotationForm.get('Annotations').value = null;
   }
 
 }

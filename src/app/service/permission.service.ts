@@ -26,9 +26,19 @@ export class PermissionService {
     return this.http.get(this.permissionsUrl)
             .map(res => res.json().filter(value => value.Project === id));
   }
+  getPermissionsByUserID(id: string): Observable<Response> {
+    return this.http.get(this.permissionsUrl)
+            .map(res => res.json().filter(value => value.User === id));
+  }
   getPermissionsByIDs(ids: string[]): Observable<Response> {
     return this.http.get(this.permissionsUrl)
             .map(res => res.json().filter(value => ids.indexOf(value._id) > -1));
+  }
+  getPermissionByUserByProject(userID: string, projectID: string): Observable<Response> {
+    console.log(userID);
+    console.log(projectID);
+    return this.http.get(this.permissionsUrl)
+            .map(res => res.json().filter(value => (value.User===userID && value.Project===projectID))[0]);
   }
   removePermisionsByProjectID(id: string): any  {
     return this.http.get(this.permissionsUrl)
@@ -45,7 +55,7 @@ export class PermissionService {
     const url = `${this.permissionsUrl}/` + id;
     return this.http.delete(url, {headers: this.headers});
   }
-  create(permission: Permission): Observable<Response> {
+  create(permission: any): Observable<Response> {
     return this.http
       .post(this.permissionsUrl, JSON.stringify(permission), {headers: this.headers});
   }

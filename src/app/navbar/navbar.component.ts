@@ -34,12 +34,12 @@ export class NavbarComponent {
           console.log('in Nav constructor');
           console.log(this.authenticated);
           if (this.authenticated) {
-            if(this.user!==null) {
+            if(this.user !== null) {
               this.userService.getUserIDByGmail(this.user.email)
                   .subscribe(res => {
                     if (res[0] !== null) {
                       alert('You are logged in.');
-                      // this.router.navigate(['/projects', 'dashboard']);
+                      this.router.navigate(['/projects', 'dashboard']);
                       // this.router.navigate(['/projects/{id}']);
                     } else {
                        this.router.navigate(['/register']);

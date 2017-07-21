@@ -33,6 +33,7 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/catch';
 import { ConsentComponent } from './consent/consent.component';
 import { LoginComponent } from './login/login.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,7 +58,8 @@ import { LoginComponent } from './login/login.component';
     RegisterComponent,
     Overlapping,
     ConsentComponent,
-    LoginComponent
+    LoginComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,

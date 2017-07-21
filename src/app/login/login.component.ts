@@ -1,6 +1,8 @@
 import { Component, Output, Input, EventEmitter, OnInit} from '@angular/core';
 import * as hello from 'hellojs';
 import { StateService } from '../service/state.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,7 +13,8 @@ export class LoginComponent implements OnInit {
   authenticated = false;
   user: any;
 
-  constructor(private stateService: StateService) {
+  constructor(private stateService: StateService,
+              private router: Router) {
     hello.init({
       google: this.GOOGLE_CLIENT_ID
     }, {
@@ -48,10 +51,12 @@ export class LoginComponent implements OnInit {
   }
   authLogin(auth) {
     hello('google').api('me').then( this.updateUserInfo.bind(this) );
+    // this.router.navigate(['/projects','dashboard']);
   }
   authLogout(auth) {
     this.updateUserInfo.bind(this, null);
     this.updateAuth.bind(this, false);
+    this.router.navigate(['/landing']);
   }
   updateUserInfo(v) {
     console.log(this.stateService.user);
@@ -60,5 +65,8 @@ export class LoginComponent implements OnInit {
   updateAuth(v) {
     console.log(this.stateService.authenticated);
     this.stateService.authenticated.next(v);
+  }
+  toProfile() {
+    this.router.navigate(['/profile']);
   }
 }

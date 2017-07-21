@@ -14,6 +14,7 @@ import { AdminComponent } from '../admin/admin.component';
 import { AdminGridComponent } from '../admin-grid//admin-grid.component';
 import { RegisterComponent } from '../register/register.component';
 import { ConsentComponent } from '../consent/consent.component';
+import { UserProfileComponent } from '../user-profile/user-profile.component';
 const routes: Routes = [
   {
     path: '',
@@ -51,6 +52,9 @@ const routes: Routes = [
   }, {
     path: 'irb',
     component: IrbComponent
+  }, {
+    path: 'profile',
+    component: UserProfileComponent
   }
 ];
 

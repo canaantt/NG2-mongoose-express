@@ -47,11 +47,21 @@ export class NavbarComponent {
                   });
             }
           } else {
-            //  this.router.navigate(['/landing']);
+              this.router.navigate(['/landing']);
           }
         });
   }
-
+  goDashboard() {
+    if(this.authenticated === true){
+      this.router.navigate(['projects/', 'dashboard']);
+    } else {
+      alert('Please Log in or register.');
+    }
+  }
+  goAdmin(){
+    console.log('need to set lock for this feature.');
+    this.router.navigate(['admin']);
+  }
  }
 
 

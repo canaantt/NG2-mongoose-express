@@ -132,13 +132,7 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
     this.newAnnotationForm.get('Annotations').value.forEach(element => {
       this.project.Annotations.push(element);
     });
-    this.newAnnotationForm.get('Annotations').value = null;
-  }
-  someMethod(event) {
-    console.log('event is triggered in parent');
-    console.log(event);
-    console.log(this.project);
-    this.update(this.project);
+    // this.newAnnotationForm.get('Annotations').value = null;
   }
 
 }

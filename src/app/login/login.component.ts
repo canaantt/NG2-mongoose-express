@@ -67,6 +67,6 @@ export class LoginComponent implements OnInit {
     this.stateService.authenticated.next(v);
   }
   toProfile() {
-    this.router.navigate(['/profile']);
+    this.router.navigate(['/projects', 'profile']);
   }
 }

@@ -47,19 +47,17 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: ProjectsDashboardComponent },
       { path: 'add', component: ProjectAdditionComponent},
-      { path: ':id', component: ProjectDetailComponent }
+      { path: ':id', component: ProjectDetailComponent },
+      { path: 'profile', component: UserProfileComponent}
     ]
   }, {
     path: 'irb',
     component: IrbComponent
-  }, {
-    path: 'profile',
-    component: UserProfileComponent
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRouterModule { }

@@ -3,7 +3,7 @@
     <span class="fa fa-power-off"></span>Login 
   </a>
 </div>
- <div *ngIf='user && authenticated'><button type="button" (click)="toProfile()"><img src={{user.thumbnail}} alt="Smiley face" height="42" width="42">{{user.name}}</button></div> 
+ <div *ngIf='user && authenticated'><a type="button" (click)="toProfile()"><img src={{user.thumbnail}} alt="Smiley face" height="42" width="42">{{user.name}}</a></div> 
 <div  *ngIf='authenticated'>
   <a (click)="googleLogOut()">
     <span class="fa fa-power-off"></span>Logout

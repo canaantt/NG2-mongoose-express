@@ -20,13 +20,6 @@ export class NavbarComponent {
     this.stateService.user
         .subscribe(res => {
           this.user = res;
-          // if('email' in this.user){
-          //   this.userService.getUserIDByGmail(this.user.email)
-          //     .subscribe(res => {
-          //       console.log('......' + res[0]);
-          //       console.log(res);
-          //     });
-          // }
         });
     this.stateService.authenticated
         .subscribe(res => {
@@ -36,19 +29,21 @@ export class NavbarComponent {
           if (this.authenticated) {
             if(this.user !== null) {
               this.userService.getUserIDByGmail(this.user.email)
-                  .subscribe(res => {
+                  .subscribe( res  => {
                     if (res[0] !== null) {
-                      alert('You are logged in.');
-                      this.router.navigate(['/projects', 'dashboard']);
+                      console.log('You are logged in.');
+                      // this.router.navigate(['/projects', 'dashboard']);
                       // this.router.navigate(['/projects/{id}']);
-                    } else {
-                       this.router.navigate(['/register']);
-                    }
+                    } 
+                    // else {
+                    //    this.router.navigate(['/register']);
+                    // }
                   });
             }
-          } else {
-              this.router.navigate(['/landing']);
-          }
+          } 
+          // else {
+          //     this.router.navigate(['/landing']);
+          // }
         });
   }
   goDashboard() {
@@ -58,9 +53,8 @@ export class NavbarComponent {
       alert('Please Log in or register.');
     }
   }
-  goAdmin(){
-    console.log('need to set lock for this feature.');
-    this.router.navigate(['admin']);
+  toProfile() {
+    this.router.navigate(['/projects', 'profile']);
   }
  }
 

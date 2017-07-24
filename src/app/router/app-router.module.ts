@@ -32,13 +32,10 @@ const routes: Routes = [
   },  {
     path: 'register',
     component: RegisterComponent
-  },{
-    path: 'grid',
-    component: AdminGridComponent
-  },{
+  }, {
     path: 'admin',
     component: AdminComponent
-  },{
+  }, {
     path: 'documentation',
     component: DocumentationComponent
   }, {

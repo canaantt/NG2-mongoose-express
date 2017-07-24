@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
     console.log(this.stateService.authenticated);
     this.stateService.authenticated.next(v);
   }
-  toProfile() {
-    this.router.navigate(['/projects', 'profile']);
+  goRegister() {
+    this.router.navigate(['/register']);
   }
 }

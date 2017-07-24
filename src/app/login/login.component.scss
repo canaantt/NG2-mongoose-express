@@ -1,65 +1,26 @@
 // import global variable
 @import '/../index';
 
-.navbar-logo-img {
-    position: absolute;
-    left: 0px;
-    top: 10px;
-    max-height: 40px;
-    image-rendering: crisp-edges;
+.landing {
+    padding-top: 150px;
 }
-.navbar-logo-text {
-    position: absolute;
-    left: 45px;
-    top: 0px;
-    font-size: 18px;
-    line-height: 60px;
-    vertical-align: middle;
-    color: $color-white;
-    letter-spacing: 6px;
+.landing-title {
+    font-weight: 400;
+    letter-spacing: 25px;
+    font-size: 30px;
+    padding-top: 10px;
+    padding-bottom: 20px;
     text-transform: uppercase;
-    font: $font-family-sans-serif;
-}
-.navbar-inverse {
-    border: none;
-    background-color: $color-onco-blue;
-}
-.navbar-inverse .navbar-toggle {
-    border: none 
-}
-.header {
-    position: absolute;
-    width: 100%;    
-}
+    color: $color-onco-blue;
 
-.nav {
-    li {
-        a {
-            font-size: 14px;
-                margin-top: 5px;
-            span {
-                padding-right: 5px;
-            }
-        }
-    }
 }
-
-.navbar {
-    border: none;
-    box-shadow: 0 2px 3px $color-gray;
-    min-height: $navbar-height;
-    margin-bottom: 18px;
+.landing-button {
+    background: $color-onco-blue;
+    color: #FFF;
+    border-radius: 0;
+    padding: 10px;
+    width: 120px;
+    height: 40px;
+    line-height: 20px;
+    margin: 3px;
 }
-
-.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
-    border-color: #0383c2;
-}
-.navbar-inverse .navbar-toggle {
-    border-color: #fff;
-}
-.navbar-inverse .navbar-nav>li>a {
-    color: $color-white;
-}
-
-
-

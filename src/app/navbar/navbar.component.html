@@ -15,8 +15,7 @@
       </div>
       <div class="collapse navbar-collapse" id="header-navbar">
         <ul class="nav navbar-nav navbar-right" routerLinkActive="active">
-          <li class="nav-item"><a type="button" (click)='goDashboard()'><span class="fa fa-dashboard"></span>Dashboard</a></li>
-          <li class="nav-item"><a type="button" (click)='goAdmin()'><span class="fa fa-lock"></span>Admin</a></li>
+          <li class="nav-item"><a *ngIf='authenticated' type="button" (click)='goDashboard()'><span class="fa fa-dashboard"></span>Dashboard</a></li>
           <li>
             <a href="" target="_blank " routerLink="/documentation">
               <span class="glyphicon glyphicon-question-sign"></span>Help
@@ -27,9 +26,15 @@
               <span class="fa fa-comments"></span>Feedback
             </a>
           </li>
-          <li><app-login></app-login></li>
+          <li>
+            <div *ngIf='user && authenticated'><a type="button" (click)="toProfile()"><img src={{user.thumbnail}} alt="Smiley face" height="42" width="42">{{user.name}}</a>
+              <!-- <a type="button" class="btn landing-button" (click)="googleLogOut()">
+                <span class="fa fa-power-off"></span>Logout
+              </a> -->
+            </div>
+          </li>
         </ul>
-        
+
       </div>
     </div>
   </nav>

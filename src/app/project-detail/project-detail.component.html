@@ -4,17 +4,31 @@
       <div *ngIf="project">
           <h3 class="detail-header">{{project.Name}}</h3>
           <div class="form-group">
-            <label>Dataset Name</label>
+            <label>Dataset Name<span class="text-danger">*</span></label>
             <input [(ngModel)]="project.Name" placeholder="Dataset Name" class="form-control" rows="1"> 
           </div>
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label>Private</label>
             <input type="checkbox" [(ngModel)]="project.Private">
-          </div>
-          <div class="form-group">
-            <label>IRB</label>
-            <input [(ngModel)]="project.IRBNumber" placeholder="IRB#" class="col-sx-3">
-            <div *ngIf="project.IRBNumber" class="col-sx-3">IRB Title : {{project.IRBNumber | IrbDetailService | async}}</div>
+          </div> -->
+          <div class="well form-group">
+            <label>Data Compliance<span class="text-danger">*</span></label>
+            <!-- <input [(ngModel)]="project.IRBNumber" placeholder="IRB#" class="col-sx-3">
+            <div *ngIf="project.IRBNumber" class="col-sx-3">IRB Title : {{project.IRBNumber | IrbDetailService | async}}</div> -->
+            <td><label>A</label>
+                <input type="radio" name="optradio" [checked]=""> 
+                <label> If data are derieved from humans, then </label>
+                <label> Human Subjects Research IRB/IEC Refrence #</label>
+                <input [(ngModel)]="project.IRBNumber" placeholder="IRB/IEC #" class="form-control" rows="1">
+                <label> Not Human Subjects Research, If IRB/IEC review required, IRB/IEC Reference #</label>
+                <input [(ngModel)]="project.IRBNumber" placeholder="IRB/IEC #" class="form-control" rows="1">
+                <input type="radio" name="optradio" [checked]=""> 
+                <label> Not Human Subjects Research, no IRB/IEC review required </label>
+            </td>
+            <td><label>B</label>
+                <input type="radio" name="optradio" [checked]=""> 
+                <label> Data are not derived from human subjects, compliant with application and laws, rules and regulations.</label> 
+            </td>
           </div>
           <div class="form-group">
             <label>Description</label>
@@ -49,7 +63,7 @@
                         <td><input class="form-control" type="text" formControlName="key" placeholder="Sample Size"></td>
                         <td><input class="form-control" type="text" formControlName="value" placeholder="110"></td>
                         <!-- <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td> -->
-                        <td><button (click)="submitAnnotations()" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
+                        <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
                       </tr>
                     </tbody>
                   </table>
@@ -64,7 +78,7 @@
         <div class="form-group">
           <label>Date Created {{project.Date}}</label>
         </div>
-        <button class='btn btn-primary' (click)="update(project)">Update</button>
+        <button class='btn btn-primary' [disabled]=false (click)="update(project)">Update</button>
       </div>
     </div>
   </div>

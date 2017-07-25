@@ -72,7 +72,7 @@ export class FilesComponent implements OnInit {
 
   updateStatus(fileitem: any) {
     // this.fileService.sendProjectID(this.id);
-    console.log(fileitem);
+    fileitem.upload();
     this.uploadedstring = 'Uploaded';
     console.log(fileitem.file);
     this.project.File = {
@@ -80,6 +80,7 @@ export class FilesComponent implements OnInit {
       'size' : fileitem.file.size,
       'timestamp' : Date()
     };
+    //this.filerefresh();
     this.uploadComplete('Being uploaded');
   }
 
@@ -94,6 +95,7 @@ export class FilesComponent implements OnInit {
     console.log('test...');
     this.uploadComplete('Being removed');
     this.hasFiles = false;
+    this.uploader.queue = [];
         // .subscribe((err) => {
         //   if (err) {console.log(err); }
         //   this.project.File = null;

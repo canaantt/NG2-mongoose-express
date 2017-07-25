@@ -15,7 +15,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { StateService } from '../service/state.service';
 import { Router } from '@angular/router';
-
+import * as _ from 'underscore';
 // @Pipe({
 //   name: 'GetProjectByID'
 // })
@@ -83,7 +83,7 @@ export class ProjectsDashboardComponent implements OnInit {
   getProjectIDs(permissions: any): void {
     console.log('in getting projectIDs');
     console.log(permissions);
-    this.projectIDs = permissions.map(function(r){return r.Project; });
+    this.projectIDs = _.uniq(permissions.map(function(r){return r.Project; }));
     console.log('this project IDs...', this.projectIDs);
     this.getProjects();
   }
@@ -98,8 +98,12 @@ export class ProjectsDashboardComponent implements OnInit {
   delete(project: Project): void {
     alert('Are you sure you would like to delete the entire dataset?');
     this.projectService.delete(project).subscribe(() => console.log('project is being removed.'));
+    let index = this.projectIDs.indexOf(project._id);
+    console.log('The index of projectID that is being removed is..', index);
+    this.projectIDs.splice(index, 1);
+    this.getProjects();
     this.fileService.removeFilesByProjectID(project._id);
-    this.permissionService.removePermisionsByProjectID(project._id);
+    // this.permissionService.removePermisionsByProjectID(project._id);
   }
   add(): void {
     console.log('in adding new project');
@@ -124,7 +128,6 @@ export class ProjectsDashboardComponent implements OnInit {
           this.newAddedProject = res;
         });
   }
-  
   addPermission(projectID: string): void{
     let newPermission = { 
                          'User': this.userID,

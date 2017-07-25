@@ -28,16 +28,16 @@
           <td>Clinical Sheet Name</td>
           <td>Patient Size</td>
           <td>Sample Size</td>
-          <td>Overlaping Samples</td>
-          <td>Overlaping Patients</td>
+          <!-- <td>Overlaping Samples</td>
+          <td>Overlaping Patients</td> -->
          </thead>
          <tbody class="form-group row" *ngFor="let sum of uploadStatus.uploadSummaryClinical">
             <tr>
               <td><span>{{sum.sheet}}</span></td>  
               <td><span *ngIf="sum.patients">{{sum.patients.length}}</span></td>
               <td><span *ngIf="sum.samples">{{sum.samples.length}}</span></td>
-              <td><span *ngIf="sum.samples">{{sum.samples | Overlapping: this.uploadStatus.allSamplesUploaded}}% </span></td>
-              <td><span>{{sum.patients | Overlapping: this.uploadStatus.allPatientsUploaded}}% </span></td>
+              <!-- <td><span *ngIf="sum.samples">{{sum.samples | Overlapping: this.uploadStatus.allSamplesUploaded}}% </span></td>
+              <td><span>{{sum.patients | Overlapping: this.uploadStatus.allPatientsUploaded}}% </span></td> -->
             </tr>
           </tbody>
       </table>
@@ -47,16 +47,16 @@
           <td>Molecular Sheet Name</td>
           <td>Sample Size</td>
           <td>Biomarker Size</td>
-          <td>Hugo Gene Biomarker Percentage</td>
-          <td>Non-Hugo Biomarkers</td>
+          <!-- <td>Hugo Gene Biomarker Percentage</td>
+          <td>Non-Hugo Biomarkers</td> -->
          </thead>
          <tbody class="form-group row" *ngFor="let sum of uploadStatus.uploadSummaryMolecular">
             <tr>
               <td><span>{{sum.sheet}}</span></td>  
               <td><span *ngIf="sum.samples">{{sum.samples.length}}</span></td>
               <td><span *ngIf="sum.markers">{{sum.markers.length}}</span></td>
-              <td><span *ngIf="sum.geneSymbolValidation">{{(sum.geneSymbolValidation.validNameNumber/sum.markers.length).toFixed(2)*100}}%</span></td>
-              <td><span *ngIf="sum.geneSymbolValidation">{{sum.geneSymbolValidation.unvalidNamesArr}}</span></td>
+              <!-- <td><span *ngIf="sum.geneSymbolValidation">{{(sum.geneSymbolValidation.validNameNumber/sum.markers.length).toFixed(2)*100}}%</span></td>
+              <td><span *ngIf="sum.geneSymbolValidation">{{sum.geneSymbolValidation.unvalidNamesArr}}</span></td> -->
             </tr>
           </tbody>
       </table>
@@ -90,11 +90,9 @@
               <div class="progress" style="margin-bottom: 0;">
                 <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': item.progress + '%' }"></div>
               </div>
-            </td>-->
-            
-            
+            </td>-->      
             <td nowrap>
-              <button type="button" class="btn btn-success btn-xs" (click)="item.upload()" (click)="updateStatus(item)" [disabled]="item.isReady || item.isUploading || item.isSuccess">
+              <button type="button" class="btn btn-success btn-xs"  (click)="updateStatus(item)" [disabled]="item.isReady || item.isUploading || item.isSuccess">
                                             <span class="glyphicon glyphicon-upload"></span> {{uploadedstring}}
                                         </button>
             </td>

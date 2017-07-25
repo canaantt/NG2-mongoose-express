@@ -25,9 +25,10 @@ export class RegisterComponent implements OnInit {
   }
 
   submit() {
+    this.newUserForm.value.Consent = true;
     this.userService.create(this.newUserForm.value).subscribe(() => {
       alert("New User is added into Database.");
-      this.router.navigate(['/projects', '/dashboard']);
+      this.router.navigate(['/landing']);
     });
   }
 
@@ -35,10 +36,8 @@ export class RegisterComponent implements OnInit {
     this.newUserForm = this.fb.group({
       FirstName: new FormControl(''),
       LastName: new FormControl(''),
-      Photo: new FormControl(''),
       Email: new FormControl(''),
       Gmail: this.user.email,
-      Group: new FormControl('')
     });
   }
 

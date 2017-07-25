@@ -40,6 +40,7 @@ export class UserService {
   }
 
   create(user: User): Observable<Response> {
+    console.log('In user service looking for consent info ... ', user);
     return this.http
       .post(this.usersUrl, JSON.stringify(user), {headers: this.headers});
   }

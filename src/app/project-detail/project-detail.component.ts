@@ -46,14 +46,15 @@ export class IrbDetailService implements PipeTransform {
 })
 export class ProjectDetailComponent implements  OnInit {
   project: any;
-  authenticated:boolean;
+  authenticated: boolean;
   userID: any;
   id: string;
+  dataCompliance = '';
+  IRB = '';
+  IEC = '';
   permission: any;
   role: any;
   files: any;
-  irb: any;
-  pi: any;
   statusMsg: any;
   lastModifiedTime: any;
   users$: Observable<any>;
@@ -152,6 +153,27 @@ export class ProjectDetailComponent implements  OnInit {
   }
   collectDataCompliance(value: string) {
     console.log('********', value, '*********');
+    const obj = {};
+    obj['ComplianceOption'] = this.dataCompliance;
+    switch (value) {
+          case 'huirb':
+              this.dataCompliance = 'humanStudyWithIRB';
+              obj['IRB'] = this.IRB;
+              break;
+          case 'huiec':
+              this.dataCompliance = 'humanStudyWithIEC';
+              obj['IEC'] = this.IEC;
+              break;
+          case 'hu':
+              this.dataCompliance = 'humanStudy';
+              break;
+          case 'nohu':
+              this.dataCompliance = 'nonHumanStudy';
+              break;
+      }
+    this.project.DataCompliance = obj;
+    this.projectService.update(this.project)
+        .subscribe(() => console.log('Data Compliance is filled in project.'));
   }
 }
 

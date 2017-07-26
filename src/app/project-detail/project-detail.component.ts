@@ -1,4 +1,4 @@
-import { Component, Input, Output, SimpleChanges,  AfterViewInit, OnInit, OnChanges, ViewChild} from '@angular/core';
+import { Component, Input, Output, SimpleChanges,  AfterViewInit, OnInit, ViewChild, ElementRef} from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Headers, Http, Response } from '@angular/http';
@@ -44,7 +44,7 @@ export class IrbDetailService implements PipeTransform {
   styleUrls: ['./project-detail.component.scss'],
   providers: [FileService, IrbService, UserService, FormBuilder, PermissionService]
 })
-export class ProjectDetailComponent implements  OnInit, OnChanges {
+export class ProjectDetailComponent implements  OnInit {
   project: any;
   authenticated:boolean;
   userID: any;
@@ -54,6 +54,8 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
   files: any;
   irb: any;
   pi: any;
+  statusMsg: any;
+  lastModifiedTime: any;
   users$: Observable<any>;
   results$: Observable<any>;
   newAnnotationForm: FormGroup;
@@ -68,41 +70,45 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
     private irbService: IrbService,
     private userService: UserService,
     private stateService: StateService,
+    private elementRef: ElementRef,
     private fb: FormBuilder) {
       this.id = this.route.snapshot.params['id'];
       this.stateService.authenticated.subscribe(res => this.authenticated = res);
       this.stateService.user.subscribe(res => {
         this.getUserID(res.email, this.id);
       });
+      const eventStream = Observable.fromEvent(elementRef.nativeElement, 'keyup')
+            .map(() => this.project)
+            .debounceTime(500)
+            .subscribe(input => {
+              this.statusMsg = '';
+              this.update(this.project);
+            });
      }
-    getUserID(id: string, projectID: string): void{
-      console.log('in getting user id');
-      this.userService.getUserIDByGmail(id)
-                .subscribe(res => {
-                  console.log(res);
-                  this.getPermission(res[0]._id, projectID );
-                  this.userID = res[0]._id;
-                });
-     }
-    getPermission(userID: string, projectID: string) {
-      console.log('in getting permission by user by project');
-      this.permissionService.getPermissionByUserByProject(userID, projectID)
-          .subscribe(res => {
-            console.log(res);
-            this.permission = res;
-            console.log('what is the permission', res);
-          });
+  getUserID(id: string, projectID: string): void {
+    console.log('in getting user id');
+    this.userService.getUserIDByGmail(id)
+              .subscribe(res => {
+                console.log(res);
+                this.getPermission(res[0]._id, projectID );
+                this.userID = res[0]._id;
+              });
     }
+  getPermission(userID: string, projectID: string) {
+    console.log('in getting permission by user by project');
+    this.permissionService.getPermissionByUserByProject(userID, projectID)
+        .subscribe(res => {
+          console.log(res);
+          this.permission = res;
+          console.log('what is the permission', res);
+        });
+  }
   ngOnInit(): void {
     this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem('')])});
     this.projectService.getProjectByID(this.route.snapshot.params['id'])
                          .subscribe(res0 => {
                            this.project = res0;
                          });
-  }
-
-  ngOnChanges(): void {
-    // this.refresh();
   }
   refresh() {
     console.log('project is being refreshed...');
@@ -120,20 +126,32 @@ export class ProjectDetailComponent implements  OnInit, OnChanges {
       value: new FormControl(val, Validators.required)
     });
   }
-
   update(project: Project): void {
     this.projectService.update(project).subscribe(() => {
       console.log('updating...');
+      this.statusReport();
       this.refresh();
     });
   }
-
+  statusReport() {
+    this.statusMsg = 'Saving updates...';
+    setTimeout(() => this.statusMsg = '', 1000);
+    this.lastModifiedTime = Date();
+  }
+  fileUpdates(event) {
+    console.log('event is triggered in parent');
+    console.log(event);
+    console.log(this.project);
+    this.update(this.project);
+  }
   submitAnnotations(): void {
     this.newAnnotationForm.get('Annotations').value.forEach(element => {
       this.project.Annotations.push(element);
     });
     // this.newAnnotationForm.get('Annotations').value = null;
   }
-
+  collectDataCompliance(value: string) {
+    console.log('********', value, '*********');
+  }
 }
 

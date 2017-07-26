@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { UserService } from './service/user.service';
 import { UserDetailComponent } from './user-detail/user-detail.component';
@@ -16,7 +16,6 @@ import { ProjectDetailComponent, IrbDetailService} from './project-detail/projec
 import { IrbComponent } from './irb/irb.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
-import { ProjectAdditionComponent } from './project-addition/project-addition.component';
 import { FilesComponent, Overlapping } from './files/files.component';
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { PermissionsComponent, UserFullNamePipe } from './permissions/permissions.component';
@@ -24,16 +23,17 @@ import { AnnotationsComponent } from './annotations/annotations.component';
 import { AdminComponent } from './admin/admin.component';
 import { AdminGridComponent } from './admin-grid/admin-grid.component';
 import { RegisterComponent } from './register/register.component';
-import * as hello from 'hellojs';
-import * as _ from 'underscore';
 import { StateService } from './service/state.service';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/catch';
+import * as hello from 'hellojs';
+import * as _ from 'underscore';
 import { ConsentComponent } from './consent/consent.component';
 import { LoginComponent } from './login/login.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,7 +46,6 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     IrbComponent,
     NavbarComponent,
     ProjectsDashboardComponent,
-    ProjectAdditionComponent,
     FilesComponent,
     FileSelectDirective,
     PermissionsComponent,
@@ -69,7 +68,8 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     HttpModule,
     RouterModule
   ],
-  providers: [UserService, StateService],
+  providers: [UserService,
+              StateService],
   bootstrap: [AppComponent ]
 })
 export class AppModule { }

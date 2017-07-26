@@ -8,7 +8,6 @@ import { ProjectsComponent } from '../projects/projects.component';
 import { IrbComponent } from '../irb/irb.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { ProjectsDashboardComponent } from '../projects-dashboard/projects-dashboard.component';
-import { ProjectAdditionComponent } from '../project-addition/project-addition.component';
 import { ProjectDetailComponent } from '../project-detail/project-detail.component';
 import { AdminComponent } from '../admin/admin.component';
 import { AdminGridComponent } from '../admin-grid//admin-grid.component';
@@ -43,7 +42,6 @@ const routes: Routes = [
     component: ProjectsComponent,
     children: [
       { path: 'dashboard', component: ProjectsDashboardComponent },
-      { path: 'add', component: ProjectAdditionComponent},
       { path: ':id', component: ProjectDetailComponent },
       { path: 'profile', component: UserProfileComponent}
     ]

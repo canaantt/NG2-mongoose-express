@@ -55,6 +55,7 @@ export class ProjectDetailComponent implements  OnInit {
   irb: any;
   pi: any;
   statusMsg: any;
+  lastModifiedTime: any;
   users$: Observable<any>;
   results$: Observable<any>;
   newAnnotationForm: FormGroup;
@@ -78,13 +79,11 @@ export class ProjectDetailComponent implements  OnInit {
       });
       const eventStream = Observable.fromEvent(elementRef.nativeElement, 'keyup')
             .map(() => this.project)
-            .debounceTime(300)
-            .distinctUntilChanged();
-
-        eventStream.subscribe(input => {
-          this.statusMsg = '';
-          this.update(this.project);
-        });
+            .debounceTime(500)
+            .subscribe(input => {
+              this.statusMsg = '';
+              this.update(this.project);
+            });
      }
   getUserID(id: string, projectID: string): void {
     console.log('in getting user id');
@@ -137,6 +136,7 @@ export class ProjectDetailComponent implements  OnInit {
   statusReport() {
     this.statusMsg = 'Saving updates...';
     setTimeout(() => this.statusMsg = '', 1000);
+    this.lastModifiedTime = Date();
   }
   fileUpdates(event) {
     console.log('event is triggered in parent');
@@ -150,6 +150,8 @@ export class ProjectDetailComponent implements  OnInit {
     });
     // this.newAnnotationForm.get('Annotations').value = null;
   }
-
+  collectDataCompliance(value: string) {
+    console.log('********', value, '*********');
+  }
 }
 

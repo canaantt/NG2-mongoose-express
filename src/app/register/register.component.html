@@ -30,11 +30,16 @@
                                 <input type="text" class="form-control" id="Email" formControlName="Email" placeholder="Institutional Email">
                                 <label><span class="text-danger">*</span></label>
                             </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="Institution" formControlName="Institution" placeholder="Institutional">
+                                <label><span class="text-danger">*</span></label>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <input type="submit" class="btn" value="AGREE" [disabled]="newUserForm?.invalid">
+                            <input type="submit" class="btn" value="AGREE" [disabled]="newUserForm.invalid">
                         </div>
                     </form>
+                    <p>Form Status: {{ newUserForm.status }}</p>
                     <p>Form value: {{ newUserForm.value | json }}</p>
                     
         </div>

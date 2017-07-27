@@ -9,6 +9,7 @@ var userSchema = new Schema({
     Gmail: String,
     // Group: String,
     Consent: Boolean,
+    Institution: String,
     Date: {type: Date, default: Date.now}
 });
 module.exports = mongoose.model("User", userSchema);

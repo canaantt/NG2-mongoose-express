@@ -7,6 +7,7 @@ export class User {
   Gmail: string;
   // Group: string;
   Consent: boolean;
+  Institution: string;
   Date: Date;
 }
 

@@ -18,21 +18,21 @@
             <div *ngIf="project.IRBNumber" class="col-sx-3">IRB Title : {{project.IRBNumber | IrbDetailService | async}}</div> -->
             <td>
               <tr>
-                <input type="radio" value="huirb" name="humanStudyWithIRB" [(ngModel)]="dataCompliance" (click)="collectDataCompliance('huirb')" [disabled]="IRB===''">
+                <input type="radio" value="huirb" name="humanStudyWithIRB" [(ngModel)]="project.DataCompliance.ComplianceOption" (click)="collectDataCompliance('huirb')" [disabled]="project.DataCompliance.IRBNumber===''">
                 A.1 If data are derieved from humans and IRB has been approved.
-                <input [(ngModel)]="IRB" placeholder="IRB#" rows="1">
+                <input [(ngModel)]="project.DataCompliance.IRBNumber" placeholder="IRB#" rows="1">
               </tr>
               <tr>
-                <input type="radio" value="huiec" name="humanStudyWithIEC" [(ngModel)]="dataCompliance" (click)="collectDataCompliance('huiec')" [disabled]="IEC===''">
+                <input type="radio" value="huiec" name="humanStudyWithIEC" [(ngModel)]="project.DataCompliance.ComplianceOption" (click)="collectDataCompliance('huiec')" [disabled]="project.DataCompliance.IECNumber===''">
                 A.2 If data are derieved from humans and IEC number is ready. 
-                <input [(ngModel)]="IEC" placeholder="IEC#" rows="1">
+                <input [(ngModel)]="project.DataCompliance.IECNumber" placeholder="IEC#" rows="1">
               </tr>
               <tr>
-                <input type="radio" value="hu" name="humanStudy" [(ngModel)]="dataCompliance" (click)="collectDataCompliance('hu')">  
+                <input type="radio" value="hu" name="humanStudy" [(ngModel)]="project.DataCompliance.ComplianceOption" (click)="collectDataCompliance('hu')">  
                 A.3 I certify this is exempt from Human Subjects Research.
               </tr>
               <tr>
-                <input type="radio" value="nohu" name="nonHumanStudy" [(ngModel)]="dataCompliance"  (click)="collectDataCompliance('nohu')">  
+                <input type="radio" value="nohu" name="nonHumanStudy" [(ngModel)]="project.DataCompliance.ComplianceOption"  (click)="collectDataCompliance('nohu')">  
                 B. Data are not derived from human subjects, compliant with application and laws, rules and regulations. 
               </tr>
             </td>

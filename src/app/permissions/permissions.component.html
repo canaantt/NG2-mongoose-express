@@ -19,7 +19,7 @@
         <table>
           <tbody class="form-group row" *ngFor="let permissionItem of newPermissionForm.get('Permissions').controls" [formGroup]='permissionItem'>
             <tr>
-              <td><input class="form-control" type="text" formControlName="Email" placeholder="Enter User Email"></td>
+              <td><input class="form-control" type="text" formControlName="Email" placeholder="Enter Collaborator's Institutional Email"></td>
               <td><select formControlName="Role">
                         <option *ngFor="let role of roles" [ngValue]="role">{{role}}</option>
                       </select></td>

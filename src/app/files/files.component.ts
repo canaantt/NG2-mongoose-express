@@ -100,7 +100,7 @@ export class FilesComponent implements OnInit {
   }
   projectValidChecking(): boolean {
     this.errorMsg = 'Still working on this feature';
-    return true;
+    return false;
   }
 }
 

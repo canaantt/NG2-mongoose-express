@@ -49,7 +49,6 @@ export class ProjectDetailComponent implements  OnInit {
   authenticated: boolean;
   userID: any;
   id: string;
-  dataCompliance = '';
   IRB = '';
   IEC = '';
   permission: any;
@@ -152,25 +151,10 @@ export class ProjectDetailComponent implements  OnInit {
     // this.newAnnotationForm.get('Annotations').value = null;
   }
   collectDataCompliance(value: string) {
-    console.log('********', value, '*********');
     const obj = {};
-    obj['ComplianceOption'] = this.dataCompliance;
-    switch (value) {
-          case 'huirb':
-              this.dataCompliance = 'humanStudyWithIRB';
-              obj['IRB'] = this.IRB;
-              break;
-          case 'huiec':
-              this.dataCompliance = 'humanStudyWithIEC';
-              obj['IEC'] = this.IEC;
-              break;
-          case 'hu':
-              this.dataCompliance = 'humanStudy';
-              break;
-          case 'nohu':
-              this.dataCompliance = 'nonHumanStudy';
-              break;
-      }
+    obj['ComplianceOption'] = value;
+    obj['IRBNumber'] = this.IRB;
+    obj['IECNumber'] = this.IEC;
     this.project.DataCompliance = obj;
     this.projectService.update(this.project)
         .subscribe(() => console.log('Data Compliance is filled in project.'));

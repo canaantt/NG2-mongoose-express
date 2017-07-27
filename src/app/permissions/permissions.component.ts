@@ -68,7 +68,7 @@ export class PermissionsComponent implements OnInit {
             p.Role = formValue.Role;
             this.permissionService.create(p).subscribe(() => this.getPermissions());
           } else {
-            this.emailError = 'Email is not in the user list.';
+            this.emailError = 'Email is not in the user list. Please invite this user to register first.';
           }
           console.log(this.emailError);
         });

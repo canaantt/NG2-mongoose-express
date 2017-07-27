@@ -61,6 +61,7 @@ export class PermissionService {
   }
 
   update(permission: Permission, permissionRole: roles): Observable<Response> {
+    console.log('&&&&&&&&&&', permission);
     const url = `${this.permissionsUrl}/` + permission._id;
     permission.Role = permissionRole;
     return this.http.put(url, JSON.stringify(permission), {headers: this.headers});

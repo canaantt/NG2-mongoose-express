@@ -31,6 +31,7 @@ export class FilesComponent implements OnInit {
   files$: Observable<any>;
   hasFiles = false;
   id: string;
+  errorMsg = '';
   uploadedstring = 'Not Uploaded';
   uploadStatus = {
     'uploadSummaryClinical': [],
@@ -96,12 +97,10 @@ export class FilesComponent implements OnInit {
     this.uploadComplete('Being removed');
     this.hasFiles = false;
     this.uploader.queue = [];
-        // .subscribe((err) => {
-        //   if (err) {console.log(err); }
-        //   this.project.File = null;
-        //   this.uploadComplete();
-        //   // this.getFiles(this.id);
-        // });
+  }
+  projectValidChecking(): boolean {
+    this.errorMsg = 'Still working on this feature';
+    return true;
   }
 }
 

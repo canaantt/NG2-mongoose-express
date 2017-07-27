@@ -27,7 +27,7 @@
             </a>
           </li>
           <li>
-            <div *ngIf='user && authenticated'><a type="button" (click)="toProfile()"><img src={{user.thumbnail}} alt="Smiley face" height="42" width="42">{{user.name}}</a>
+            <div *ngIf='user && authenticated'><a type="button" (click)="toProfile()"><img src={{user.thumbnail}} alt="Smiley face" height="42" width="42">{{internalUser.LastName}}</a>
               <!-- <a type="button" class="btn landing-button" (click)="googleLogOut()">
                 <span class="fa fa-power-off"></span>Logout
               </a> -->

@@ -16,21 +16,25 @@
             <label>Data Compliance<span class="text-danger">*</span></label>
             <!-- <input [(ngModel)]="project.IRBNumber" placeholder="IRB#" class="col-sx-3">
             <div *ngIf="project.IRBNumber" class="col-sx-3">IRB Title : {{project.IRBNumber | IrbDetailService | async}}</div> -->
-            <td><label>A.1</label>
-                <input type="radio" value="huirb" name="humanStudyWithIRB" [(ngModel)]="dataCompliance" (click)="collectDataCompliance('huirb')">
-                <label> If data are derieved from humans and IRB has been approved. </label>
-                <input [(ngModel)]="IRB" placeholder="IRB#" class="form-control" rows="1">
-                <label>A.2</label>
-                <input type="radio" value="huiec" name="humanStudyWithIEC" [(ngModel)]="dataCompliance" (click)="collectDataCompliance('huiec')">
-                <label> If data are derieved from humans and IEC number is ready. </label>
-                <input [(ngModel)]="IEC" placeholder="IEC#" class="form-control" rows="1">
-                <label>A.3</label>
+            <td>
+              <tr>
+                <input type="radio" value="huirb" name="humanStudyWithIRB" [(ngModel)]="dataCompliance" (click)="collectDataCompliance('huirb')" [disabled]="IRB===''">
+                A.1 If data are derieved from humans and IRB has been approved.
+                <input [(ngModel)]="IRB" placeholder="IRB#" rows="1">
+              </tr>
+              <tr>
+                <input type="radio" value="huiec" name="humanStudyWithIEC" [(ngModel)]="dataCompliance" (click)="collectDataCompliance('huiec')" [disabled]="IEC===''">
+                A.2 If data are derieved from humans and IEC number is ready. 
+                <input [(ngModel)]="IEC" placeholder="IEC#" rows="1">
+              </tr>
+              <tr>
                 <input type="radio" value="hu" name="humanStudy" [(ngModel)]="dataCompliance" (click)="collectDataCompliance('hu')">  
-                <label> Not Human Subjects Research, no IRB/IEC review is required.</label>
-            </td>
-            <td><label>B</label>
+                A.3 I certify this is exempt from Human Subjects Research.
+              </tr>
+              <tr>
                 <input type="radio" value="nohu" name="nonHumanStudy" [(ngModel)]="dataCompliance"  (click)="collectDataCompliance('nohu')">  
-                <label> Data are not derived from human subjects, compliant with application and laws, rules and regulations.</label> 
+                B. Data are not derived from human subjects, compliant with application and laws, rules and regulations. 
+              </tr>
             </td>
           </div>
           <div class="form-group">

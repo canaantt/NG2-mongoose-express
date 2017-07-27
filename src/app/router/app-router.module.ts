@@ -13,7 +13,7 @@ import { AdminComponent } from '../admin/admin.component';
 import { AdminGridComponent } from '../admin-grid//admin-grid.component';
 import { RegisterComponent } from '../register/register.component';
 import { ConsentComponent } from '../consent/consent.component';
-import { UserProfileComponent } from '../user-profile/user-profile.component';
+import { UserDetailComponent } from '../user-detail/user-detail.component';
 const routes: Routes = [
   {
     path: '',
@@ -23,17 +23,14 @@ const routes: Routes = [
     path: 'landing',
     component: LandingComponent
   }, {
-    path: 'consent',
-    component: ConsentComponent
-  }, {
     path: 'users',
-    component: UsersComponent
-  },  {
+    component: UsersComponent,
+    children: [
+      { path: ':id', component: UserDetailComponent }
+    ]
+  }, {
     path: 'register',
     component: RegisterComponent
-  }, {
-    path: 'admin',
-    component: AdminComponent
   }, {
     path: 'documentation',
     component: DocumentationComponent
@@ -42,12 +39,8 @@ const routes: Routes = [
     component: ProjectsComponent,
     children: [
       { path: 'dashboard', component: ProjectsDashboardComponent },
-      { path: ':id', component: ProjectDetailComponent },
-      { path: 'profile', component: UserProfileComponent}
+      { path: ':id', component: ProjectDetailComponent }
     ]
-  }, {
-    path: 'irb',
-    component: IrbComponent
   }
 ];
 

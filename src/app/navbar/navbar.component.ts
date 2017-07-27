@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class NavbarComponent {
   authenticated = false;
   user: any;
+  internalUser: any;
 
   constructor( private stateService: StateService,
                private userService: UserService,
@@ -32,29 +33,23 @@ export class NavbarComponent {
                   .subscribe( res  => {
                     if (res[0] !== null) {
                       console.log('You are logged in.');
-                      // this.router.navigate(['/projects', 'dashboard']);
-                      // this.router.navigate(['/projects/{id}']);
-                    } 
-                    // else {
-                    //    this.router.navigate(['/register']);
-                    // }
+                      this.internalUser = res[0];
+                    }
                   });
             }
-          } 
-          // else {
-          //     this.router.navigate(['/landing']);
-          // }
+          }
         });
   }
   goDashboard() {
-    if(this.authenticated === true){
+    if (this.authenticated === true) {
       this.router.navigate(['projects/', 'dashboard']);
     } else {
       alert('Please Log in or register.');
     }
   }
   toProfile() {
-    this.router.navigate(['/projects', 'profile']);
+    console.log('in nav toProfile(), user is', this.internalUser);
+    this.router.navigate([`/users/${this.internalUser._id}/`]);
   }
  }
 

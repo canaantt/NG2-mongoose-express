@@ -20,6 +20,8 @@ import 'rxjs/add/observable/of';
 import { PermissionsComponent } from '../permissions/permissions.component';
 import { FilesComponent } from '../files/files.component';
 import { StateService } from '../service/state.service';
+import { DateFormatter } from '../projects-dashboard/projects-dashboard.component';
+
 enum roles {'full-access', 'read-only'};
 @Pipe({
   name: 'IrbDetailService'
@@ -49,6 +51,7 @@ export class ProjectDetailComponent implements  OnInit {
   authenticated: boolean;
   userID: any;
   id: string;
+  clickedHuman = false;
   IRB = '';
   IEC = '';
   permission: any;
@@ -151,6 +154,11 @@ export class ProjectDetailComponent implements  OnInit {
     // this.newAnnotationForm.get('Annotations').value = null;
   }
   collectDataCompliance(value: string) {
+    if (value === 'human') {
+      this.clickedHuman = true;
+    } else if (value === 'non-human') {
+      this.clickedHuman = false;
+    }
     // const obj = {};
     // obj['ComplianceOption'] = value;
     // obj['IRBNumber'] = this.IRB;

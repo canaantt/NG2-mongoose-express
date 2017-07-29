@@ -28,17 +28,19 @@ export class RegisterComponent implements OnInit {
     this.newUserForm.value.Consent = true;
     this.newUserForm.value.Gmail = this.user.email;
     this.userService.create(this.newUserForm.value).subscribe(() => {
-      alert("New User is added into Database.");
+      alert('New User is added into Database.');
+      this.stateService.authenticated.next(false);
+      this.stateService.user.next(null);
       this.router.navigate(['/landing']);
     });
   }
 
   ngOnInit(): void {
     this.newUserForm = this.fb.group({
-      FirstName: new FormControl('', Validators.required),
-      LastName: new FormControl('', Validators.required),
-      Email: new FormControl('', Validators.required),
-      Institution: new FormControl('', Validators.required)
+      FirstName: new FormControl(''),
+      LastName: new FormControl(''),
+      Email: new FormControl(''),
+      Institution: new FormControl('')
     });
   }
 

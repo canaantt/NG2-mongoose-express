@@ -15,7 +15,7 @@ import { ProjectsComponent } from './projects/projects.component';
 import { ProjectDetailComponent, IrbDetailService} from './project-detail/project-detail.component';
 import { IrbComponent } from './irb/irb.component';
 import { NavbarComponent } from './navbar/navbar.component';
-import { ProjectsDashboardComponent } from './projects-dashboard/projects-dashboard.component';
+import { ProjectsDashboardComponent, DateFormatter } from './projects-dashboard/projects-dashboard.component';
 import { FilesComponent, Overlapping } from './files/files.component';
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { PermissionsComponent, UserFullNamePipe } from './permissions/permissions.component';
@@ -46,6 +46,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     IrbComponent,
     NavbarComponent,
     ProjectsDashboardComponent,
+    DateFormatter,
     FilesComponent,
     FileSelectDirective,
     PermissionsComponent,

@@ -14,7 +14,7 @@
                     <div class="panel panel-default panel-horizontal">
                         <div class="panel-heading">
                             <h3 class="dashboard-title">{{project.Name}}</h3>
-                            <div class="dashboard-lists">Created: {{project.Date}}</div>
+                            <div class="dashboard-lists">Created: {{project.Date | DateFormatter : 'Date'}} </div>
                         </div>
                         <div class="row panel-body">
                             <div class="col-xs-12">

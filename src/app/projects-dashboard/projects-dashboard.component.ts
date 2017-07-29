@@ -16,18 +16,23 @@ import 'rxjs/add/operator/toPromise';
 import { StateService } from '../service/state.service';
 import { Router } from '@angular/router';
 import * as _ from 'underscore';
-// @Pipe({
-//   name: 'GetProjectByID'
-// })
-// export class GetProjectByID implements PipeTransform {
-//   constructor(private projectService: ProjectService) {}
-//   transform(id: string): Observable<any> {
-//       return this.projectService.getProjectByID(id)
-//       .map(res => {
-//         this.projects
-//       });
-//   }
-// }
+@Pipe({
+  name: 'DateFormatter'
+})
+export class DateFormatter implements PipeTransform {
+  constructor() {}
+  transform(id: string, option: string): string {
+      const d = id.split('T');
+      const d1 = d[0].split('-');
+      switch (option) {
+        case 'Date':
+          return d1[1] + '/' + d1[0] + '/' + d1[2];
+      case 'WithTime':
+          const d2 = d[1].substr(0, 8);
+          return d1[1] + '/' + d1[0] + '/' + d1[2] + ' ' + d2;
+      }
+  }
+}
 @Component({
   selector: 'app-projects-dashboard',
   templateUrl: './projects-dashboard.component.html',

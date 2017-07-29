@@ -30,6 +30,7 @@ export class PermissionsComponent implements OnInit {
   permissions$: Observable<any>;
   roles= ['admin', 'read-write', 'read-only'];
   @Input() project: any;
+  @Input() role: any;
   id: string;
   emailError: string;
 
@@ -41,6 +42,7 @@ export class PermissionsComponent implements OnInit {
     this.newPermissionForm = this.fb.group({Permissions: this.fb.array([this.permissionItem('')])});
     this.id = this.project._id;
     this.getPermissions();
+    console.log('Current role is...........', this.role);
     // this.newPermissionForm.valueChanges.debounceTime(500).subscribe(data => {
     //   console.log(data);
     // });
@@ -78,7 +80,6 @@ export class PermissionsComponent implements OnInit {
     this.newPermissionForm.get('Permissions').value.forEach(element => {
       this.addPermission(element);
     });
-    this.newPermissionForm.get('Permissions').value = null;
   }
 
   updatePermission(permission: Permission, permissionRole: roles) {

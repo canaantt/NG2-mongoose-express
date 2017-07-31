@@ -1,7 +1,8 @@
-import { Component, Output, Input, EventEmitter, OnInit} from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, ElementRef} from '@angular/core';
 import * as hello from 'hellojs';
 import { StateService } from '../service/state.service';
 import { Router } from '@angular/router';
+import { Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,9 @@ export class LoginComponent implements OnInit {
   user: any;
 
   constructor(private stateService: StateService,
+              private elementRef: ElementRef,
               private router: Router) {
+                console.log("%%%%%%%%%%%%%%%%%%%%%%1");
     hello.init({
       google: this.GOOGLE_CLIENT_ID
     }, {
@@ -22,8 +25,16 @@ export class LoginComponent implements OnInit {
       redirect_uri: '/landing'});
       hello.on('auth.login', this.authLogin.bind(this));
       hello.on('auth.logout', this.authLogout.bind(this));
+      hello.on('auth.change', function() {alert('state changed!'); });
+      // const eventStream = Observable.fromEvent(elementRef.nativeElement, 'mouseover')
+      //       .map(() => this.authenticated)
+      //       .debounceTime(500)
+      //       .subscribe(input => {
+      //         console.log('is this doing anything ?');
+      //       });
   }
   ngOnInit() {
+    console.log("%%%%%%%%%%%%%%%%%%%%%%2");
     this.stateService.authenticated
         .subscribe(res => {
           this.authenticated = res;
@@ -38,6 +49,7 @@ export class LoginComponent implements OnInit {
         });
   }
   googleLogin(): any {
+    console.log("%%%%%%%%%%%%%%%%%%%%%%3");
     console.log('In login component', this.authenticated);
     hello.login('google', {
                  display: 'popup',
@@ -50,6 +62,7 @@ export class LoginComponent implements OnInit {
     hello.logout('google', {}, this.updateAuth.bind(this, false));
   }
   authLogin(auth) {
+    console.log("%%%%%%%%%%%%%%%%%%%%%%6");
     hello('google').api('me').then( this.updateUserInfo.bind(this) );
     // this.router.navigate(['/projects','dashboard']);
   }
@@ -59,10 +72,12 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/landing']);
   }
   updateUserInfo(v) {
+    console.log("%%%%%%%%%%%%%%%%%%%%%%5");
     console.log(this.stateService.user);
     this.stateService.user.next(v);
   }
   updateAuth(v) {
+    console.log("%%%%%%%%%%%%%%%%%%%%%%4");
     console.log(this.stateService.authenticated);
     this.stateService.authenticated.next(v);
   }

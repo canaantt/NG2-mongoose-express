@@ -17,24 +17,16 @@ export class LoginComponent implements OnInit {
   constructor(private stateService: StateService,
               private elementRef: ElementRef,
               private router: Router) {
-                console.log("%%%%%%%%%%%%%%%%%%%%%%1");
-    hello.init({
-      google: this.GOOGLE_CLIENT_ID
-    }, {
-      force: true,
-      redirect_uri: '/landing'});
+      hello.init({
+        google: this.GOOGLE_CLIENT_ID
+      }, {
+        force: true,
+        redirect_uri: '/landing'});
       hello.on('auth.login', this.authLogin.bind(this));
       hello.on('auth.logout', this.authLogout.bind(this));
       hello.on('auth.change', function() {alert('state changed!'); });
-      // const eventStream = Observable.fromEvent(elementRef.nativeElement, 'mouseover')
-      //       .map(() => this.authenticated)
-      //       .debounceTime(500)
-      //       .subscribe(input => {
-      //         console.log('is this doing anything ?');
-      //       });
   }
   ngOnInit() {
-    console.log("%%%%%%%%%%%%%%%%%%%%%%2");
     this.stateService.authenticated
         .subscribe(res => {
           this.authenticated = res;
@@ -49,7 +41,6 @@ export class LoginComponent implements OnInit {
         });
   }
   googleLogin(): any {
-    console.log("%%%%%%%%%%%%%%%%%%%%%%3");
     console.log('In login component', this.authenticated);
     hello.login('google', {
                  display: 'popup',
@@ -62,9 +53,7 @@ export class LoginComponent implements OnInit {
     hello.logout('google', {}, this.updateAuth.bind(this, false));
   }
   authLogin(auth) {
-    console.log("%%%%%%%%%%%%%%%%%%%%%%6");
     hello('google').api('me').then( this.updateUserInfo.bind(this) );
-    // this.router.navigate(['/projects','dashboard']);
   }
   authLogout(auth) {
     this.updateUserInfo.bind(this, null);
@@ -72,12 +61,10 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/landing']);
   }
   updateUserInfo(v) {
-    console.log("%%%%%%%%%%%%%%%%%%%%%%5");
     console.log(this.stateService.user);
     this.stateService.user.next(v);
   }
   updateAuth(v) {
-    console.log("%%%%%%%%%%%%%%%%%%%%%%4");
     console.log(this.stateService.authenticated);
     this.stateService.authenticated.next(v);
   }

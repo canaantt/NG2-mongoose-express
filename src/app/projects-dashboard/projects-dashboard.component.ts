@@ -108,7 +108,7 @@ export class ProjectsDashboardComponent implements OnInit {
     this.projectIDs.splice(index, 1);
     this.getProjects();
     this.fileService.removeFilesByProjectID(project._id);
-    // this.permissionService.removePermisionsByProjectID(project._id);
+    this.permissionService.removePermisionsByProjectID(project._id);
   }
   add(): void {
     console.log('in adding new project');

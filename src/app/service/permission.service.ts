@@ -3,6 +3,7 @@ import { Headers, Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Permission } from '../permission';
 import { User } from '../user';
+import 'rxjs/add/observable/forkJoin';
 // import 'rxjs/add/operator/map';
 // import 'rxjs/add/operator/filter';
 // import 'rxjs/add/observable/of';
@@ -41,11 +42,23 @@ export class PermissionService {
             .map(res => res.json().filter(value => (value.User===userID && value.Project===projectID))[0]);
   }
   removePermisionsByProjectID(id: string): any  {
-    return this.http.get(this.permissionsUrl)
-             .map(res => res.json().filter(value => value.Project === id)
-                                   .map(permission => this.delete(permission)
-                                                          .subscribe(err => console.log(err))));
+    this.http.get(this.permissionsUrl)
+        .map(res => res.json().filter(value => value.Project === id)
+        .map(permission => permission._id))
+        .subscribe(res => {
+          console.log('All permissions related to ProjectID ', id, ' are ', res);
+          this.deletePermissions(res).subscribe();
+        });
   }
+
+  deletePermissions( inputObject ) {
+    let observableBatch = [];
+    inputObject.forEach(( item, key ) => {
+      observableBatch.push( this.http.delete('http://localhost:3000/permissions/' + item).map((res: Response) => res.json()) );
+    });
+    return Observable.forkJoin(observableBatch);
+  }
+
   delete(permission: Permission): Observable<Response> {
     const url = `${this.permissionsUrl}/` + permission._id;
     return this.http.delete(url, {headers: this.headers});
@@ -61,7 +74,6 @@ export class PermissionService {
   }
 
   update(permission: Permission, permissionRole: roles): Observable<Response> {
-    console.log('&&&&&&&&&&', permission);
     const url = `${this.permissionsUrl}/` + permission._id;
     permission.Role = permissionRole;
     return this.http.put(url, JSON.stringify(permission), {headers: this.headers});

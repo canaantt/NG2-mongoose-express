@@ -81,7 +81,9 @@ export class FilesComponent implements OnInit {
       'size' : fileitem.file.size,
       'timestamp' : Date()
     };
+    // alert('File is uploaded');
     this.uploadComplete('Being uploaded');
+    this.filerefresh();
   }
   cancelUpdate(fileitem: any) {
     const len = this.uploader.queue.length;

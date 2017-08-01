@@ -3,7 +3,6 @@
     <div class="row">
       <div *ngIf="project">
         <h1 class="detail-header">Dataset Detail</h1>
-        <h3 class="datail-header">{{project.Name}}</h3>
         <label class="pull-right">{{statusMsg}}</label>
         <div class="form-group">
           <label>Dataset Name<span class="text-danger">*</span></label>
@@ -39,18 +38,16 @@
           </div>
           <form class='submitForm' [formGroup]="newAnnotationForm" (ngSubmit)="submitAnnotations()">
             <div class="form-group">
-              <fieldset formArrayName="Annotations">
-                <table>
-                  <tbody class="form-group row" *ngFor="let annotationItem of newAnnotationForm.get('Annotations').controls" [formGroup]='annotationItem'>
-                    <tr>
-                      <td><input class="form-control" type="text" formControlName="key" placeholder="Sample Size"></td>
-                      <td><input class="form-control" type="text" formControlName="value" placeholder="110"></td>
-                      <!-- <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td> -->
-                      <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </fieldset>
+              <table>
+                <tbody>  
+                  <tr>
+                    <td><input class="form-control" type="text" formControlName="key" placeholder="Sample Size"></td>
+                    <td><input class="form-control" type="text" formControlName="value" placeholder="110"></td>
+                    <!-- <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td> -->
+                    <td><button type="submit" class="btn glyphicon glyphicon-plus-sign detail-submission-btn"></button></td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </form>
         </div>
@@ -69,21 +66,25 @@
               </tr>
               </td>
               <div *ngIf="project.DataCompliance.ComplianceOption === 'human'">
-                <tr>
-                  <input type="checkbox" name="IRBChecked" [(ngModel)]="IRBChecked">
-                  <label>IRB Number: </label>
-                  <input name="IRBNumber" [(ngModel)]="project.DataCompliance.IRBNumber" rows="1" [disabled]="!IRBChecked"> 
-                </tr>
-                <tr>
-                  <input type="checkbox" name="IECChecked" [(ngModel)]="IECChecked">
-                  <label>IEC Number: </label>
-                  <input name="IECNumber" [(ngModel)]="project.DataCompliance.IECNumber" rows="1" [disabled]="!IECChecked">  
-                </tr>
-                <tr> 
-                  <input type="checkbox" name="ExemptedChecked" [(ngModel)]="ExemptedChecked">
-                  <label>Waiver Number: </label>
-                  <input name="exempted" [(ngModel)]="project.DataCompliance.Waiver" rows="1" [disabled]="!ExemptedChecked">
-                </tr>
+
+                <tr><input type="radio" value="IRBChecked" name="IRBChecked" [(ngModel)]="human">IRB</tr>
+                <tr><input type="radio" value="IECChecked"  name="IECChecked" [(ngModel)]="human">IEC</tr>
+                <tr><input type="radio"  value="ExemptedChecked" name="ExemptedChecked" [(ngModel)]="human">Exempted</tr>
+                
+                <td>
+                  <div *ngIf="human === 'IRBChecked'">
+                    <label>IRB Number: </label>
+                    <input name="IRBNumber" [(ngModel)]="project.DataCompliance.IRBNumber" rows="1"> 
+                  </div>
+                  <div *ngIf="human === 'IECChecked'">
+                    <label>IEC Number: </label>
+                    <input name="IECNumber" [(ngModel)]="project.DataCompliance.IECNumber" rows="1" > 
+                  </div>
+                  <div *ngIf="human === 'ExemptedChecked'">
+                    <label>Waiver Number: </label>
+                    <input name="exempted" [(ngModel)]="project.DataCompliance.Waiver" rows="1"> 
+                  </div>
+                </td>
               </div>
               <!-- <tr>
                 <input type="radio" value="huirb" name="humanStudyWithIRB" [(ngModel)]="project.DataCompliance.ComplianceOption" (click)="collectDataCompliance('huirb')" [disabled]="project.DataCompliance.IRBNumber===''">

@@ -80,6 +80,11 @@ export class ProjectDetailComponent implements  OnInit {
       this.stateService.user.subscribe(res => {
         this.getUserID(res.email, this.id);
       });
+      this.projectService.getProjectByID(this.route.snapshot.params['id'])
+                         .subscribe(res0 => {
+                           this.project = res0;
+                         });
+      
       const eventStream = Observable.fromEvent(elementRef.nativeElement, 'keyup')
             .map(() => this.project)
             .debounceTime(500)
@@ -107,27 +112,11 @@ export class ProjectDetailComponent implements  OnInit {
         });
   }
   ngOnInit(): void {
-    this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem('')])});
-    this.projectService.getProjectByID(this.route.snapshot.params['id'])
-                         .subscribe(res0 => {
-                           this.project = res0;
-                         });
-  }
-  refresh() {
-    console.log('project is being refreshed...');
-    console.log(this.id);
-    // if (typeof(this.id) !== 'undefined') {
-      this.projectService.getProjectByID(this.route.snapshot.params['id'])
-                         .subscribe(res0 => {
-                          //  this.project = res0;
-                           this.filesComponent.filerefresh();
-                          });
-  }
-  annotationItem(val: string) {
-    return new FormGroup({
-      key: new FormControl(val, Validators.required),
-      value: new FormControl(val, Validators.required)
-    });
+    // this.newAnnotationForm = this.fb.group({Annotations: this.fb.array([this.annotationItem('')])});
+    this.newAnnotationForm = new FormGroup({
+        key: new FormControl(''),
+        value: new FormControl('')
+      });
   }
   update(project: Project): void {
     this.projectService.update(project).subscribe(() => {
@@ -135,6 +124,14 @@ export class ProjectDetailComponent implements  OnInit {
       this.statusReport();
       this.refresh();
     });
+  }
+  refresh() {
+    console.log('project is being refreshed...');
+    console.log(this.id);
+    this.projectService.getProjectByID(this.route.snapshot.params['id'])
+                        .subscribe(res0 => {
+                          this.filesComponent.filerefresh();
+                          });
   }
   statusReport() {
     this.statusMsg = 'Saving updates...';
@@ -148,12 +145,10 @@ export class ProjectDetailComponent implements  OnInit {
     this.update(this.project);
   }
   submitAnnotations(): void {
-
-    this.project.Annotations.push( {key:'', value:''} );
-    // this.newAnnotationForm.get('Annotations').value.forEach(element => {
-    //   this.project.Annotations.push(element);
-    // });
-    // this.newAnnotationForm.get('Annotations').value = null;
+    console.log('&&&', this.newAnnotationForm.value);
+    this.project.Annotations.push(this.newAnnotationForm.value);
+    // this.newAnnotationForm.value={key:'', value:''};
+    // document.getElementById("myAnchor").focus();
   }
   collectDataCompliance(value: string) {
     if (value === 'human') {

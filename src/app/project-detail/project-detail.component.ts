@@ -155,9 +155,8 @@ export class ProjectDetailComponent implements  OnInit {
   }
   collectDataCompliance(value: string) {
     if (value === 'human') {
-      this.clickedHuman = true;
+      this.update(this.project);
     } else if (value === 'non-human') {
-      this.clickedHuman = false;
       this.project.DataCompliance.IRBNumber = '';
       this.project.DataCompliance.IECNumber = '';
       this.project.DataCompliance.Waiver = '';

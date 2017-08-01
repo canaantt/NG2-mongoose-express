@@ -64,8 +64,8 @@
             <p>Date Derived from Human Subjects?</p>
             <td>
               <tr>
-                <input type="radio" value="human" name="human" [(ngModel)]="project.DataCompliance.ComplianceOption" (click)="collectDataCompliance('human')">Yes
-                <input type="radio" value="non-human" name="non-human" [(ngModel)]="project.DataCompliance.ComplianceOption" (click)="collectDataCompliance('non-human')">No
+                <input type="radio" value="human" name="human" [(ngModel)]="project.DataCompliance.ComplianceOption" (change)="collectDataCompliance('human')">Yes
+                <input type="radio" value="non-human" name="non-human" [(ngModel)]="project.DataCompliance.ComplianceOption" (change)="collectDataCompliance('non-human')">No
               </tr>
               </td>
               <div *ngIf="project.DataCompliance.ComplianceOption === 'human'">

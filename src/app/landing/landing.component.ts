@@ -45,7 +45,7 @@ export class LandingComponent {
                   .subscribe( res => {
                     if (typeof(res[0]) !== 'undefined') {
                       console.log('Found user', res[0]);
-                      // this.router.navigate(['/projects', 'dashboard']);
+                      // setTimeout(() => {this.router.navigate(['/projects', 'dashboard'];}, 1000);
                       // this.router.navigate(['/projects/{id}']);
                     } else {
                       console.log('Couldn\'t find this user from user collection');

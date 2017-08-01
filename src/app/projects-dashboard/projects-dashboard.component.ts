@@ -26,10 +26,10 @@ export class DateFormatter implements PipeTransform {
       const d1 = d[0].split('-');
       switch (option) {
         case 'Date':
-          return d1[1] + '/' + d1[0] + '/' + d1[2];
+          return d1[1] + '/' + d1[2] + '/' + d1[0];
       case 'WithTime':
           const d2 = d[1].substr(0, 8);
-          return d1[1] + '/' + d1[0] + '/' + d1[2] + ' ' + d2;
+          return d1[1] + '/' + d1[2] + '/' + d1[0] + ' ' + d2;
       }
   }
 }

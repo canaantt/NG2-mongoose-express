@@ -102,4 +102,7 @@ export class FilesComponent implements OnInit {
     this.errorMsg = 'Still working on this feature';
     return false;
   }
+  report(){
+    alert('Choose file is changed.');
+  }
 }

@@ -55,7 +55,7 @@
 
     </div>
     <input #fileInput type="file" class="form-control col-md-5" name="single" 
-                        ng2FileSelect [uploader]="uploader"/>
+                        ng2FileSelect [uploader]="uploader" (change)="report()"/>
     
     <div class="col-md-8" *ngIf = "uploader?.queue?.length > 0">
       <!--Queue length: {{ uploader?.queue?.length }}-->

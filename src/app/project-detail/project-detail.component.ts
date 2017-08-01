@@ -84,7 +84,6 @@ export class ProjectDetailComponent implements  OnInit {
                          .subscribe(res0 => {
                            this.project = res0;
                          });
-      
       const eventStream = Observable.fromEvent(elementRef.nativeElement, 'keyup')
             .map(() => this.project)
             .debounceTime(500)
@@ -118,12 +117,17 @@ export class ProjectDetailComponent implements  OnInit {
         value: new FormControl('')
       });
   }
+
   update(project: Project): void {
-    this.projectService.update(project).subscribe(() => {
-      console.log('updating...');
-      this.statusReport();
-      this.refresh();
-    });
+    if (project.Name === '') {
+      alert('Project Name cannot be empty');
+    } else {
+       this.projectService.update(project).subscribe(() => {
+        console.log('updating...');
+        this.statusReport();
+        this.refresh();
+      });
+    }
   }
   refresh() {
     console.log('project is being refreshed...');

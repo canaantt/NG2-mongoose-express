@@ -15,7 +15,7 @@ export class ProjectService {
   getProjects(): Observable<Response> {
     return this.http.get(this.projectsUrl);
   }
- 
+
   getRecentProject(userID: string): Observable<Response> {
     console.log('in project service, user ID is ', userID);
      return this.http.get(this.projectsUrl)
@@ -23,7 +23,8 @@ export class ProjectService {
                    let filtered = res.json().filter(value => value.Author === userID);
                    return filtered[filtered.length-1];
                   });
-  } 
+  }
+
   getProjectByID(id: string): Observable<Response> {
     const url = `${this.projectsUrl}/` + id;
     return this.http.get(url).map(res => res.json());

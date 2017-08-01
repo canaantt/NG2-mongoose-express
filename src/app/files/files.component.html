@@ -60,22 +60,25 @@
     <div class="col-md-8" *ngIf = "uploader?.queue?.length > 0">
       <!--Queue length: {{ uploader?.queue?.length }}-->
       <table class="table">
-        <thead>
+        <!-- <thead>
           <tr>
             <th width="70%">Name</th>
             <th>Type</th>
             <th>Size</th>
             <th>Progress</th>
           </tr>
-        </thead>
+        </thead> -->
         <tbody>
           <tr *ngFor="let item of uploader.queue" >
-            <td><strong>{{ item.file.name }}</strong></td>
+            <!-- <td><strong>{{ item.file.name }}</strong></td>
             <td><strong>{{ item.file.type }}</strong></td>
-            <td nowrap>{{ item.file.size/1024/1024 | number:'.2' }} MB</td>    
+            <td nowrap>{{ item.file.size/1024/1024 | number:'.2' }} MB</td>     -->
             <td nowrap>
               <button type="button" class="btn btn-success btn-xs"  (click)="updateStatus(item)" [disabled]="projectValidChecking()">
                                             <span class="glyphicon glyphicon-upload"></span> {{uploadedstring}}
+                                        </button>
+              <button type="button" class="btn btn-warning btn-xs"  (click)="cancelUpdate(item)" [disabled]="uploadedstring === 'Uploaded'">
+                                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel Update
                                         </button>
             </td>
             <td class="text-center">

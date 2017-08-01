@@ -34,12 +34,20 @@ export class RegisterComponent implements OnInit {
           alert('Please fill all the required fields to proceed');
           return;
        } else {
-        this.userService.create(this.newUserForm.value).subscribe(() => {
-          alert('New User is added into Database.');
-          this.stateService.authenticated.next(false);
-          this.stateService.user.next(null);
-          this.router.navigate(['/landing']);
-        });
+        this.userService.userValidationByEmail(this.newUserForm.value.Email)
+            .subscribe(res => {
+              if (typeof(res[0]) !== 'undefined') {
+                alert('This email has already been linked to existing user. Please check accuracy.');
+                return;
+              } else {
+                this.userService.create(this.newUserForm.value).subscribe(() => {
+                  alert('New User is added into Database.');
+                  this.stateService.authenticated.next(false);
+                  this.stateService.user.next(null);
+                  this.router.navigate(['/landing']);
+                });
+              }
+            });
       }
   }
 

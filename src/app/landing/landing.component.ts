@@ -51,7 +51,7 @@ export class LandingComponent {
                       console.log('Couldn\'t find this user from user collection');
                       setTimeout(() => {
                         this.router.navigate(['/register']);
-                      }, 5000);
+                      }, 100);
                     }
                   });
             }
@@ -60,7 +60,7 @@ export class LandingComponent {
           }
         });
   }
-  
+
   goDashboard() {
     if(this.authenticated === true){
       this.router.navigate(['projects/', 'dashboard']);

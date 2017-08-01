@@ -148,9 +148,11 @@ export class ProjectDetailComponent implements  OnInit {
     this.update(this.project);
   }
   submitAnnotations(): void {
-    this.newAnnotationForm.get('Annotations').value.forEach(element => {
-      this.project.Annotations.push(element);
-    });
+
+    this.project.Annotations.push( {key:'', value:''} );
+    // this.newAnnotationForm.get('Annotations').value.forEach(element => {
+    //   this.project.Annotations.push(element);
+    // });
     // this.newAnnotationForm.get('Annotations').value = null;
   }
   collectDataCompliance(value: string) {

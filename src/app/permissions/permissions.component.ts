@@ -68,7 +68,15 @@ export class PermissionsComponent implements OnInit {
             p.User = res[0]._id;
             p.Project = this.project._id;
             p.Role = formValue.Role;
-            this.permissionService.create(p).subscribe(() => this.getPermissions());
+            this.permissionService.getPermissionByUserByProject(p.User, p.Project)
+                .subscribe(res => {
+                  if(typeof(res) === 'undefined') {
+                    this.permissionService.create(p).subscribe(() => this.getPermissions());
+                  } else {
+                    alert('This user has already been added to this project');
+                    return;
+                  }
+                });
           } else {
             this.emailError = 'Email is not in the user list. Please invite this user to register first.';
           }
@@ -85,8 +93,7 @@ export class PermissionsComponent implements OnInit {
   updatePermission(permission: Permission, permissionRole: roles) {
     this.permissionService.update(permission, permissionRole).subscribe(() => this.getPermissions);
   }
-  updatePermissions(){
-    console.log("within updatePermissions");
+  updatePermissions() {
     this.newPermissionForm.get('Permissions').value.forEach(element => {
       console.log(element);
       this.updatePermission(element, element.Role);

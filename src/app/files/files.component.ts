@@ -81,13 +81,13 @@ export class FilesComponent implements OnInit {
       'size' : fileitem.file.size,
       'timestamp' : Date()
     };
-    //this.filerefresh();
     this.uploadComplete('Being uploaded');
   }
-
-  // getFiles(id: string) {
-  //   this.files$ = this.fileService.getFilesByProjectID(id);
-  // }
+  cancelUpdate(fileitem: any) {
+    const len = this.uploader.queue.length;
+    this.uploader.queue.pop();
+    this.uploadComplete('Being canceled');
+  }
 
   removeAllFiles() {
     alert('Are you sure you want to delete all the files related to this dataset? ');
@@ -101,5 +101,8 @@ export class FilesComponent implements OnInit {
   projectValidChecking(): boolean {
     this.errorMsg = 'Still working on this feature';
     return false;
+  }
+  report(){
+    alert('Choose file is changed.');
   }
 }

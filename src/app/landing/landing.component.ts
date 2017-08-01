@@ -42,14 +42,16 @@ export class LandingComponent {
           if (this.authenticated) {
             if(this.user !== null) {
               this.userService.getUserIDByGmail(this.user.email)
-                  .subscribe(res => {
+                  .subscribe( res => {
                     if (typeof(res[0]) !== 'undefined') {
-                      console.log("Found user", res[0]);
-                      // this.router.navigate(['/projects', 'dashboard']);
+                      console.log('Found user', res[0]);
+                      // setTimeout(() => {this.router.navigate(['/projects', 'dashboard'];}, 1000);
                       // this.router.navigate(['/projects/{id}']);
                     } else {
-                      console.log("couldn't find this user from user collection");
-                       this.router.navigate(['/register']);
+                      console.log('Couldn\'t find this user from user collection');
+                      setTimeout(() => {
+                        this.router.navigate(['/register']);
+                      }, 100);
                     }
                   });
             }
@@ -58,7 +60,7 @@ export class LandingComponent {
           }
         });
   }
-  
+
   goDashboard() {
     if(this.authenticated === true){
       this.router.navigate(['projects/', 'dashboard']);

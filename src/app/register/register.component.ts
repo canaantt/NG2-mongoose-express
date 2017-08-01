@@ -27,12 +27,28 @@ export class RegisterComponent implements OnInit {
   submit() {
     this.newUserForm.value.Consent = true;
     this.newUserForm.value.Gmail = this.user.email;
-    this.userService.create(this.newUserForm.value).subscribe(() => {
-      alert('New User is added into Database.');
-      this.stateService.authenticated.next(false);
-      this.stateService.user.next(null);
-      this.router.navigate(['/landing']);
-    });
+    if (this.newUserForm.value.FirstName === '' ||
+        this.newUserForm.value.LastName === '' ||
+        this.newUserForm.value.Email === '' ||
+        this.newUserForm.value.Institution === '') {
+          alert('Please fill all the required fields to proceed');
+          return;
+       } else {
+        this.userService.userValidationByEmail(this.newUserForm.value.Email)
+            .subscribe(res => {
+              if (typeof(res[0]) !== 'undefined') {
+                alert('This email has already been linked to existing user. Please check accuracy.');
+                return;
+              } else {
+                this.userService.create(this.newUserForm.value).subscribe(() => {
+                  alert('New User is added into Database.');
+                  this.stateService.authenticated.next(false);
+                  this.stateService.user.next(null);
+                  this.router.navigate(['/landing']);
+                });
+              }
+            });
+      }
   }
 
   ngOnInit(): void {

@@ -1,7 +1,8 @@
-import { Component, Output, Input, EventEmitter, OnInit} from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, ElementRef} from '@angular/core';
 import * as hello from 'hellojs';
 import { StateService } from '../service/state.service';
 import { Router } from '@angular/router';
+import { Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'app-login',
@@ -14,14 +15,16 @@ export class LoginComponent implements OnInit {
   user: any;
 
   constructor(private stateService: StateService,
+              private elementRef: ElementRef,
               private router: Router) {
-    hello.init({
-      google: this.GOOGLE_CLIENT_ID
-    }, {
-      force: true,
-      redirect_uri: '/landing'});
+      hello.init({
+        google: this.GOOGLE_CLIENT_ID
+      }, {
+        force: true,
+        redirect_uri: '/landing'});
       hello.on('auth.login', this.authLogin.bind(this));
       hello.on('auth.logout', this.authLogout.bind(this));
+      hello.on('auth.change', function() {alert('state changed!'); });
   }
   ngOnInit() {
     this.stateService.authenticated
@@ -51,7 +54,6 @@ export class LoginComponent implements OnInit {
   }
   authLogin(auth) {
     hello('google').api('me').then( this.updateUserInfo.bind(this) );
-    // this.router.navigate(['/projects','dashboard']);
   }
   authLogout(auth) {
     this.updateUserInfo.bind(this, null);

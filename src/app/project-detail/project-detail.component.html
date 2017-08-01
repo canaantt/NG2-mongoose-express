@@ -61,13 +61,30 @@
             <label>Regulatory Infomation<span class="text-danger">*</span></label>
             <!-- <input [(ngModel)]="project.IRBNumber" placeholder="IRB#" class="col-sx-3">
             <div *ngIf="project.IRBNumber" class="col-sx-3">IRB Title : {{project.IRBNumber | IrbDetailService | async}}</div> -->
+            <p>Date Derived from Human Subjects?</p>
             <td>
               <tr>
-                <input type="radio" value="huirb" name="human" [(ngModel)]="project.DataCompliance.ComplianceOption" (click)="collectDataCompliance('human')">
-                A. Data are derieved from human subjects
-                <input type="radio" value="nohu" name="non-human" [(ngModel)]="project.DataCompliance.ComplianceOption" (click)="collectDataCompliance('non-human')">
-                B. Data are Not derieved from human subjects
+                <input type="radio" value="human" name="human" [(ngModel)]="project.DataCompliance.ComplianceOption" (change)="collectDataCompliance('human')">Yes
+                <input type="radio" value="non-human" name="non-human" [(ngModel)]="project.DataCompliance.ComplianceOption" (change)="collectDataCompliance('non-human')">No
               </tr>
+              </td>
+              <div *ngIf="project.DataCompliance.ComplianceOption === 'human'">
+                <tr>
+                  <input type="checkbox" name="IRBChecked" [(ngModel)]="IRBChecked">
+                  <label>IRB Number: </label>
+                  <input name="IRBNumber" [(ngModel)]="project.DataCompliance.IRBNumber" rows="1" [disabled]="!IRBChecked"> 
+                </tr>
+                <tr>
+                  <input type="checkbox" name="IECChecked" [(ngModel)]="IECChecked">
+                  <label>IEC Number: </label>
+                  <input name="IECNumber" [(ngModel)]="project.DataCompliance.IECNumber" rows="1" [disabled]="!IECChecked">  
+                </tr>
+                <tr> 
+                  <input type="checkbox" name="ExemptedChecked" [(ngModel)]="ExemptedChecked">
+                  <label>Waiver Number: </label>
+                  <input name="exempted" [(ngModel)]="project.DataCompliance.Waiver" rows="1" [disabled]="!ExemptedChecked">
+                </tr>
+              </div>
               <!-- <tr>
                 <input type="radio" value="huirb" name="humanStudyWithIRB" [(ngModel)]="project.DataCompliance.ComplianceOption" (click)="collectDataCompliance('huirb')" [disabled]="project.DataCompliance.IRBNumber===''">
                 A.1 If data are derieved from humans and IRB has been approved.
@@ -78,7 +95,7 @@
                 A.2 If data are derieved from humans and IEC number is ready. 
                 <input [(ngModel)]="project.DataCompliance.IECNumber" placeholder="IEC#" rows="1">
               </tr> -->
-            </td>
+            
         </div>
         <app-files *ngIf="permission.Role==='admin' || permission.Role==='read-write'" [project]="project" (uploaded)="fileUpdates($event)"></app-files>
         </div>

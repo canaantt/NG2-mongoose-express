@@ -108,7 +108,7 @@ export class ProjectsDashboardComponent implements OnInit {
     this.projectIDs.splice(index, 1);
     this.getProjects();
     this.fileService.removeFilesByProjectID(project._id);
-    // this.permissionService.removePermisionsByProjectID(project._id);
+    this.permissionService.removePermisionsByProjectID(project._id);
   }
   add(): void {
     console.log('in adding new project');
@@ -117,7 +117,7 @@ export class ProjectsDashboardComponent implements OnInit {
       Description: new FormControl('The largest recorded snowflake was in MT during year 1887, 15 inches wide', Validators.minLength(4)),
       Private: new FormControl(true),
       Author: this.userID,
-      DataCompliance: {'IRBNumber': '', 'IECNumber': '', 'ComplianceOption': ''}
+      DataCompliance: {'IRBNumber': null, 'IECNumber': null, 'Waiver': null, 'ComplianceOption': null }
     });
     this.projectService.create(this.newProjectForm.value)
         .subscribe(() => {

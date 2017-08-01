@@ -155,17 +155,14 @@ export class ProjectDetailComponent implements  OnInit {
   }
   collectDataCompliance(value: string) {
     if (value === 'human') {
-      this.clickedHuman = true;
+      this.update(this.project);
     } else if (value === 'non-human') {
-      this.clickedHuman = false;
+      this.project.DataCompliance.IRBNumber = '';
+      this.project.DataCompliance.IECNumber = '';
+      this.project.DataCompliance.Waiver = '';
+      console.log(this.project);
+      this.update(this.project);
     }
-    // const obj = {};
-    // obj['ComplianceOption'] = value;
-    // obj['IRBNumber'] = this.IRB;
-    // obj['IECNumber'] = this.IEC;
-    // this.project.DataCompliance = obj;
-    this.projectService.update(this.project)
-        .subscribe(() => console.log('Data Compliance is filled in project.'));
   }
 }
 

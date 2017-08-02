@@ -19,9 +19,6 @@ import { ProjectsDashboardComponent, DateFormatter } from './projects-dashboard/
 import { FilesComponent, Overlapping } from './files/files.component';
 import { FileSelectDirective, FileDropDirective } from 'ng2-file-upload';
 import { PermissionsComponent, UserFullNamePipe } from './permissions/permissions.component';
-import { AnnotationsComponent } from './annotations/annotations.component';
-import { AdminComponent } from './admin/admin.component';
-import { AdminGridComponent } from './admin-grid/admin-grid.component';
 import { RegisterComponent } from './register/register.component';
 import { StateService } from './service/state.service';
 import 'rxjs/add/observable/of';
@@ -30,7 +27,6 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/catch';
 import * as hello from 'hellojs';
 import * as _ from 'underscore';
-import { ConsentComponent } from './consent/consent.component';
 import { LoginComponent } from './login/login.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 
@@ -50,14 +46,10 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     FilesComponent,
     FileSelectDirective,
     PermissionsComponent,
-    AnnotationsComponent,
     UserFullNamePipe,
     IrbDetailService,
-    AdminComponent,
-    AdminGridComponent,
     RegisterComponent,
     Overlapping,
-    ConsentComponent,
     LoginComponent,
     UserProfileComponent
   ],
